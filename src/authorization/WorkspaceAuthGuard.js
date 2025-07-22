@@ -19,16 +19,16 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
    */
   static async requireWorkspaceActive() {
     const session = await this.requireAuth();
+
     if (!session) return this.redirectUnauthorized();
 
     const workspaceExists = await UserServices.hasResource({
       where: { id: session.id },
-      select: { workspaceId: true },
     });
-    if (!workspaceExists.workspaceId) return this.redirectUnauthorized();
+    if (!workspaceExists) return this.redirectUnauthorized();
 
     const workspace = await WorkspaceService.getResource({
-      where: { id: workspaceExists.workspaceId },
+      where: { ownerId: session.id },
     });
     if (!workspace) return this.redirectUnauthorized();
 

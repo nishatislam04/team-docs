@@ -4,6 +4,7 @@ export class WorkspaceDTO {
       id: workspace.id,
       name: workspace.name,
       slug: workspace.slug,
+      status: workspace.status,
       description: workspace.description,
       createdAt: workspace.createdAt.toISOString(),
       updatedAt: workspace.updatedAt.toISOString(),

@@ -4,8 +4,8 @@ import ProjectShell from "./ProjectShell";
 import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
 
 export default async function ProjectPage() {
-  const workspaceId = await Session.getWorkspaceIdForUser();
   await requireWorkspaceActive();
+  const workspaceId = await Session.getWorkspaceIdForUser();
 
   const hasProjects = await ProjectService.hasResource({
     where: { workspaceId },
