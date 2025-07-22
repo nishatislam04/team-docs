@@ -30,7 +30,7 @@ class NotificationAuthGuard extends BaseAuthGuard {
     }
 
     // Users can only access their own notifications
-    if (!this.isOwner(session.id, notification.userId)) {
+    if (!this.isOwner(notification.userId)) {
       Logger.warn(
         `User ${session.id} attempted to access notification ${notificationId} belonging to user ${notification.userId}`
       );
@@ -71,7 +71,7 @@ class NotificationAuthGuard extends BaseAuthGuard {
     const notification = await this.protect(notificationId);
 
     // Users can only update their own notifications
-    if (!this.isSuperAdmin(session) && !this.isOwner(session.id, notification.userId)) {
+    if (!this.isSuperAdmin(session) && !this.isOwner(notification.userId)) {
       Logger.warn(
         `User ${session.id} attempted to update notification ${notificationId} without permission`
       );
@@ -92,7 +92,7 @@ class NotificationAuthGuard extends BaseAuthGuard {
     const notification = await this.protect(notificationId);
 
     // Users can delete their own notifications, admins can delete any
-    if (!this.isSuperAdmin(session) && !this.isOwner(session.id, notification.userId)) {
+    if (!this.isSuperAdmin(session) && !this.isOwner(notification.userId)) {
       Logger.warn(
         `User ${session.id} attempted to delete notification ${notificationId} without permission`
       );
@@ -120,7 +120,7 @@ class NotificationAuthGuard extends BaseAuthGuard {
     }
 
     // Users can only access their own notifications
-    if (!this.isOwner(session.id, userId)) {
+    if (!this.isOwner(userId)) {
       Logger.warn(`User ${session.id} attempted to access notifications for user ${userId}`);
       this.redirectUnauthorized();
     }
@@ -145,7 +145,7 @@ class NotificationAuthGuard extends BaseAuthGuard {
     }
 
     // Users can only perform bulk operations on their own notifications
-    if (!this.isOwner(session.id, userId)) {
+    if (!this.isOwner(userId)) {
       Logger.warn(`User ${session.id} attempted bulk notification operations for user ${userId}`);
       this.redirectUnauthorized();
     }

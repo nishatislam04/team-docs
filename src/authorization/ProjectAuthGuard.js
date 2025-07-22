@@ -125,7 +125,7 @@ class ProjectAuthGuard extends BaseAuthGuard {
 
     // Super admins can manage any project
     if (!this.isSuperAdmin(session)) {
-      this.requireOwnership(session.id, project.ownerId, "project");
+      this.requireOwnership(project.ownerId, "project");
     }
 
     return project;
@@ -155,12 +155,12 @@ class ProjectAuthGuard extends BaseAuthGuard {
     }
 
     // Project owners can manage their project
-    if (this.isOwner(session.id, project.ownerId)) {
+    if (this.isOwner(project.ownerId)) {
       return { project, role: "owner" };
     }
 
     // Workspace owners can manage projects in their workspace
-    if (this.isOwner(session.id, project.workspace.ownerId)) {
+    if (this.isOwner(project.workspace.ownerId)) {
       return { project, role: "workspace_owner" };
     }
 
@@ -224,8 +224,8 @@ class ProjectAuthGuard extends BaseAuthGuard {
     // Only super admins, project owners, or workspace owners can delete
     const canDelete =
       this.isSuperAdmin(session) ||
-      this.isOwner(session.id, project.ownerId) ||
-      this.isOwner(session.id, project.workspace.ownerId);
+      this.isOwner(project.ownerId) ||
+      this.isOwner(project.workspace.ownerId);
 
     if (!canDelete) {
       Logger.warn(`User ${session.id} attempted to delete project ${projectId} without permission`);
@@ -256,8 +256,8 @@ class ProjectAuthGuard extends BaseAuthGuard {
     // Check if user can manage project members
     const canManage =
       this.isSuperAdmin(session) ||
-      this.isOwner(session.id, project.ownerId) ||
-      this.isOwner(session.id, project.workspace.ownerId) ||
+      this.isOwner(project.ownerId) ||
+      this.isOwner(project.workspace.ownerId) ||
       (await this.hasPermission(session.id, "manage:members", "project", projectId));
 
     if (!canManage) {

@@ -135,9 +135,9 @@ class SectionAuthGuard extends BaseAuthGuard {
     // Check if user can delete sections
     const canDelete =
       this.isSuperAdmin(session) ||
-      this.isOwner(session.id, section.ownerId) ||
-      this.isOwner(session.id, section.project.ownerId) ||
-      this.isOwner(session.id, section.project.workspace.ownerId) ||
+      this.isOwner(section.ownerId) ||
+      this.isOwner(section.project.ownerId) ||
+      this.isOwner(section.project.workspace.ownerId) ||
       (await this.hasPermission(session.id, "delete:section", "project", section.projectId));
 
     if (!canDelete) {
@@ -160,7 +160,7 @@ class SectionAuthGuard extends BaseAuthGuard {
 
     // Super admins can manage any section
     if (!this.isSuperAdmin(session)) {
-      this.requireOwnership(session.id, section.ownerId, "section");
+      this.requireOwnership(section.ownerId, "section");
     }
 
     return section;

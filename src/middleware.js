@@ -16,7 +16,7 @@ export default auth(async function middleware(request) {
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
 
-  // Create new request headers with `x-pathname`
+  // it looks like, we are using this in places. do not remove!
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
 
@@ -35,17 +35,6 @@ export default auth(async function middleware(request) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 
-  // ✅ PROTECT admin routes - require authentication (admin check to be implemented)
-  if (pathname.startsWith("/admin")) {
-    if (!session) {
-      return NextResponse.redirect(new URL("/auth/signin", request.url));
-    }
-    // TODO: Add admin privilege check here
-    // Note: Cannot use Prisma in middleware (edge runtime limitation)
-    // Consider using JWT claims or server-side protection in layout
-    // For now, all authenticated users can access admin (temporary)
-  }
-
   // ✅ Allow non-authenticated users to access landing page at root
   if (pathname === "/") {
     return NextResponse.next({
@@ -60,7 +49,7 @@ export default auth(async function middleware(request) {
     return NextResponse.redirect(new URL("/auth/signin", request.url));
   }
 
-  // ✅ Optional: redirect / to /home if logged in
+  // ✅ Optional: redirect / to /home. for auth user
   if (session && pathname === "/") {
     return NextResponse.redirect(new URL("/home", request.url));
   }
@@ -74,11 +63,5 @@ export default auth(async function middleware(request) {
 });
 
 export const config = {
-  matcher: [
-    "/", // root
-    "/home", // main page
-    "/auth/:path*", // must explicitly include auth
-    "/admin/:path*", // admin routes
-    "/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)",
-  ],
+  matcher: ["/", "/home", "/auth/:path*", "/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };

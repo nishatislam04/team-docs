@@ -143,10 +143,10 @@ class PageAuthGuard extends BaseAuthGuard {
     // Check if user can delete pages
     const canDelete =
       this.isSuperAdmin(session) ||
-      this.isOwner(session.id, page.ownerId) ||
-      this.isOwner(session.id, page.section.ownerId) ||
-      this.isOwner(session.id, page.section.project.ownerId) ||
-      this.isOwner(session.id, page.section.project.workspace.ownerId) ||
+      this.isOwner(page.ownerId) ||
+      this.isOwner(page.section.ownerId) ||
+      this.isOwner(page.section.project.ownerId) ||
+      this.isOwner(page.section.project.workspace.ownerId) ||
       (await this.hasPermission(session.id, "delete:page", "section", page.sectionId));
 
     if (!canDelete) {
@@ -169,7 +169,7 @@ class PageAuthGuard extends BaseAuthGuard {
 
     // Super admins can manage any page
     if (!this.isSuperAdmin(session)) {
-      this.requireOwnership(session.id, page.ownerId, "page");
+      this.requireOwnership(page.ownerId, "page");
     }
 
     return page;
@@ -234,7 +234,7 @@ class PageAuthGuard extends BaseAuthGuard {
     // Check if user can share pages
     const canShare =
       this.isSuperAdmin(session) ||
-      this.isOwner(session.id, page.ownerId) ||
+      this.isOwner(page.ownerId) ||
       (await this.hasPermission(session.id, "share:page", "section", page.sectionId));
 
     if (!canShare) {

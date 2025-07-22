@@ -4,7 +4,7 @@ import FeaturedSection from "./_components/FeaturedSection";
 import Footer from "./_components/Footer";
 import { Session } from "@/lib/Session";
 import { WorkspaceService } from "@/system/Services/WorkspaceService";
-
+import Logger from "@/lib/Logger";
 export const dynamic = "force-dynamic";
 
 export default async function LandingPage() {
@@ -14,6 +14,8 @@ export default async function LandingPage() {
   const workspaceStatus = workspaceId
     ? await WorkspaceService.getWorkspaceStatus(workspaceId)
     : null;
+
+  // Logger.info(session, "session");
 
   return (
     <main className="min-h-screen bg-background">

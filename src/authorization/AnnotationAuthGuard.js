@@ -132,7 +132,7 @@ class AnnotationAuthGuard extends BaseAuthGuard {
     // Users can only update their own annotations unless they have special permissions
     const canUpdate =
       this.isSuperAdmin(session) ||
-      this.isOwner(session.id, annotation.userId) ||
+      this.isOwner(annotation.userId) ||
       (await this.hasPermission(session.id, "edit:annotation", "page", annotation.pageId));
 
     if (!canUpdate) {
@@ -158,7 +158,7 @@ class AnnotationAuthGuard extends BaseAuthGuard {
     // Users can delete their own annotations, or moderators can delete any
     const canDelete =
       this.isSuperAdmin(session) ||
-      this.isOwner(session.id, annotation.userId) ||
+      this.isOwner(annotation.userId) ||
       (await this.hasPermission(session.id, "delete:annotation", "page", annotation.pageId));
 
     if (!canDelete) {
@@ -184,7 +184,7 @@ class AnnotationAuthGuard extends BaseAuthGuard {
     // Users can resolve their own annotations, or moderators can resolve any
     const canResolve =
       this.isSuperAdmin(session) ||
-      this.isOwner(session.id, annotation.userId) ||
+      this.isOwner(annotation.userId) ||
       (await this.hasPermission(session.id, "resolve:annotation", "page", annotation.pageId));
 
     if (!canResolve) {

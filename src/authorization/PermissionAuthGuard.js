@@ -31,7 +31,7 @@ class PermissionAuthGuard extends BaseAuthGuard {
     }
 
     // Users can only access their own created permissions
-    if (permission.ownerId && !this.isOwner(session.id, permission.ownerId)) {
+    if (permission.ownerId && !this.isOwner(permission.ownerId)) {
       Logger.warn(
         `User ${session.id} attempted to access permission ${permissionId} without ownership`
       );
@@ -81,7 +81,7 @@ class PermissionAuthGuard extends BaseAuthGuard {
 
     // Custom permissions can only be updated by their owners or super admins
     if (permission.ownerId && !this.isSuperAdmin(session)) {
-      this.requireOwnership(session.id, permission.ownerId, "permission");
+      this.requireOwnership(permission.ownerId, "permission");
     }
 
     return permission;
@@ -109,7 +109,7 @@ class PermissionAuthGuard extends BaseAuthGuard {
 
     // Custom permissions can only be deleted by their owners or super admins
     if (!this.isSuperAdmin(session)) {
-      this.requireOwnership(session.id, permission.ownerId, "permission");
+      this.requireOwnership(permission.ownerId, "permission");
     }
 
     // Check if permission is in use before deletion

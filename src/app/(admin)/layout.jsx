@@ -17,7 +17,6 @@ export const dynamic = "force-dynamic";
  * - Server-side admin privilege check
  */
 export default async function AdminLayout({ children }) {
-  await Session.requireAuth();
   const user = await Session.getCurrentUser();
 
   await protectAdmin();

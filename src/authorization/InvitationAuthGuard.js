@@ -37,7 +37,7 @@ class InvitationAuthGuard extends BaseAuthGuard {
     }
 
     // Inviter can access their sent invitations
-    if (this.isOwner(session.id, invitation.invitedBy)) {
+    if (this.isOwner(invitation.invitedBy)) {
       return invitation;
     }
 
@@ -187,12 +187,12 @@ class InvitationAuthGuard extends BaseAuthGuard {
     }
 
     // Inviter can cancel their own invitations
-    if (this.isOwner(session.id, invitation.invitedBy)) {
+    if (this.isOwner(invitation.invitedBy)) {
       return invitation;
     }
 
     // Workspace owners can cancel invitations to their workspace
-    if (this.isOwner(session.id, invitation.workspace.ownerId)) {
+    if (this.isOwner(invitation.workspace.ownerId)) {
       return invitation;
     }
 

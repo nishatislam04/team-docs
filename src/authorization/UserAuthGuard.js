@@ -37,7 +37,7 @@ class UserAuthGuard extends BaseAuthGuard {
     }
 
     // Users can only access their own profile
-    this.requireOwnership(session.id, userId, "user profile");
+    this.requireOwnership(userId, "user profile");
 
     return await this.validateResourceExists(
       (where) => prisma.user.findUnique(where),
@@ -102,7 +102,7 @@ class UserAuthGuard extends BaseAuthGuard {
     } else {
       // Users can update their own profile, admins can update any
       if (!this.isSuperAdmin(session)) {
-        this.requireOwnership(session.id, userId, "user profile");
+        this.requireOwnership(userId, "user profile");
       }
     }
 

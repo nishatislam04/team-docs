@@ -25,16 +25,14 @@ export class BaseAuthGuard {
   }
 
   /**
+   * THIS IS ACTUALLY NOT NEEDED. BECAUSE IT WAS HANDLED IN MIDDLEWARE
    * Require authentication - throws forbidden if not authenticated
    * @returns {Promise<Object>} User session object
    * @throws {Error} Forbidden error if not authenticated
    */
   static async requireAuth() {
     const session = await this.getSession();
-    if (!session) {
-      Logger.warn("Unauthorized access attempt");
-      this.redirectUnauthorized();
-    }
+    if (!session) return this.redirectUnauthorized();
     return session;
   }
 
@@ -63,12 +61,12 @@ export class BaseAuthGuard {
 
   /**
    * Check if user owns a resource
-   * @param {string} userId - User ID to check
    * @param {string} resourceOwnerId - Resource owner ID
    * @returns {boolean} True if user owns the resource
    */
-  static isOwner(userId, resourceOwnerId) {
-    return userId === resourceOwnerId;
+  static isOwner(resourceOwnerId) {
+    const session = this.getSession();
+    return session?.id === resourceOwnerId;
   }
 
   /**
@@ -78,17 +76,19 @@ export class BaseAuthGuard {
    * @param {string} resourceType - Type of resource for logging
    * @throws {Error} Forbidden error if not owner
    */
-  static requireOwnership(userId, resourceOwnerId, resourceType = "resource") {
-    if (!this.isOwner(userId, resourceOwnerId)) {
+  static requireOwnership(resourceOwnerId, resourceType = "resource") {
+    if (!this.isOwner(resourceOwnerId)) {
       Logger.warn(
-        `User ${userId} attempted unauthorized access to ${resourceType} owned by ${resourceOwnerId}`
+        `User ${
+          this.getSession().id
+        } attempted unauthorized access to ${resourceType} owned by ${resourceOwnerId}`
       );
       this.redirectUnauthorized();
     }
   }
 
   /**
-   * Check if user has workspace membership
+   * get if user is the dev of the workspace
    * @param {string} userId - User ID
    * @param {string} workspaceId - Workspace ID
    * @returns {Promise<Object|null>} Workspace membership or null

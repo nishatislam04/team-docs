@@ -3,6 +3,8 @@
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import { WorkspaceService } from "@/system/Services/WorkspaceService";
+import { UserServices } from "@/system/Services/UserServices";
 
 /**
  * WorkspaceAuthGuard - Authorization guard for workspace-related operations
@@ -11,6 +13,30 @@ import Logger from "@/lib/Logger";
  * for use in server components and actions.
  */
 class WorkspaceAuthGuard extends BaseAuthGuard {
+  /**
+   * Require workspace to be active
+   * @returns {Promise<boolean>} True if workspace is active
+   */
+  static async requireWorkspaceActive() {
+    const session = await this.requireAuth();
+    if (!session) return this.redirectUnauthorized();
+
+    const workspaceExists = await UserServices.hasResource({
+      where: { id: session.id },
+      select: { workspaceId: true },
+    });
+    if (!workspaceExists.workspaceId) return this.redirectUnauthorized();
+
+    const workspace = await WorkspaceService.getResource({
+      where: { id: workspaceExists.workspaceId },
+    });
+    if (!workspace) return this.redirectUnauthorized();
+
+    if (workspace.status !== "ACTIVE") return this.redirectUnauthorized();
+
+    return true;
+  }
+
   /**
    * Protect workspace access - requires membership
    * @param {string} workspaceId - Workspace ID to access
@@ -56,7 +82,7 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
 
     // Super admins can manage any workspace
     if (!this.isSuperAdmin(session)) {
-      this.requireOwnership(session.id, workspace.ownerId, "workspace");
+      this.requireOwnership(workspace.ownerId, "workspace");
     }
 
     return workspace;
@@ -82,7 +108,7 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
     }
 
     // Workspace owners can manage their workspace
-    if (this.isOwner(session.id, workspace.ownerId)) {
+    if (this.isOwner(workspace.ownerId)) {
       return { workspace, role: "owner" };
     }
 
@@ -137,7 +163,7 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
 
     // Only super admins or workspace owners can delete
     if (!this.isSuperAdmin(session)) {
-      this.requireOwnership(session.id, workspace.ownerId, "workspace");
+      this.requireOwnership(workspace.ownerId, "workspace");
     }
 
     return workspace;
@@ -163,7 +189,7 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
     }
 
     // Workspace owners can manage members
-    if (this.isOwner(session.id, workspace.ownerId)) {
+    if (this.isOwner(workspace.ownerId)) {
       return { workspace, canManage: true, role: "owner" };
     }
 
@@ -202,7 +228,7 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
     // Check if user can access workspace settings
     const canAccessSettings =
       this.isSuperAdmin(session) ||
-      this.isOwner(session.id, workspace.ownerId) ||
+      this.isOwner(workspace.ownerId) ||
       (await this.hasPermission(session.id, "view:settings", "workspace", workspaceId));
 
     if (!canAccessSettings) {
@@ -220,16 +246,16 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
    * @param {string} userId - User ID
    * @returns {Promise<boolean>} True if user can create workspaces
    */
-  static async canCreateWorkspace(userId) {
-    try {
-      // For now, all authenticated users can create workspaces
-      // This could be extended to check subscription limits, etc.
-      return true;
-    } catch (error) {
-      Logger.error("Failed to check workspace creation permission", error);
-      return false;
-    }
-  }
+  // static async canCreateWorkspace(userId) {
+  //   try {
+  //     // For now, all authenticated users can create workspaces
+  //     // This could be extended to check subscription limits, etc.
+  //     return true;
+  //   } catch (error) {
+  //     Logger.error("Failed to check workspace creation permission", error);
+  //     return false;
+  //   }
+  // }
 
   /**
    * Get user's role in workspace
@@ -303,6 +329,10 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
 }
 
 // Exported async functions for use in server components and actions
+export async function requireWorkspaceActive() {
+  return await WorkspaceAuthGuard.requireWorkspaceActive();
+}
+
 export async function protectWorkspace(workspaceId) {
   return await WorkspaceAuthGuard.protect(workspaceId);
 }

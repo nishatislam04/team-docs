@@ -31,7 +31,7 @@ class RoleAuthGuard extends BaseAuthGuard {
     }
 
     // Users can access system roles or their own created roles
-    if (!role.isSystem && !this.isOwner(session.id, role.ownerId)) {
+    if (!role.isSystem && !this.isOwner(role.ownerId)) {
       Logger.warn(`User ${session.id} attempted to access role ${roleId} without permission`);
       this.redirectUnauthorized();
     }
@@ -79,7 +79,7 @@ class RoleAuthGuard extends BaseAuthGuard {
 
     // Custom roles can only be updated by their owners or super admins
     if (!role.isSystem && !this.isSuperAdmin(session)) {
-      this.requireOwnership(session.id, role.ownerId, "role");
+      this.requireOwnership(role.ownerId, "role");
     }
 
     return role;
@@ -107,7 +107,7 @@ class RoleAuthGuard extends BaseAuthGuard {
 
     // Custom roles can only be deleted by their owners or super admins
     if (!this.isSuperAdmin(session)) {
-      this.requireOwnership(session.id, role.ownerId, "role");
+      this.requireOwnership(role.ownerId, "role");
     }
 
     // Check if role is in use before deletion
