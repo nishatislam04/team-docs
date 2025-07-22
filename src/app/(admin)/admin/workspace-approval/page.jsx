@@ -7,8 +7,7 @@ import { WorkspaceService } from "@/system/Services/WorkspaceService";
 import WorkspaceDetailsDialog from "./components/WorkspaceDetailsDialog";
 import WorkspaceApprovalDialog from "./components/WorkspaceApprovalDialog";
 import WorkspaceRejectionDialog from "./components/WorkspaceRejectionDialog";
-import { revalidatePath } from "next/cache";
-import Logger from "@/lib/Logger";
+import { protectAdmin } from "@/authorization/AdminAuthGuard";
 
 /**
  * Workspace Approval Page
@@ -17,8 +16,7 @@ import Logger from "@/lib/Logger";
  * Fetches real pending workspaces from database and provides approval/rejection functionality.
  */
 export default async function WorkspaceApprovalPage() {
-  // Ensure user is authenticated (layout handles admin check)
-  await Session.requireAuth();
+  await protectAdmin();
 
   // Fetch pending workspaces from database
   const pendingWorkspaces = await WorkspaceService.getPendingWorkspaces();

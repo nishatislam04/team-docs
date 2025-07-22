@@ -12,6 +12,9 @@ import { WorkspaceModel } from "../Models/WorkspaceModel";
 import bcrypt from "bcryptjs";
 import { Session } from "@/lib/Session";
 
+/**
+ * This is probably from landing page registration
+ */
 class RegistrationAction extends BaseAction {
   static get schema() {
     return z

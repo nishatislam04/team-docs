@@ -4,9 +4,9 @@ generator client {
 }
 
 generator custom {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x", "rhel-openssl-3.0.x"]
-  output   = "../src/generated/client" 
+  output        = "../src/generated/client"
 }
 
 datasource db {
@@ -17,15 +17,15 @@ datasource db {
 // ==================== USER & AUTHENTICATION ===================
 
 model User {
-  id          String   @id @default(cuid())
-  username    String   @unique
-  email       String   @unique
-  password    String
-  status      UserStatus   @default(ACTIVE) 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  workspaceId String?
-  isWorkspaceOwner Boolean @default(false)
+  id               String     @id @default(cuid())
+  username         String     @unique
+  email            String     @unique
+  password         String
+  status           UserStatus @default(ACTIVE)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  workspaceId      String?
+  isWorkspaceOwner Boolean    @default(false)
   // name       String?
   // avatar     String? // URL to avatar image
 
@@ -60,7 +60,7 @@ enum UserStatus {
 
 model Role {
   id          String   @id @default(cuid())
-  name        String
+  name        String   @unique @default("DEVELOPER")
   description String?
   isSystem    Boolean  @default(false) // True for default roles (Admin, Developer, Viewer)
   createdAt   DateTime @default(now())
@@ -75,6 +75,14 @@ model Role {
   projectMembers   ProjectMember[] // Users with this role at project level
 
   @@unique([ownerId, name]) // ✅ name must be unique only within same user
+}
+
+enum UserRole {
+  ADMIN
+  DEVELOPER
+  VIEWER
+  PROJECT_MANAGER
+  SUPPORT
 }
 
 model Permission {
@@ -117,15 +125,15 @@ model RolePermissionAssignment {
 // ==================== WORKSPACE & ORGANIZATION ====================
 
 model Workspace {
-  id          String   @id @default(cuid())
+  id          String          @id @default(cuid())
   name        String
   slug        String // URL-friendly identifier
   description String?
   logo        String? // URL to logo image
-  status      WorkspaceStatus   @default(PENDING) // New field for registration status
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  ownerId     String   @unique
+  status      WorkspaceStatus @default(PENDING) // New field for registration status
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  ownerId     String          @unique
 
   // Relationships
   owner    User              @relation("workspaceCreator", fields: [ownerId], references: [id])
@@ -166,7 +174,7 @@ model WorkspaceMember {
 // ==================== PROJECT MODULE ====================
 
 model Project {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   name        String
   slug        String
   description String?
@@ -174,9 +182,9 @@ model Project {
   color       String?
   workspaceId String
   ownerId     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  isArchived  Boolean  @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  isArchived  Boolean       @default(false)
   status      ProjectStatus @default(ACTIVE)
 
   // Relationships

@@ -9,6 +9,7 @@ import { SectionSchema } from "@/lib/schemas/SectionSchema";
 import { SectionModel } from "../Models/SectionModel";
 import { ProjectService } from "../Services/ProjectServices";
 import { SectionServices } from "../Services/SectionServices";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 
 class SectionActions extends BaseAction {
   static get schema() {
@@ -16,6 +17,8 @@ class SectionActions extends BaseAction {
   }
 
   static async create(formData) {
+    await requireWorkspaceAdmin();
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -55,6 +58,7 @@ class SectionActions extends BaseAction {
   }
 
   static async update(sectionId, formData) {
+    await requireWorkspaceAdmin();
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -90,6 +94,8 @@ class SectionActions extends BaseAction {
   }
 
   static async delete(sectionId) {
+    await requireWorkspaceAdmin();
+
     try {
       Logger.debug(sectionId, "delete section");
       // const section = await SectionServices.getResource({

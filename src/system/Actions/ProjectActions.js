@@ -7,6 +7,7 @@ import { Session } from "@/lib/Session";
 import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
 import { WorkspaceService } from "../Services/WorkspaceService";
 import { ProjectService } from "../Services/ProjectServices";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 
 class ProjectAction extends BaseAction {
   static get schema() {
@@ -14,6 +15,8 @@ class ProjectAction extends BaseAction {
   }
 
   static async create(formData) {
+    await requireWorkspaceAdmin();
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -55,12 +58,12 @@ class ProjectAction extends BaseAction {
   }
 
   static async update(projectId, formData) {
+    await requireWorkspaceAdmin();
     const result = await this.execute(formData);
 
     if (!result.success) return result;
 
     try {
-      Logger.debug("Updating project", { projectId, data: result.data });
       await ProjectService.updateResource(projectId, result.data);
 
       return {
@@ -83,8 +86,9 @@ class ProjectAction extends BaseAction {
   }
 
   static async delete(projectId) {
+    await requireWorkspaceAdmin();
+
     try {
-      Logger.debug("Deleting project", { projectId });
       await ProjectService.deleteResource(projectId);
 
       return {

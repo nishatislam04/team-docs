@@ -122,27 +122,27 @@ async function main() {
   // Create system roles
   const systemRoles = [
     {
-      name: "Admin",
+      name: "ADMIN",
       description: "Full access to all settings and data",
       isSystem: true,
     },
     {
-      name: "Developer",
+      name: "DEVELOPER",
       description: "Can access and modify development resources",
       isSystem: true,
     },
     {
-      name: "Viewer",
+      name: "VIEWER",
       description: "Can view data but cannot make changes",
       isSystem: true,
     },
     {
-      name: "Project Manager",
+      name: "PROJECT_MANAGER",
       description: "Manages project timelines and members",
       isSystem: true,
     },
     {
-      name: "Support",
+      name: "SUPPORT",
       description: "Handles user queries and support tickets",
       isSystem: true,
     },

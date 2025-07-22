@@ -3,9 +3,12 @@ import { BaseAction } from "./BaseAction";
 import { ProjectUserPermissionService } from "../Services/ProjectUserPermissionService";
 import { revalidatePath } from "next/cache";
 import Logger from "@/lib/Logger";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 
 class ProjectPermissionAction extends BaseAction {
   static async assignDev(formData) {
+    await requireWorkspaceAdmin();
+
     const result = await ProjectUserPermissionService.assignDev(formData);
 
     return {
@@ -16,6 +19,8 @@ class ProjectPermissionAction extends BaseAction {
   }
 
   static async removeDevFromProject(formData) {
+    await requireWorkspaceAdmin();
+
     try {
       await ProjectUserPermissionService.removeDevFromProject(formData);
 
@@ -37,6 +42,8 @@ class ProjectPermissionAction extends BaseAction {
   }
 
   static async modifyDevPermissions(formData) {
+    await requireWorkspaceAdmin();
+
     const result = await ProjectUserPermissionService.modifyDevPermissions(formData);
 
     return {

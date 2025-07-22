@@ -19,8 +19,6 @@ export const dynamic = "force-dynamic";
 export default async function AdminLayout({ children }) {
   const user = await Session.getCurrentUser();
 
-  await protectAdmin();
-
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("admin_sidebar_state")?.value === "true";
 

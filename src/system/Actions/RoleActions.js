@@ -8,6 +8,7 @@ import { RoleModel } from "../Models/RoleModel";
 import { Session } from "@/lib/Session";
 import { revalidatePath } from "next/cache";
 import { RoleService } from "../Services/RoleServices";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 
 class RoleActions extends BaseAction {
   static get schema() {
@@ -15,6 +16,8 @@ class RoleActions extends BaseAction {
   }
 
   static async create(formData) {
+    await requireWorkspaceAdmin();
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -49,6 +52,8 @@ class RoleActions extends BaseAction {
   }
 
   static async update(roleId, formData) {
+    await requireWorkspaceAdmin();
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -77,6 +82,8 @@ class RoleActions extends BaseAction {
   }
 
   static async delete(roleId) {
+    await requireWorkspaceAdmin();
+
     try {
       await RoleService.deleteResource(roleId);
 

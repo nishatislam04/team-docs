@@ -3,7 +3,6 @@
 import { signIn } from "@/app/auth";
 import { signInSchema } from "./signinSchema";
 import prisma from "@/lib/prisma";
-import Logger from "@/lib/Logger";
 import { redirect } from "next/navigation";
 
 export async function signin(prevState, formData) {

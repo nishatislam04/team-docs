@@ -8,6 +8,7 @@ import { PermissionSchema } from "@/lib/schemas/PermissionSchema";
 import { PermissionModel } from "../Models/PermissionModel";
 import { PermissionServices } from "../Services/PermissionServices";
 import { revalidatePath } from "next/cache";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 
 class PermissionActions extends BaseAction {
   static get schema() {
@@ -15,6 +16,8 @@ class PermissionActions extends BaseAction {
   }
 
   static async create(formData) {
+    await requireWorkspaceAdmin();
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -48,6 +51,8 @@ class PermissionActions extends BaseAction {
   }
 
   static async update(permissionId, formData) {
+    await requireWorkspaceAdmin();
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -77,6 +82,8 @@ class PermissionActions extends BaseAction {
   }
 
   static async delete(permissionId) {
+    await requireWorkspaceAdmin();
+
     try {
       await PermissionServices.deleteResource(permissionId);
 

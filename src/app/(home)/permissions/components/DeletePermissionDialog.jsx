@@ -25,7 +25,6 @@ export default function DeletePermissionDialog({ permission, setStartFetchPermis
   const handleDelete = async () => {
     try {
       setIsDeleting(true);
-      Logger.debug("Deleting permission", { permissionId: permission.id });
 
       const result = await deletePermissionAction(null, permission.id);
 

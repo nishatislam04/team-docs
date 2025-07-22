@@ -7,7 +7,7 @@ export const UserSchema = z.object({
     .min(3, "Email must be at least 3 characters")
     .email("Please enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters").optional(),
-  status: z.string().default("ACTIVE").optional(),
+  // status: z.string().default("ACTIVE").optional(),
 });
 
 // this is probably from landing page user creation

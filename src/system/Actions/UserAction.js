@@ -6,23 +6,54 @@ import Logger from "@/lib/Logger";
 import { Session } from "@/lib/Session";
 import { AdminUpdatingUserSchema, UserSchema } from "@/lib/schemas/UserSchema";
 import { UserModel } from "../Models/UserModel";
+import bcrypt from "bcryptjs";
+import { WorkspaceMemberModel } from "../Models/WorkspaceMemberModel";
+import { RoleService } from "../Services/RoleServices";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 
 class UserActions extends BaseAction {
   static get schema() {
     return UserSchema;
   }
 
+  /**
+   * This user is created by workspace admin
+   * @param {*} formData
+   * @returns
+   */
   static async create(formData) {
+    await requireWorkspaceAdmin();
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
 
     try {
       const session = await Session.getCurrentUser();
-      await UserModel.create({
+      const hashedPassword = await bcrypt.hash(result.data.password, 10);
+
+      const user = await UserModel.create({
         ...result.data,
         status: "ACTIVE",
         workspaceId: session.workspaceId,
+        password: hashedPassword,
+      });
+
+      const role = await RoleService.getResource({
+        where: {
+          name: "DEVELOPER",
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      // also inject the user to workspace members model
+      await WorkspaceMemberModel.create({
+        workspaceId: user.workspaceId,
+        userId: user.id,
+        roleId: role.id,
+        joinedAt: user.createdAt,
       });
 
       return {
@@ -46,6 +77,8 @@ class UserActions extends BaseAction {
   }
 
   static async delete(userId) {
+    await requireWorkspaceAdmin();
+
     try {
       await UserModel.delete({
         where: {
@@ -71,6 +104,8 @@ class UserActions extends BaseAction {
   }
 
   static async update(formData) {
+    await requireWorkspaceAdmin();
+
     const result = await this.execute(formData, AdminUpdatingUserSchema);
 
     if (!result.success) return result;

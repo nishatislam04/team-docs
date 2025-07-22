@@ -28,13 +28,21 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
     if (!workspaceExists) return this.redirectUnauthorized();
 
     const workspace = await WorkspaceService.getResource({
-      where: { ownerId: session.id },
+      where: { id: session.workspaceId },
     });
     if (!workspace) return this.redirectUnauthorized();
 
     if (workspace.status !== "ACTIVE") return this.redirectUnauthorized();
 
     return true;
+  }
+
+  /**
+   * Require workspace admin privileges
+   * @returns {Promise<boolean>} True if user is workspace admin
+   */
+  static async requireWorkspaceAdmin() {
+    return await this.isWorkspaceAdmin();
   }
 
   /**
@@ -331,6 +339,10 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
 // Exported async functions for use in server components and actions
 export async function requireWorkspaceActive() {
   return await WorkspaceAuthGuard.requireWorkspaceActive();
+}
+
+export async function requireWorkspaceAdmin() {
+  return await WorkspaceAuthGuard.requireWorkspaceAdmin();
 }
 
 export async function protectWorkspace(workspaceId) {

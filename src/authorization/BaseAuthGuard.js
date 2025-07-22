@@ -2,6 +2,7 @@ import { Session } from "@/lib/Session";
 import { redirect, notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import Logger from "@/lib/Logger";
+import { UserServices } from "@/system/Services/UserServices";
 
 /**
  * BaseAuthGuard - Laravel-like authorization base class
@@ -18,8 +19,7 @@ export class BaseAuthGuard {
   static async getSession() {
     try {
       return await Session.getCurrentUser();
-    } catch (error) {
-      Logger.error("Failed to get session", error);
+    } catch (_) {
       return null;
     }
   }
@@ -52,11 +52,29 @@ export class BaseAuthGuard {
    */
   static async requireSuperAdmin() {
     const session = await this.requireAuth();
-    if (!this.isSuperAdmin(session)) {
-      Logger.warn(`Non-admin user ${session.id} attempted admin access`);
-      return this.redirectUnauthorized();
-    }
+    if (!this.isSuperAdmin(session)) return this.redirectUnauthorized();
+
     return session;
+  }
+
+  /**
+   * Require workspace admin privileges
+   * This is now our prismary function to perform authorization
+   * @returns {Promise<boolean>} True if user is workspace admin
+   * @throws {Error} Forbidden error if not workspace admin
+   */
+  static async isWorkspaceAdmin() {
+    const session = await this.requireAuth();
+    if (!session) return this.redirectUnauthorized();
+
+    const user = await UserServices.getResource({
+      where: { id: session.id },
+      select: { isWorkspaceOwner: true },
+    });
+
+    if (!user.isWorkspaceOwner) return this.redirectUnauthorized();
+
+    return true;
   }
 
   /**

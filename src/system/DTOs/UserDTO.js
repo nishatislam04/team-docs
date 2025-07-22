@@ -4,9 +4,10 @@ export class UserDTO {
       id: user.id,
       username: user.username,
       email: user.email,
+      status: user.status,
+      isWorkspaceOwner: user.isWorkspaceOwner,
       createdAt: user?.createdAt?.toISOString(),
       updatedAt: user?.updatedAt?.toISOString(),
-      status: user.status,
     };
   }
 
