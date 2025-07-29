@@ -16,17 +16,18 @@ import dynamic from "next/dynamic";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import { useRoles } from "../hooks/useRoles";
 import TableLoading from "@/components/loading/TableLoading";
-import DrawerLoading from "@/components/loading/DialogLoading";
+import DialogLoading from "@/components/loading/DialogLoading";
 import ClientErrorUI from "@/components/abstracts/clientErrorUI";
 import RoleEditDialog from "./RoleEditDialog";
 import DeleteRoleDialog from "./DeleteRoleDialog";
 import TablePagination from "@/components/shared/TablePagination";
+import SortIcon from "@/components/shared/SortIcon";
 
 const LoadRolePermissionDialogLazy = dynamic(
   () => import("@/app/(home)/role-permission-assign/RolePermissionDialog"),
   {
     ssr: false,
-    loading: () => <DrawerLoading />,
+    loading: () => <DialogLoading />,
   }
 );
 
@@ -49,18 +50,6 @@ export default function RoleListings({
     openPermissionAssignDialog,
     setOpenPermissionAssignDialog,
   } = useRoles(shouldStartFetchRoles, setShouldStartFetchRoles);
-
-  // Function to render sort indicator icons
-  const renderSortIcon = (column) => {
-    if (column === sortBy) {
-      return sortOrder === "asc" ? (
-        <ChevronUp className="ml-2 w-4 h-4" />
-      ) : (
-        <ChevronDown className="ml-2 w-4 h-4" />
-      );
-    }
-    return <ArrowUpDown className="ml-2 w-4 h-4 opacity-50" />;
-  };
 
   // State for editing role
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -102,7 +91,7 @@ export default function RoleListings({
               >
                 <div className="flex items-center">
                   Name
-                  {renderSortIcon("name")}
+                  <SortIcon columnName="name" sortBy={sortBy} sortOrder={sortOrder} />
                 </div>
               </TableHead>
               <TableHead className="w-[300px] px-6 py-4">Description</TableHead>
@@ -112,7 +101,7 @@ export default function RoleListings({
               >
                 <div className="flex justify-center items-center">
                   System?
-                  {renderSortIcon("isSystem")}
+                  <SortIcon columnName="isSystem" sortBy={sortBy} sortOrder={sortOrder} />
                 </div>
               </TableHead>
               <TableHead className="w-[320px] text-center px-6 py-4">Actions</TableHead>

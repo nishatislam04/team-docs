@@ -13,7 +13,8 @@ import bcrypt from "bcryptjs";
 import { Session } from "@/lib/Session";
 
 /**
- * This is probably from landing page registration
+ * This is probably from landing page Registration
+ * NOT signup
  */
 class RegistrationAction extends BaseAction {
   static get schema() {

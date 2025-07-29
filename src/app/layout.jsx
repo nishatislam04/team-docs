@@ -7,6 +7,11 @@ export const metadata = {
     "Company documentation collaboration system with workspace, projects, sections and pages",
 };
 
+/**
+ * ! check if our useToast work properly for this <Toaster  />
+ * ! like provide some options.
+ */
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>

@@ -3,17 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import {
-  Github,
-  Twitter,
-  Linkedin,
-  Facebook,
-  Instagram,
-  ChevronRight,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { Github, Twitter, Linkedin, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();

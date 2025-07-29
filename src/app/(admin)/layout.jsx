@@ -7,27 +7,13 @@ import { protectAdmin } from "@/authorization/AdminAuthGuard";
 
 export const dynamic = "force-dynamic";
 
-/**
- * Admin Layout Component
- *
- * This layout wraps all admin routes and provides:
- * - Theme provider for consistent theming
- * - Session provider for authentication context
- * - Admin-specific layout with sidebar and header
- * - Server-side admin privilege check
- */
 export default async function AdminLayout({ children }) {
   const user = await Session.getCurrentUser();
-
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("admin_sidebar_state")?.value === "true";
 
   return (
     <SessionProvider>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-        <ConditionalAdminLayout defaultOpen={defaultOpen} user={user}>
-          {children}
-        </ConditionalAdminLayout>
+        <ConditionalAdminLayout user={user}>{children}</ConditionalAdminLayout>
       </ThemeProvider>
     </SessionProvider>
   );

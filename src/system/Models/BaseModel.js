@@ -47,8 +47,12 @@ export class BaseModel {
     return await this.model.deleteMany({ where });
   }
 
-  static async findUnique({ where, select }) {
-    return await this.model.findUnique({ where, ...(select && { select }) });
+  static async findUnique({ where, select, include }) {
+    return await this.model.findUnique({
+      where,
+      ...(select && { select }),
+      ...(include && { include }),
+    });
   }
 
   static async findMany({ where, select, orderBy = { createdAt: "desc" }, include }) {

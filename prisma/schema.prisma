@@ -60,9 +60,9 @@ enum UserStatus {
 
 model Role {
   id          String   @id @default(cuid())
-  name        String   @unique @default("DEVELOPER")
+  name        String?
   description String?
-  isSystem    Boolean  @default(false) // True for default roles (Admin, Developer, Viewer)
+  isSystem    Boolean  @default(false)
   createdAt   DateTime @default(now())
 
   // ✅ Optional reference to User
@@ -86,15 +86,19 @@ enum UserRole {
 }
 
 model Permission {
-  id          String   @id @default(cuid())
-  name        String // e.g., "create:page", "update:project", etc.
+  id          String             @id @default(cuid())
+  name        String?
   description String?
-  scope       String // e.g., "workspace", "project", "page", "user"
-  createdAt   DateTime @default(now())
+  status      PermissionStatus   @default(PENDING)
+  scope       PermissionScope
+  action      PermissionAction
+  resource    PermissionResource
+  createdAt   DateTime           @default(now())
 
   // ✅ Optional reference to User
-  ownerId   String?
-  createdBy User?   @relation(fields: [ownerId], references: [id])
+  workspaceId String?
+  ownerId     String?
+  createdBy   User?   @relation(fields: [ownerId], references: [id])
 
   // Relationships
   roles                  RolePermissionAssignment[]
@@ -102,6 +106,34 @@ model Permission {
   // @@unique([ownerId, scope])
 
   @@unique([ownerId, name])
+}
+
+enum PermissionScope {
+  SYSTEM
+  WORKSPACE
+}
+
+enum PermissionAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+}
+
+enum PermissionResource {
+  WORKSPACE
+  PROJECT
+  SECTION
+  PAGE
+  USER
+  ROLE
+  PERMISSION
+}
+
+enum PermissionStatus {
+  ACTIVE
+  PENDING
+  INACTIVE
 }
 
 model RolePermissionAssignment {

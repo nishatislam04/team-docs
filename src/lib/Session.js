@@ -1,6 +1,7 @@
 import { auth } from "@/app/auth";
 import { forbidden } from "next/navigation";
 import { UserModel } from "@/system/Models/UserModel";
+import Logger from "./Logger";
 
 export class Session {
   /**
@@ -8,8 +9,12 @@ export class Session {
    * @returns {Promise<UserModel|null>}
    */
   static async getCurrentUser() {
-    const session = await auth();
-    return session?.user || null;
+    try {
+      const session = await auth();
+      return session?.user || null;
+    } catch (err) {
+      Logger.error(err.message, "failed to get current user session");
+    }
   }
 
   /**
@@ -27,9 +32,7 @@ export class Session {
    */
   static async requireAuth() {
     const isAuth = await this.isAuthenticated();
-    if (!isAuth) {
-      forbidden();
-    }
+    if (!isAuth) return forbidden();
   }
 
   /**
@@ -45,8 +48,8 @@ export class Session {
       });
 
       return user?.workspaceId;
-    } catch (error) {
-      console.error("[Session.getWorkspaceId] Error:", error);
+    } catch (err) {
+      Logger.error(err.message, "getting workspace id error");
       return null;
     }
   }
@@ -66,21 +69,4 @@ export class Session {
     // Fallback to database
     return this.getWorkspaceId(session.id);
   }
-
-  // static async requireRole(role) {
-  // 	await this.requireAuth();
-  // 	const hasRole = await this.isAuthorized(role);
-  // 	if (!hasRole) {
-  // 		// This will trigger the unauthorized page
-  // 		throw new Error("Unauthorized");
-  // 	}
-  // }
-
-  // static async isAuthorized(requiredRole) {
-  // 	const user = await this.getCurrentUser();
-  // 	if (!user) return false;
-
-  // 	// Placeholder for role check - customize as needed
-  // 	return true; // Replace with actual role check logic
-  // }
 }

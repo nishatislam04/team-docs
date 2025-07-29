@@ -1,12 +1,11 @@
 "use client";
 
 import { Spinner } from "@/components/ui/spinner";
-import { useDrawerLoadingStore } from "@/stores/useDrawerLoadingStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function DrawerLoading() {
-  const isDrawerReady = useDrawerLoadingStore((s) => s.isDrawerReady);
+  const [isDrawerReady, setIsDraweReady] = useState(false);
   const [show, setShow] = useState(true);
 
   useEffect(() => {

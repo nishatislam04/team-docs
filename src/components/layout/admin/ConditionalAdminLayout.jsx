@@ -17,12 +17,10 @@ import { AdminRefreshProvider } from "@/components/layout/admin/AdminRefreshCont
  * @param {boolean} props.defaultOpen - Default sidebar open state
  * @param {Object} props.user - Current user object
  */
-export default function ConditionalAdminLayout({ children, defaultOpen, user }) {
-  const pathname = usePathname();
-
+export default function ConditionalAdminLayout({ children, user }) {
   return (
     <AdminRefreshProvider>
-      <SidebarProvider defaultOpen={defaultOpen}>
+      <SidebarProvider>
         <div className="flex min-h-screen w-full admin-sidebar">
           <AdminSidebar />
           <div className="flex flex-1 flex-col overflow-hidden">

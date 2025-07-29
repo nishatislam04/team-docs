@@ -1,5 +1,4 @@
-import dynamic from "next/dynamic";
-const SignInForm = dynamic(() => import("./SignInForm"));
+import SignInForm from "./SignInForm";
 
 export default async function SignInPage() {
   return (

@@ -54,26 +54,31 @@ toastError("Error!", "Something went wrong");
 ## Toast Types
 
 ### Success Toast
+
 ```jsx
 toast.success("Success!", "Your changes have been saved.");
 ```
 
 ### Error Toast
+
 ```jsx
 toast.error("Error!", "Failed to save changes. Please try again.");
 ```
 
 ### Warning Toast
+
 ```jsx
 toast.warning("Warning!", "Please review your input before proceeding.");
 ```
 
 ### Info Toast
+
 ```jsx
 toast.info("Info", "Here's some helpful information.");
 ```
 
 ### Loading Toast
+
 ```jsx
 const loadingToastId = toast.loading("Loading", "Processing your request...");
 // Later dismiss it
@@ -102,10 +107,11 @@ toast.showNetworkError("Failed to connect to server");
 ## Advanced Features
 
 ### Promise Handling
+
 ```jsx
 const saveData = async () => {
   // Your async operation
-  return fetch('/api/save', { method: 'POST' });
+  return fetch("/api/save", { method: "POST" });
 };
 
 toast.promise(saveData(), {
@@ -116,17 +122,15 @@ toast.promise(saveData(), {
 ```
 
 ### Async Operations with Loading States
+
 ```jsx
 const handleAsyncOperation = async () => {
   try {
-    await toast.handleAsync(
-      () => fetch('/api/data').then(res => res.json()),
-      {
-        loadingMessage: "Fetching data...",
-        successMessage: "Data loaded successfully!",
-        errorMessage: "Failed to load data",
-      }
-    );
+    await toast.handleAsync(() => fetch("/api/data").then((res) => res.json()), {
+      loadingMessage: "Fetching data...",
+      successMessage: "Data loaded successfully!",
+      errorMessage: "Failed to load data",
+    });
   } catch (error) {
     console.error("Operation failed:", error);
   }
@@ -134,6 +138,7 @@ const handleAsyncOperation = async () => {
 ```
 
 ### Custom Options
+
 ```jsx
 toast.success("Custom Toast", "This toast has custom options", {
   duration: 10000, // 10 seconds
@@ -168,9 +173,9 @@ The toast system automatically adapts to your app's theme:
 
 - **Light Mode**: Clean white background with subtle shadows
 - **Dark Mode**: Dark background with appropriate contrast
-- **Colors**: 
+- **Colors**:
   - Success: Green theme
-  - Error: Red theme  
+  - Error: Red theme
   - Warning: Orange theme
   - Info: Blue theme
 
@@ -191,6 +196,7 @@ The system uses CSS variables that can be customized:
 ## Mobile Responsiveness
 
 On mobile devices (< 640px):
+
 - Toasts span the full width with margins
 - Animation changes from horizontal slide to vertical slide
 - Positioning adjusts for better mobile UX
@@ -211,7 +217,7 @@ const {
   custom,
   dismiss,
   dismissAll,
-  
+
   // Convenience methods
   showFormSuccess,
   showFormError,
@@ -220,7 +226,7 @@ const {
   showDeleteSuccess,
   showCreateSuccess,
   showUpdateSuccess,
-  
+
   // Utility methods
   handleAsync,
 } = useToast();
@@ -242,10 +248,6 @@ import {
 } from "@/lib/toast";
 ```
 
-## Demo
-
-Visit `/toast-demo` to see all toast types and features in action.
-
 ## Best Practices
 
 1. **Use appropriate types**: Match the toast type to the message context
@@ -254,20 +256,3 @@ Visit `/toast-demo` to see all toast types and features in action.
 4. **Handle errors gracefully**: Always show user-friendly error messages
 5. **Use convenience methods**: Leverage pre-configured methods for common cases
 6. **Test on mobile**: Ensure toasts work well on all screen sizes
-
-## Migration from Basic Sonner
-
-If you're migrating from basic Sonner usage:
-
-```jsx
-// Old way
-import { toast } from "sonner";
-toast.success("Success", { description: "It worked!" });
-
-// New way
-import { useToast } from "@/hooks/useToast";
-const toast = useToast();
-toast.success("Success", "It worked!");
-```
-
-The new system provides better TypeScript support, consistent styling, and enhanced functionality while maintaining backward compatibility.

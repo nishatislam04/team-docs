@@ -5,14 +5,6 @@ import { protectAdmin } from "@/authorization/AdminAuthGuard";
 
 export const dynamic = "force-dynamic";
 
-/**
- * Admin Dashboard Page
- *
- * Main landing page for the admin panel providing:
- * - Overview of system statistics
- * - Quick access to main admin functions
- * - System health indicators
- */
 export default async function AdminDashboard() {
   await protectAdmin();
 

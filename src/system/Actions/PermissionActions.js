@@ -108,7 +108,7 @@ export async function createPermissions(formData) {
   return await PermissionActions.create(formData);
 }
 
-export async function updatePermissionAction(prevState, { permissionId, formData }) {
+export async function updatePermissionAction({ permissionId, formData }) {
   return await PermissionActions.update(permissionId, formData);
 }
 

@@ -21,7 +21,7 @@ const nextConfig = {
   },
   experimental: {
     authInterrupts: true,
-    ppr: "incremental",
+    // ppr: "incremental",
     // Forward browser logs to the terminal for easier debugging
     browserDebugInfoInTerminal: true,
 
@@ -32,7 +32,7 @@ const nextConfig = {
     devtoolSegmentExplorer: true,
 
     // Enable persistent caching for the turbopack dev server and build.
-    turbopackPersistentCaching: true,
+    // turbopackPersistentCaching: true,
   },
   webpack: (config, { isServer }) => {
     if (isServer) {

@@ -43,6 +43,7 @@ export default function PermissionCreateDialog({
   const [permissionScopeStatus, setPermissionScopeStatus] = useState("general");
   const [projects, setProjects] = useState([]);
 
+  // ! maybe use react use() or transition not useEFFECT!
   useEffect(() => {
     getAllProjectsFn().then((res) => {
       setProjects(res);

@@ -9,6 +9,7 @@ import { Session } from "@/lib/Session";
 import { WorkspaceService } from "../Services/WorkspaceService";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { PermissionModel } from "../Models/PermissionModel";
 
 class WorkspaceAction extends BaseAction {
   static get schema() {
@@ -64,13 +65,14 @@ class WorkspaceAction extends BaseAction {
 
       // Ensure user is authenticated and has admin privileges
       await Session.requireAuth();
-      const currentUser = await Session.getCurrentUser();
 
       // Check if workspace exists and is pending
       const workspace = await WorkspaceModel.findUnique({
         where: { id: validatedId },
-        include: { owner: { select: { username: true, email: true } } },
+        include: { owner: { select: { id: true, username: true, email: true } } },
       });
+
+      Logger.info(workspace, "Workspace found");
 
       if (!workspace) {
         return {
@@ -94,10 +96,11 @@ class WorkspaceAction extends BaseAction {
         data: { status: "ACTIVE" },
       });
 
+      // generate permissions for this workspace
+      await this.generatePermissions(validatedId, workspace.owner.id);
+
       // Revalidate all admin routes to refresh sidebar badge and other data
       revalidatePath("/admin", "layout");
-
-      Logger.info(`Workspace ${workspace.name} approved by admin ${currentUser.username}`);
 
       return {
         success: true,
@@ -191,6 +194,41 @@ class WorkspaceAction extends BaseAction {
         success: false,
         type: "fail",
         errors: { _form: ["Failed to reject workspace"] },
+      };
+    }
+  }
+
+  static async generatePermissions(workspaceId, ownerId) {
+    const resources = ["PROJECT", "USER", "ROLE", "PERMISSION", "SECTION", "PAGE"];
+    const actions = ["CREATE", "READ", "UPDATE", "DELETE"];
+
+    try {
+      // Create workspace-level permissions for the owner
+      for (const resource of resources) {
+        for (const action of actions) {
+          await PermissionModel.create({
+            workspaceId,
+            name: `${action} ${resource}`,
+            scope: "WORKSPACE",
+            action,
+            resource,
+            ownerId,
+          });
+        }
+      }
+
+      return {
+        success: true,
+        type: "success",
+        message: "Permissions generated successfully",
+      };
+    } catch (error) {
+      Logger.error(error.message, "Failed to generate permissions");
+
+      return {
+        success: false,
+        type: "fail",
+        errors: { _form: ["Failed to generate permissions"] },
       };
     }
   }

@@ -16,7 +16,7 @@ export default auth(async function middleware(request) {
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
 
-  // it looks like, we are using this in places. do not remove!
+  // it looks like, we are using these in places. do not remove!
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
 

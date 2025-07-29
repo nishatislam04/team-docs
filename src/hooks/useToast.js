@@ -101,69 +101,87 @@ export const useToast = () => {
   }, []);
 
   // Convenience methods for common use cases
-  const showFormSuccess = useCallback((message = "Changes saved successfully") => {
-    return success("Success", message);
-  }, [success]);
+  const showFormSuccess = useCallback(
+    (message = "Changes saved successfully") => {
+      return success("Success", message);
+    },
+    [success]
+  );
 
-  const showFormError = useCallback((message = "Please check your input and try again") => {
-    return error("Error", message);
-  }, [error]);
+  const showFormError = useCallback(
+    (message = "Please check your input and try again") => {
+      return error("Error", message);
+    },
+    [error]
+  );
 
-  const showNetworkError = useCallback((message = "Please check your connection and try again") => {
-    return error("Network Error", message);
-  }, [error]);
+  const showNetworkError = useCallback(
+    (message = "Please check your connection and try again") => {
+      return error("Network Error", message);
+    },
+    [error]
+  );
 
-  const showValidationError = useCallback((message = "Please fix the errors and try again") => {
-    return warning("Validation Error", message);
-  }, [warning]);
+  const showValidationError = useCallback(
+    (message = "Please fix the errors and try again") => {
+      return warning("Validation Error", message);
+    },
+    [warning]
+  );
 
-  const showDeleteSuccess = useCallback((itemName = "Item") => {
-    return success("Deleted", `${itemName} has been successfully deleted`);
-  }, [success]);
+  const showDeleteSuccess = useCallback(
+    (itemName = "Item") => {
+      return success("Deleted", `${itemName} has been successfully deleted`);
+    },
+    [success]
+  );
 
-  const showCreateSuccess = useCallback((itemName = "Item") => {
-    return success("Created", `${itemName} has been successfully created`);
-  }, [success]);
+  const showCreateSuccess = useCallback(
+    (itemName = "Item") => {
+      return success("Created", `${itemName} has been successfully created`);
+    },
+    [success]
+  );
 
-  const showUpdateSuccess = useCallback((itemName = "Item") => {
-    return success("Updated", `${itemName} has been successfully updated`);
-  }, [success]);
+  const showUpdateSuccess = useCallback(
+    (itemName = "Item") => {
+      return success("Updated", `${itemName} has been successfully updated`);
+    },
+    [success]
+  );
 
   // Handle async operations with loading states
-  const handleAsync = useCallback(async (
-    asyncFn,
-    {
-      loadingMessage = "Processing...",
-      successMessage = "Operation completed successfully",
-      errorMessage = "Something went wrong",
-      showLoading = true,
-    } = {}
-  ) => {
-    let loadingToastId;
-    
-    try {
-      if (showLoading) {
-        loadingToastId = loading("Loading", loadingMessage);
+  const handleAsync = useCallback(
+    async (
+      asyncFn,
+      {
+        loadingMessage = "Processing...",
+        successMessage = "Operation completed successfully",
+        errorMessage = "Something went wrong",
+        showLoading = true,
+      } = {}
+    ) => {
+      let loadingToastId;
+
+      try {
+        if (showLoading) loadingToastId = loading("Loading", loadingMessage);
+
+        const result = await asyncFn();
+
+        if (loadingToastId) dismiss(loadingToastId);
+
+        success("Success", successMessage);
+        return result;
+      } catch (error) {
+        if (loadingToastId) dismiss(loadingToastId);
+
+        const message = error?.message || errorMessage;
+        error("Error", message);
+        throw error;
       }
-
-      const result = await asyncFn();
-
-      if (loadingToastId) {
-        dismiss(loadingToastId);
-      }
-
-      success("Success", successMessage);
-      return result;
-    } catch (error) {
-      if (loadingToastId) {
-        dismiss(loadingToastId);
-      }
-
-      const message = error?.message || errorMessage;
-      error("Error", message);
-      throw error;
-    }
-  }, [loading, success, error, dismiss]);
+    },
+    [loading, success, error, dismiss]
+  );
 
   return {
     // Core toast methods

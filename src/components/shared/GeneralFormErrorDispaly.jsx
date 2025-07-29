@@ -1,3 +1,6 @@
+/**
+ * This shown general form error [_form]
+ */
 export default function GeneralFormErrorDispaly({ form }) {
   return (
     <>

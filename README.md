@@ -8,17 +8,16 @@
 
 ## 📦 Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
-- **Database**: PostgreSQL (via Docker)
+- **Framework**: Next.js 15 Canary(App Router)
+- **Database**: Prisma PostgreSQL
 - **ORM**: Prisma
 - **Package Manager**: Bun
 - **Styling**: Tailwind CSS v4
 - **UI Library**: ShadCN UI
-- **Editor**: Tiptap (rich text editing)
+- **Editor**: Tiptap (RTE)
 - **State Management**: Zustand
 - **Forms & Validation**: React Hook Form + Zod
 - **Icons**: Lucide React Icons
-- **Environment**: Dockerized setup for consistent local dev
 
 ---
 
@@ -46,7 +45,7 @@ curl -fsSL https://bun.sh/install | bash
 
 💡 After install, restart your terminal and run `bun --version` to verify installation.
 
-### 2. 🐳 Install Docker
+<!-- ### 2. 🐳 Install Docker
 
 Docker is required to run the database in a containerized environment.
 
@@ -66,21 +65,21 @@ curl -fsSL https://get.docker.com | bash
 # Add your user to the docker group to run without sudo (optional but recommended)
 sudo usermod -aG docker $USER
 newgrp docker
-```
+``` -->
 
-### 3. 📄 Create .env File
+### 2. 📄 Create .env File
 
 ```bash
 cp .env.example .env
 ```
 
-### 4. 📦 Install Dependencies (with Bun)
+### 3. 📦 Install Dependencies (with Bun)
 
 ```bash
 bun install
 ```
 
-> ⚠️ If `bun install` takes too long or stalls at postinstall, you can temporarily comment out the `postinstall` script in `package.json` to speed things up:
+> ⚠️ If `bun install` takes too long..., you can temporarily cut out the `postinstall` script in `package.json` to speed things up:
 
 ```json
 "scripts": {
@@ -88,10 +87,18 @@ bun install
 }
 ```
 
-### 5. 🐳 Start PostgreSQL + App with Docker
+<!-- ### 5. 🐳 Start PostgreSQL + App with Docker
 
 ```bash
 docker compose up
+``` -->
+
+### 4. Start The App
+
+> this will start `prisma studio` and `next.js local server`.
+
+```bash
+make dev
 ```
 
 ### 🌐 Visit the App
@@ -100,13 +107,11 @@ docker compose up
 http://localhost:3000
 ```
 
-# ✅ You're all set!
-
-The app should now be running in development mode with Docker and Bun.
-
 ---
 
-# view the database
+# ✅ You're all set!
+
+<!-- # view the database
 
 ### credentials
 
@@ -115,7 +120,7 @@ host: localhost
 port: 5432
 user: mazumder
 password: 1234
-```
+``` -->
 
 ---
 

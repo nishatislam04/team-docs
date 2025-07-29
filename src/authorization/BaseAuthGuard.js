@@ -19,7 +19,8 @@ export class BaseAuthGuard {
   static async getSession() {
     try {
       return await Session.getCurrentUser();
-    } catch (_) {
+    } catch (err) {
+      Logger.error(err.message, "failed to get user session");
       return null;
     }
   }

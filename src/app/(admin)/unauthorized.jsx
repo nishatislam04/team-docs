@@ -3,12 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Shield, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-/**
- * Admin Unauthorized Page
- *
- * Page shown when users try to access admin routes without proper permissions.
- * Provides clear messaging and navigation options.
- */
 export default function AdminUnauthorized() {
   return (
     <div className="flex items-center justify-center min-h-[60vh] p-6">

@@ -18,6 +18,7 @@ import { ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
 import UserDeleteDialog from "./UserDeleteDialog";
 import { useState } from "react";
 import UserEditDialog from "./UserEditDialog";
+import SortIcon from "@/components/shared/SortIcon";
 
 export default function UserListings({ setIsDialogOpen, shouldRefetch, setShouldRefetch }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -35,19 +36,6 @@ export default function UserListings({ setIsDialogOpen, shouldRefetch, setShould
   const handleEditClick = (user) => {
     setSelectedUserEdit(user);
     setIsEditDialogOpen(true);
-  };
-
-  // Function to render sort indicator icons
-  // extract this into re-usable components
-  const renderSortIcon = (column) => {
-    if (column === sortBy) {
-      return sortOrder === "asc" ? (
-        <ChevronUp className="ml-2 w-4 h-4" />
-      ) : (
-        <ChevronDown className="ml-2 w-4 h-4" />
-      );
-    }
-    return <ArrowUpDown className="ml-2 w-4 h-4 opacity-50" />;
   };
 
   return (
@@ -78,7 +66,7 @@ export default function UserListings({ setIsDialogOpen, shouldRefetch, setShould
               >
                 <div className="flex items-center">
                   Name
-                  {renderSortIcon("username")}
+                  <SortIcon columnName="username" sortBy={sortBy} sortOrder={sortOrder} />
                 </div>
               </TableHead>
               <TableHead
@@ -87,7 +75,7 @@ export default function UserListings({ setIsDialogOpen, shouldRefetch, setShould
               >
                 <div className="flex items-center">
                   Email
-                  {renderSortIcon("email")}
+                  <SortIcon columnName="email" sortBy={sortBy} sortOrder={sortOrder} />
                 </div>
               </TableHead>
               <TableHead className="w-[480px] px-6 py-4">Role</TableHead>

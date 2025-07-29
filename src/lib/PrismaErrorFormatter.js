@@ -1,5 +1,3 @@
-import Logger from "./Logger";
-
 export class PrismaErrorFormatter {
   static format(error, data, formFields = []) {
     // when error code does not exist, produce general error

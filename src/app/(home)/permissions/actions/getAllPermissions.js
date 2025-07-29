@@ -1,6 +1,5 @@
 "use server";
 
-// Logger not needed in this file
 import { Session } from "@/lib/Session";
 import { PermissionServices } from "@/system/Services/PermissionServices";
 
@@ -14,41 +13,36 @@ import { PermissionServices } from "@/system/Services/PermissionServices";
  * @returns {Promise<{data: Array, totalItems: number, totalPages: number, sortBy: string, sortOrder: string}>}
  */
 export async function getAllPermissionsFn(options = {}) {
-	const session = await Session.getCurrentUser();
-	const { 
-		page = 1, 
-		pageSize = 10,
-		sortBy = 'name',
-		sortOrder = 'asc'
-	} = options;
+  const session = await Session.getCurrentUser();
+  const { page = 1, pageSize = 10, sortBy = "name", sortOrder = "asc" } = options;
 
-	const whereClause = { ownerId: session.id };
+  const whereClause = { ownerId: session.id };
 
-	// Get total count for pagination
-	const totalItems = await PermissionServices.countResources({ where: whereClause });
-	
-	// Calculate pagination parameters
-	const skip = (page - 1) * pageSize;
-	const take = pageSize;
-	const totalPages = Math.ceil(totalItems / pageSize);
+  // Get total count for pagination
+  const totalItems = await PermissionServices.countResources({ where: whereClause });
 
-	// Prepare sort options
-	const orderBy = { [sortBy]: sortOrder };
+  // Calculate pagination parameters
+  const skip = (page - 1) * pageSize;
+  const take = pageSize;
+  const totalPages = Math.ceil(totalItems / pageSize);
 
-	// Get paginated and sorted data
-	const permissions = await PermissionServices.getAllResources({ 
-		where: whereClause,
-		pagination: { skip, take },
-		orderBy
-	});
+  // Prepare sort options
+  const orderBy = { [sortBy]: sortOrder };
 
-	return {
-		data: permissions,
-		totalItems,
-		totalPages,
-		currentPage: page,
-		pageSize,
-		sortBy,
-		sortOrder
-	};
+  // Get paginated and sorted data
+  const permissions = await PermissionServices.getAllResources({
+    where: whereClause,
+    pagination: { skip, take },
+    orderBy,
+  });
+
+  return {
+    data: permissions,
+    totalItems,
+    totalPages,
+    currentPage: page,
+    pageSize,
+    sortBy,
+    sortOrder,
+  };
 }

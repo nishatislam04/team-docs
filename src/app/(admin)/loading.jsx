@@ -2,14 +2,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Crown } from "lucide-react";
 
-/**
- * Admin Loading Page
- * 
- * Loading state for admin routes providing:
- * - Admin-specific loading animation
- * - Skeleton placeholders for admin content
- * - Consistent branding with admin panel
- */
 export default function AdminLoading() {
   return (
     <div className="p-6 space-y-6">

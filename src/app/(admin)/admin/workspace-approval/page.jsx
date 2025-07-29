@@ -9,19 +9,10 @@ import WorkspaceApprovalDialog from "./components/WorkspaceApprovalDialog";
 import WorkspaceRejectionDialog from "./components/WorkspaceRejectionDialog";
 import { protectAdmin } from "@/authorization/AdminAuthGuard";
 
-/**
- * Workspace Approval Page
- *
- * Admin page for managing workspace approval requests.
- * Fetches real pending workspaces from database and provides approval/rejection functionality.
- */
 export default async function WorkspaceApprovalPage() {
   await protectAdmin();
 
-  // Fetch pending workspaces from database
   const pendingWorkspaces = await WorkspaceService.getPendingWorkspaces();
-
-  // Server actions handle revalidation automatically, no need for manual refresh
 
   return (
     <div className="p-8 space-y-8">

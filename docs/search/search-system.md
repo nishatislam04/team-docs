@@ -148,29 +148,6 @@ if (trimmedQuery.length < 2) {
 - `searchSections()`: Section name and description search
 - `searchPages()`: Page title, description, and content search
 
-## Database Implementation
-
-### PostgreSQL Full-Text Search
-
-The system uses PostgreSQL's advanced full-text search capabilities:
-
-```sql
--- Example project search query
-SELECT
-  id, name, description, slug,
-  ts_rank(
-    to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(description, '')),
-    to_tsquery('english', $1)
-  ) as rank
-FROM "Project"
-WHERE
-  "workspaceId" = $2
-  AND to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(description, ''))
-      @@ to_tsquery('english', $3)
-ORDER BY rank DESC, name ASC
-LIMIT 10
-```
-
 ### Search Strategies
 
 1. **Primary Strategy**: Full-text search with `ts_rank()` scoring
@@ -329,31 +306,6 @@ const customSearch = async (query, options = {}) => {
 - **UX**: Search history and recent searches
 - **Analytics**: Search performance monitoring
 
-## Troubleshooting
-
-### Common Issues
-
-#### Search Not Working
-
-1. **Check Database Connection**: Ensure PostgreSQL is running
-2. **Verify Workspace Access**: User must be in an active workspace
-3. **Check Search Permissions**: User needs read access to content
-4. **Database Indexes**: Ensure proper indexes are created
-
-#### Performance Issues
-
-1. **Query Optimization**: Review slow query logs
-2. **Result Limiting**: Reduce result limits if needed
-3. **Debounce Timing**: Adjust debounce delay for better UX
-4. **Connection Pooling**: Monitor database connections
-
-#### UI Issues
-
-1. **Component Loading**: Check dynamic imports
-2. **State Management**: Verify Zustand store updates
-3. **Navigation**: Ensure proper route handling
-4. **Responsive Design**: Test on different screen sizes
-
 ### Debug Tools
 
 #### Search Debugging
@@ -380,7 +332,3 @@ const monitorSearch = async (query) => {
   return results;
 };
 ```
-
----
-
-_This documentation covers the current implementation of the search system. For implementation details and code examples, refer to the source files mentioned throughout this document._

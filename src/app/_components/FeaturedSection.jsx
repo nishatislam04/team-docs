@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -200,10 +201,6 @@ export default function FeaturedSection({
               workspaceId={workspaceId}
               workspaceStatus={workspaceStatus}
             />
-            {/* <Button variant="outline" size="lg" className="group">
-              View demo
-              <ChevronRight className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
-            </Button> */}
           </div>
         </motion.div>
       </div>

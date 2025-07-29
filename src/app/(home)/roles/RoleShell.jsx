@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import DrawerLoading from "@/components/loading/DialogLoading";
+import DialogLoading from "@/components/loading/DialogLoading";
 import LazyPageLoading from "@/components/loading/LazyPageLoading";
 
 const RoleCreateDialogLazy = dynamic(
   () => import("@/app/(home)/roles/components/RoleCreateDialog"),
   {
     ssr: false,
-    loading: () => <DrawerLoading />,
+    loading: () => <DialogLoading />,
   }
 );
 

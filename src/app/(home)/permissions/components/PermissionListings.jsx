@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
+import { Pencil } from "lucide-react";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import TableLoading from "@/components/loading/TableLoading";
 import ClientErrorUI from "@/components/abstracts/clientErrorUI";
@@ -18,6 +18,7 @@ import PermissionEditDialog from "./PermissionEditDialog";
 import DeletePermissionDialog from "./DeletePermissionDialog";
 import TablePagination from "@/components/shared/TablePagination";
 import { usePermissions } from "../hooks/usePermissions";
+import SortIcon from "@/components/shared/SortIcon";
 
 export default function PermissionListings({
   hasPermission,
@@ -25,7 +26,6 @@ export default function PermissionListings({
   startFetchPermissions,
   setStartFetchPermissions,
 }) {
-  // State for editing permission
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedPermission, setSelectedPermission] = useState(null);
 
@@ -44,18 +44,6 @@ export default function PermissionListings({
     showSkeleton,
     fetchError,
   } = usePermissions(startFetchPermissions, setStartFetchPermissions);
-
-  // Function to render sort indicator icons
-  const renderSortIcon = (column) => {
-    if (column === sortBy) {
-      return sortOrder === "asc" ? (
-        <ChevronUp className="ml-2 w-4 h-4" />
-      ) : (
-        <ChevronDown className="ml-2 w-4 h-4" />
-      );
-    }
-    return <ArrowUpDown className="ml-2 w-4 h-4 opacity-50" />;
-  };
 
   if (fetchError)
     return <ClientErrorUI errorMessage={fetchError} retry={setStartFetchPermissions} />;
@@ -90,7 +78,7 @@ export default function PermissionListings({
               >
                 <div className="flex items-center">
                   Name
-                  {renderSortIcon("name")}
+                  <SortIcon columnName="name" sortBy={sortBy} sortOrder={sortOrder} />
                 </div>
               </TableHead>
               <TableHead
@@ -99,7 +87,7 @@ export default function PermissionListings({
               >
                 <div className="flex items-center">
                   Scope
-                  {renderSortIcon("scope")}
+                  <SortIcon columnName="scope" sortBy={sortBy} sortOrder={sortOrder} />
                 </div>
               </TableHead>
               <TableHead className="w-[480px] px-6 py-4">Description</TableHead>

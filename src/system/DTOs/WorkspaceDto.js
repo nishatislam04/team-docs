@@ -10,9 +10,9 @@ export class WorkspaceDTO {
       updatedAt: workspace.updatedAt.toISOString(),
       owner: {
         id: workspace.ownerId,
-        // username: workspace.owner.username,
-        // email: workspace.owner.email,
-        // createdAt: workspace.owner.createdAt.toISOString(),
+        username: workspace.owner.username,
+        email: workspace.owner.email,
+        createdAt: workspace.owner.createdAt.toISOString(),
       },
     };
   }

@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import ProjectEditDrawer from "./ProjectEditDrawer";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import TablePagination from "@/components/shared/TablePagination";
+import SortIcon from "@/components/shared/SortIcon";
 
 export default function ProjectListings({
   hasProjects,
@@ -44,18 +45,6 @@ export default function ProjectListings({
     fetchError,
     showSkeleton,
   } = useProjects(startFetchProjects, setStartFetchProjects);
-
-  // Function to render sort indicator icons
-  const renderSortIcon = (column) => {
-    if (column === sortBy) {
-      return sortOrder === "asc" ? (
-        <ChevronUp className="ml-2 w-4 h-4" />
-      ) : (
-        <ChevronDown className="ml-2 w-4 h-4" />
-      );
-    }
-    return <ArrowUpDown className="ml-2 w-4 h-4 opacity-50" />;
-  };
 
   // State for editing project
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -102,7 +91,7 @@ export default function ProjectListings({
                 >
                   <div className="flex items-center">
                     Name
-                    {renderSortIcon("name")}
+                    <SortIcon columnName="name" sortBy={sortBy} sortOrder={sortOrder} />
                   </div>
                 </TableHead>
                 <TableHead className="w-[300px] px-6 py-4">Description</TableHead>

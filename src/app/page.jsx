@@ -4,8 +4,13 @@ import FeaturedSection from "./_components/FeaturedSection";
 import Footer from "./_components/Footer";
 import { Session } from "@/lib/Session";
 import { WorkspaceService } from "@/system/Services/WorkspaceService";
-import Logger from "@/lib/Logger";
+
 export const dynamic = "force-dynamic";
+
+/**
+ * !our main job is to turn this page into partial pre rendering page.
+ * ! right now, it is dynamic.
+ */
 
 export default async function LandingPage() {
   const session = await Session.getCurrentUser();
@@ -15,11 +20,11 @@ export default async function LandingPage() {
     ? await WorkspaceService.getWorkspaceStatus(workspaceId)
     : null;
 
-  // Logger.info(session, "session");
-
   return (
     <main className="min-h-screen bg-background">
       <Header session={session} />
+
+      {/* both HeroSection and FeaturedSection component expecting same props. can we simply this? instead of duplicating? */}
       <HeroSection
         session={session}
         isAuthenticated={isAuthenticated}

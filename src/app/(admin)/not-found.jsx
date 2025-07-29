@@ -3,14 +3,6 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-/**
- * Admin Not Found Page
- *
- * Custom 404 page for admin routes providing:
- * - Admin-specific styling and branding
- * - Navigation back to admin dashboard
- * - Helpful error message for admin users
- */
 export default function AdminNotFound() {
   return (
     <div className="flex items-center justify-center min-h-[60vh] p-6">
