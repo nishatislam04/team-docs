@@ -3,8 +3,17 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import projectEditorUI from "./../../../assets/project-editor.png";
 import ActionButton from "./ActionButton";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { MoveUpRight } from "lucide-react";
 
 export default function HeroSection({ session, isAuthenticated, workspaceId, workspaceStatus }) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/admin");
+  };
+
   return (
     <section className="container px-4 py-16 mx-auto md:py-24">
       <div className="mx-auto max-w-4xl text-center">
@@ -31,12 +40,24 @@ export default function HeroSection({ session, isAuthenticated, workspaceId, wor
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <ActionButton
-            session={session}
-            isAuthenticated={isAuthenticated}
-            workspaceId={workspaceId}
-            workspaceStatus={workspaceStatus}
-          />
+          <div className="w-full flex items-center justify-center gap-2">
+            <ActionButton
+              session={session}
+              isAuthenticated={isAuthenticated}
+              workspaceId={workspaceId}
+              workspaceStatus={workspaceStatus}
+            />
+
+            {session && session.isWorkspaceOwner && (
+              <Button
+                onClick={handleClick}
+                className="bg-red-400 text-white uppercase px-6 py-4 h-10 hover:bg-red-500"
+              >
+                Go to Admin Panel
+                <MoveUpRight />
+              </Button>
+            )}
+          </div>
         </motion.div>
       </div>
       <motion.div

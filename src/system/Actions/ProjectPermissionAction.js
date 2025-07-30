@@ -1,6 +1,6 @@
 "use server";
 import { BaseAction } from "./BaseAction";
-import { ProjectUserPermissionService } from "../Services/ProjectUserPermissionService";
+import { ProjectUserPermissionService } from "../Services/ProjectUserPermissionServices";
 import { revalidatePath } from "next/cache";
 import Logger from "@/lib/Logger";
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";

@@ -11,8 +11,8 @@ export class WorkspaceDTO {
       owner: {
         id: workspace.ownerId,
         username: workspace.owner.username,
-        email: workspace.owner.email,
-        createdAt: workspace.owner.createdAt.toISOString(),
+        email: workspace?.owner?.email,
+        createdAt: workspace?.owner?.createdAt?.toISOString(),
       },
     };
   }

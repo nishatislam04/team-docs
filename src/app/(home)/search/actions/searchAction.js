@@ -1,8 +1,7 @@
 "use server";
 
 import { Session } from "@/lib/Session";
-import { SearchService } from "@/system/Services/SearchService";
-import Logger from "@/lib/Logger";
+import { SearchService } from "@/system/Services/SearchServices";
 
 /**
  * Server action for performing real-time search across projects, sections, and pages

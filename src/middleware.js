@@ -20,7 +20,6 @@ export default auth(async function middleware(request) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
 
-  // ✅ Skip public files (static, images, etc.)
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon.ico") ||
@@ -30,12 +29,10 @@ export default auth(async function middleware(request) {
     return response;
   }
 
-  // ✅ BLOCK logged-in users from accessing `/auth/*`
   if (session && pathname.startsWith("/auth")) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 
-  // ✅ Allow non-authenticated users to access landing page at root
   if (pathname === "/") {
     return NextResponse.next({
       request: {
@@ -44,17 +41,14 @@ export default auth(async function middleware(request) {
     });
   }
 
-  // ✅ Redirect not-logged-in users from protected pages (except / and /auth)
   if (!session && !pathname.startsWith("/auth")) {
     return NextResponse.redirect(new URL("/auth/signin", request.url));
   }
 
-  // ✅ Optional: redirect / to /home. for auth user
   if (session && pathname === "/") {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 
-  // ✅ Allow to continue
   return NextResponse.next({
     request: {
       headers: requestHeaders,

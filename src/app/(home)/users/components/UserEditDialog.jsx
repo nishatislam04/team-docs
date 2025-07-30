@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { AdminUpdatingUser } from "@/system/Actions/UserAction";
+import { AdminUpdatingUser } from "@/system/Actions/UserActions";
 import { AdminUpdatingUserSchema } from "@/lib/schemas/UserSchema";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
 import {

@@ -13,7 +13,8 @@ import bcrypt from "bcryptjs";
 import { Session } from "@/lib/Session";
 
 /**
- * This is probably from landing page Registration
+ * This is from landing page Registration.
+ * where user can create their own account and request to create a workspace
  * NOT signup
  */
 class RegistrationAction extends BaseAction {
@@ -37,6 +38,13 @@ class RegistrationAction extends BaseAction {
       );
   }
 
+  /**
+   * this method is invoked when user tries to create account from landing page
+   * both user account and workspace will be created but pending state
+   * @param {*} formData
+   * @param {*} session
+   * @returns
+   */
   static async register(formData, session = null) {
     const result = await this.execute(formData);
 
@@ -57,6 +65,7 @@ class RegistrationAction extends BaseAction {
           email,
           password: hashedPassword,
           status: "ACTIVE",
+          isWorkspaceOwner: true,
         });
         userId = user.id;
       } else if (session) {

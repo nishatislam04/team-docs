@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
-import { getPendingWorkspaceCount } from "@/system/Actions/WorkspaceAction";
+import { getPendingWorkspaceCount } from "@/system/Actions/WorkspaceActions";
 
 /**
  * Custom hook to fetch and manage pending workspace count

@@ -21,3 +21,19 @@
 # need to add [tools & packages]
 
 - [] biome
+
+### feature workflow
+
+# super admin to workspace permissions
+
+(1) after approving a workspace, all related permissions auto generated!!
+(2) then on super admin panel, we will have a workspace route. which will held necessary actions for a workspace.
+(3) we will have a permissions button for each workspace. clicking on it, will render all the permissions for the workspace
+(4) we can activate/deactivate permissions here!
+
+# workspace to member permissions
+
+(1) on permissions page, we will have a button saying, generate default permissions
+(2) clicking on it, will generate default permissions for the workspace to be applied to members
+(3) we can assign some or one permissions to a role
+(4) then we will assign the role to a member

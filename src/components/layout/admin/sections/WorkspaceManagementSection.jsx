@@ -60,7 +60,7 @@ export default function WorkspaceManagementSection({ sectionId }) {
       icon: Building,
       href: "/admin/workspaces",
       description: "Manage all workspaces in the system",
-      disabled: true,
+      disabled: false,
     },
     {
       id: "settings",

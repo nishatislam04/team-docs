@@ -1,6 +1,6 @@
 import { Session } from "@/lib/Session";
 import { SidebarTrigger } from "../ui/sidebar";
-import { WorkspaceService } from "@/system/Services/WorkspaceService";
+import { WorkspaceService } from "@/system/Services/WorkspaceServices";
 
 import { headers } from "next/headers";
 import ProjectNameDisplay from "./ProjectNameDisplay";
@@ -21,9 +21,7 @@ export default async function Header() {
         <SidebarTrigger />
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-semibold">{workspace?.name || "workspace name"}</h1>
-          {isAssignDevRoute && (
-            <ProjectNameDisplay />
-          )}
+          {isAssignDevRoute && <ProjectNameDisplay />}
         </div>
       </div>
     </header>

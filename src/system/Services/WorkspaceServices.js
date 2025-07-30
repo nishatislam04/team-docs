@@ -5,9 +5,66 @@ import { UserModel } from "../Models/UserModel";
 import { WorkspaceModel } from "../Models/WorkspaceModel";
 import { WorkspaceStatus } from "@prisma/client";
 
-export class WorkspaceService extends BaseService {
+export class WorkspaceServices extends BaseService {
   static modelName = "workspace";
   static dto = WorkspaceDTO;
+
+  static async getAllWorkspaces({ page, pageSize, sortBy, sortOrder }) {
+    try {
+      const workspaces = await WorkspaceModel.findMany({
+        where: { status: WorkspaceStatus.ACTIVE },
+        include: {
+          owner: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+        orderBy: { [sortBy]: sortOrder },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      });
+
+      const totalItems = await WorkspaceModel.count({
+        where: { status: WorkspaceStatus.ACTIVE },
+      });
+
+      const totalPages = Math.ceil(totalItems / pageSize);
+
+      return {
+        data: this.dto.toCollection(workspaces),
+        totalItems,
+        pageSize,
+        sortBy,
+        sortOrder,
+        totalPages,
+      };
+    } catch (error) {
+      Logger.error(error.message, "Get all workspaces failed");
+      return {
+        data: [],
+        totalItems: 0,
+        pageSize: 0,
+        sortBy: "",
+        sortOrder: "",
+        totalPages: 0,
+      };
+    }
+  }
+
+  static async deleteResource(id) {
+    try {
+      Logger.debug(`Deleting workspace with id: ${id}`);
+      await WorkspaceModel.delete({
+        where: { id },
+      });
+      return true;
+    } catch (error) {
+      Logger.error(error.message, `Workspace delete fail`);
+      throw error;
+    }
+  }
 
   static async assignWorkspaceToUser(workspaceId, userId) {
     try {

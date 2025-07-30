@@ -4,7 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import ConditionalHomeLayout from "@/components/layout/ConditionalHomeLayout";
 import { cookies } from "next/headers";
 import { Session } from "@/lib/Session";
-import { WorkspaceService } from "@/system/Services/WorkspaceService";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +15,7 @@ export default async function HomeLayout({ children }) {
   // Fetch workspace data for the header
   const workspaceId = await Session.getWorkspaceIdForUser();
   const workspace = workspaceId
-    ? await WorkspaceService.getResource({ where: { id: workspaceId } })
+    ? await WorkspaceServices.getResource({ where: { id: workspaceId } })
     : null;
 
   return (

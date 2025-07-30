@@ -1,6 +1,6 @@
 "use server";
 
-import { ProjectUserPermissionService } from "@/system/Services/ProjectUserPermissionService";
+import { ProjectUserPermissionService } from "@/system/Services/ProjectUserPermissionServices";
 
 export async function getMembersPermissionListings(projectId) {
   const result = await ProjectUserPermissionService.getMembersAndPermissions(projectId);

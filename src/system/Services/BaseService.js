@@ -16,20 +16,13 @@ export class BaseService {
     }
   }
 
-  static async getResource({
-    where,
-    include = null,
-    select = null,
-    // orderBy = { createdAt: "desc" },
-  }) {
+  static async getResource({ where, include = null, select = null }) {
     try {
-      if (include && select) {
+      if (include && select)
         throw new Error("You cannot use both 'select' and 'include' in the same Prisma query.");
-      }
 
       const queryOptions = {
         ...(where && { where }),
-        // orderBy,
       };
 
       if (include) queryOptions.include = include;
@@ -37,9 +30,8 @@ export class BaseService {
 
       const resource = await this.model.findUnique(queryOptions);
 
-      if (this.dto && typeof this.dto.toResponse === "function") {
+      if (this.dto && typeof this.dto.toResponse === "function")
         return this.dto.toResponse(resource);
-      }
     } catch (error) {
       Logger.error(error.message, "failed getResource on BaseService");
     }
@@ -63,9 +55,8 @@ export class BaseService {
     select = null,
   }) {
     try {
-      if (include && select) {
+      if (include && select)
         throw new Error("You cannot use both 'select' and 'include' in the same Prisma query.");
-      }
 
       const queryOptions = {
         ...(where && { where }),
@@ -84,9 +75,8 @@ export class BaseService {
 
       const allResources = await this.model.findMany(queryOptions);
 
-      if (this.dto && typeof this.dto.toCollection === "function") {
+      if (this.dto && typeof this.dto.toCollection === "function")
         return this.dto.toCollection(allResources);
-      }
 
       return allResources;
     } catch (error) {

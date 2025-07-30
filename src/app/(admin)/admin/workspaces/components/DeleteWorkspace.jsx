@@ -14,10 +14,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-import { deleteUser } from "@/system/Actions/UserActions";
+import { deleteWorkspaceAction } from "@/system/Actions/WorkspaceActions";
 import { toast } from "sonner";
+import Logger from "@/lib/Logger";
 
-export default function UserDeleteDialog({ user, setShouldRefetch }) {
+export default function DeleteWorkspace({ workspace, setStartFetchWorkspaces }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -25,21 +26,23 @@ export default function UserDeleteDialog({ user, setShouldRefetch }) {
     try {
       setIsDeleting(true);
 
-      const result = await deleteUser(user.id);
+      const result = await deleteWorkspaceAction(workspace.id);
 
       if (result.success) {
-        toast.success("User deleted", {
-          description: "User has been successfully deleted.",
+        toast.success("Workspace deleted", {
+          description: "Workspace has been successfully deleted.",
         });
         setIsOpen(false);
-        setShouldRefetch(true);
+        setStartFetchWorkspaces(true);
       } else {
-        toast.error("Failed to delete user", {
-          description: result.errors?._form?.[0] || "An error occurred while deleting the user.",
+        toast.error("Failed to delete workspace", {
+          description:
+            result.errors?._form?.[0] || "An error occurred while deleting the workspace.",
         });
       }
-    } catch (_) {
-      toast.error("Failed to delete user", {
+    } catch (error) {
+      Logger.error(error.message, "Failed to delete workspace:");
+      toast.error("Failed to delete workspace", {
         description: "An unexpected error occurred.",
       });
     } finally {
@@ -62,10 +65,10 @@ export default function UserDeleteDialog({ user, setShouldRefetch }) {
       <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to delete this user?</AlertDialogTitle>
+            <AlertDialogTitle>Are you sure you want to delete this workspace?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the{" "}
-              <strong className="font-medium">&quot;{user.username}&quot;</strong> user.
+              <strong className="font-medium">&quot;{workspace.name}&quot;</strong> workspace.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

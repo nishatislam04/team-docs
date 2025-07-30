@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle, Clock, User, Calendar, Eye, Mail } from "lucide-react";
-import { WorkspaceService } from "@/system/Services/WorkspaceService";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 import WorkspaceDetailsDialog from "./components/WorkspaceDetailsDialog";
 import WorkspaceApprovalDialog from "./components/WorkspaceApprovalDialog";
 import WorkspaceRejectionDialog from "./components/WorkspaceRejectionDialog";
@@ -12,7 +12,7 @@ import { protectAdmin } from "@/authorization/AdminAuthGuard";
 export default async function WorkspaceApprovalPage() {
   await protectAdmin();
 
-  const pendingWorkspaces = await WorkspaceService.getPendingWorkspaces();
+  const pendingWorkspaces = await WorkspaceServices.getPendingWorkspaces();
 
   return (
     <div className="p-8 space-y-8">

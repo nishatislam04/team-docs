@@ -6,7 +6,7 @@ import { WorkspaceModel } from "../Models/WorkspaceModel";
 import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
 import Logger from "@/lib/Logger";
 import { Session } from "@/lib/Session";
-import { WorkspaceService } from "../Services/WorkspaceService";
+import { WorkspaceServices } from "../Services/WorkspaceServices";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { PermissionModel } from "../Models/PermissionModel";
@@ -29,7 +29,7 @@ class WorkspaceAction extends BaseAction {
         ownerId: session.id,
       });
 
-      await WorkspaceService.assignWorkspaceToUser(createdWorkspace.id, session.id);
+      await WorkspaceServices.assignWorkspaceToUser(createdWorkspace.id, session.id);
 
       revalidatePath("(home)/", "layout");
       return {
@@ -48,6 +48,28 @@ class WorkspaceAction extends BaseAction {
         type: "fail",
         errors: { _form: ["Failed to create workspace"] },
         data: result.data,
+      };
+    }
+  }
+
+  static async delete(workspaceId) {
+    await Session.requireSuperAdmin();
+
+    try {
+      await WorkspaceServices.deleteResource(workspaceId);
+
+      revalidatePath("/admin/workspaces", "page");
+      return {
+        success: true,
+        type: "success",
+        message: "Workspace successfully deleted",
+      };
+    } catch (error) {
+      Logger.error(error.message, "workspace deletion failed:");
+      return {
+        success: false,
+        type: "fail",
+        errors: { _form: ["Failed to delete workspace"] },
       };
     }
   }
@@ -198,6 +220,13 @@ class WorkspaceAction extends BaseAction {
     }
   }
 
+  /**
+   * Generate default permissions for a workspace
+   * when a workspace is approved, this function will be called and permissions will be generated
+   * @param {*} workspaceId
+   * @param {*} ownerId
+   * @returns
+   */
   static async generatePermissions(workspaceId, ownerId) {
     const resources = ["PROJECT", "USER", "ROLE", "PERMISSION", "SECTION", "PAGE"];
     const actions = ["CREATE", "READ", "UPDATE", "DELETE"];
@@ -209,7 +238,8 @@ class WorkspaceAction extends BaseAction {
           await PermissionModel.create({
             workspaceId,
             name: `${action} ${resource}`,
-            scope: "WORKSPACE",
+            scope: "SYSTEM",
+            status: "INACTIVE",
             action,
             resource,
             ownerId,
@@ -243,7 +273,7 @@ class WorkspaceAction extends BaseAction {
       await Session.requireAuth();
 
       // Get the pending workspace count using WorkspaceService
-      const count = await WorkspaceService.getPendingWorkspacesCount();
+      const count = await WorkspaceServices.getPendingWorkspacesCount();
 
       return {
         success: true,
@@ -277,4 +307,8 @@ export async function rejectWorkspace(workspaceId) {
 
 export async function getPendingWorkspaceCount() {
   return await WorkspaceAction.getPendingCount();
+}
+
+export async function deleteWorkspaceAction(workspaceId) {
+  return await WorkspaceAction.delete(workspaceId);
 }

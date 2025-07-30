@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { CheckCircle, Loader2 } from "lucide-react";
-import { approveWorkspace } from "@/system/Actions/WorkspaceAction";
+import { approveWorkspace } from "@/system/Actions/WorkspaceActions";
 import { toast } from "sonner";
 import Logger from "@/lib/Logger";
 import { useAdminRefresh } from "@/components/layout/admin/AdminRefreshContext";

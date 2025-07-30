@@ -35,6 +35,11 @@ export class Session {
     if (!isAuth) return forbidden();
   }
 
+  static async requireSuperAdmin() {
+    const user = await this.getCurrentUser();
+    if (!user || !user.isSuperAdmin) return forbidden();
+  }
+
   /**
    * When workspaceId is not available in JWT, get it from database
    * @param {string} userId

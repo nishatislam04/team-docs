@@ -3,21 +3,16 @@ import HeroSection from "./_components/HeroSection";
 import FeaturedSection from "./_components/FeaturedSection";
 import Footer from "./_components/Footer";
 import { Session } from "@/lib/Session";
-import { WorkspaceService } from "@/system/Services/WorkspaceService";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 
 export const dynamic = "force-dynamic";
-
-/**
- * !our main job is to turn this page into partial pre rendering page.
- * ! right now, it is dynamic.
- */
 
 export default async function LandingPage() {
   const session = await Session.getCurrentUser();
   const isAuthenticated = await Session.isAuthenticated();
   const workspaceId = await Session.getWorkspaceIdForUser();
   const workspaceStatus = workspaceId
-    ? await WorkspaceService.getWorkspaceStatus(workspaceId)
+    ? await WorkspaceServices.getWorkspaceStatus(workspaceId)
     : null;
 
   return (

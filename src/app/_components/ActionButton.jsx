@@ -34,7 +34,7 @@ export default function ActionButton({ session, isAuthenticated, workspaceId, wo
         size="lg"
         onClick={handleButtonClick}
         disabled={isDisabled}
-        className="flex items-center justify-center mx-auto"
+        className="flex items-center justify-center"
       >
         {buttonText}
         {buttonIcon}

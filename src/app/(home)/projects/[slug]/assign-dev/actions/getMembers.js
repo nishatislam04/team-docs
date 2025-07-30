@@ -1,6 +1,6 @@
 "use server";
 
-import { ProjectUserPermissionService } from "@/system/Services/ProjectUserPermissionService";
+import { ProjectUserPermissionService } from "@/system/Services/ProjectUserPermissionServices";
 import { UserServices } from "@/system/Services/UserServices";
 
 export async function getMembers(workspaceId, projectId) {

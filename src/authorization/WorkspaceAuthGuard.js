@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
-import { WorkspaceService } from "@/system/Services/WorkspaceService";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 import { UserServices } from "@/system/Services/UserServices";
 
 /**
@@ -23,13 +23,15 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
     if (!session) return this.redirectUnauthorized();
 
     const workspaceExists = await UserServices.hasResource({
-      where: { id: session.id },
+      where: { workspaceId: session.workspaceId },
     });
     if (!workspaceExists) return this.redirectUnauthorized();
 
-    const workspace = await WorkspaceService.getResource({
+    const workspace = await WorkspaceServices.getResource({
       where: { id: session.workspaceId },
+      include: { owner: true },
     });
+
     if (!workspace) return this.redirectUnauthorized();
 
     if (workspace.status !== "ACTIVE") return this.redirectUnauthorized();

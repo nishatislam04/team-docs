@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { createUser } from "@/system/Actions/UserAction";
+import { createUser } from "@/system/Actions/UserActions";
 import { UserSchema } from "@/lib/schemas/UserSchema";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
 import {

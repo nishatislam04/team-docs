@@ -5,7 +5,7 @@ import { ProjectModel } from "../Models/ProjectModel";
 import Logger from "@/lib/Logger";
 import { Session } from "@/lib/Session";
 import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import { WorkspaceService } from "../Services/WorkspaceService";
+import { WorkspaceService } from "../Services/WorkspaceServices";
 import { ProjectService } from "../Services/ProjectServices";
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 
