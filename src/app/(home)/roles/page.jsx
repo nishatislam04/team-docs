@@ -1,7 +1,11 @@
 import RoleShell from "./RoleShell";
 import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
+import { canViewRolesAuth } from "@/authorization/RoleAuthGuard";
 
 export default async function RolePage() {
   await requireWorkspaceActive();
-  return <RoleShell hasRoles={true} />;
+
+  const canViewRoles = await canViewRolesAuth();
+
+  return <RoleShell canViewRoles={canViewRoles} hasRoles={true} />;
 }

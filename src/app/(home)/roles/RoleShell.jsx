@@ -4,6 +4,8 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import DialogLoading from "@/components/loading/DialogLoading";
 import LazyPageLoading from "@/components/loading/LazyPageLoading";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const RoleCreateDialogLazy = dynamic(
   () => import("@/app/(home)/roles/components/RoleCreateDialog"),
@@ -17,9 +19,15 @@ const RoleListingsLazy = dynamic(() => import("@/app/(home)/roles/components/Rol
   loading: () => <LazyPageLoading>Loading Roles...</LazyPageLoading>,
 });
 
-export default function RoleShell({ hasRoles }) {
+export default function RoleShell({ hasRoles, canViewRoles }) {
+  const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [shouldStartFetchRoles, setShouldStartFetchRoles] = useState(hasRoles ? true : false);
+
+  if (canViewRoles.success === false) {
+    toast.error(canViewRoles.errors._form[0]);
+    router.replace("/");
+  }
 
   return (
     <>

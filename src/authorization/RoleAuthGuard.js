@@ -23,7 +23,7 @@ class RoleAuthGuard extends BaseAuthGuard {
           { workspaceId: session.workspaceId },
           { ownerId: session.id },
           { scope: "SYSTEM" },
-          { action: "VIEW" },
+          { action: "READ" },
           { resource: "ROLE" },
         ],
       },
