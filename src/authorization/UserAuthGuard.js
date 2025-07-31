@@ -3,6 +3,10 @@
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import prisma from "@/lib/prisma";
 import Logger from "@/lib/Logger";
+import { Session } from "@/lib/Session";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
+import { UserServices } from "@/system/Services/UserServices";
+import { PermissionServices } from "@/system/Services/PermissionServices";
 
 /**
  * UserAuthGuard - Authorization guard for user-related operations
@@ -17,6 +21,138 @@ class UserAuthGuard extends BaseAuthGuard {
    */
   static async protect() {
     return await this.requireAuth();
+  }
+
+  static async canReadUser() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "READ" },
+          { resource: "USER" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to read user without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to read a user."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canCreateUser() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "CREATE" },
+          { resource: "USER" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to create user without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a user."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canUpdateUser() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "UPDATE" },
+          { resource: "USER" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to update user without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to update a user."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canDeleteUser() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "DELETE" },
+          { resource: "USER" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to delete user without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to delete a user."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
   }
 
   /**
@@ -200,6 +336,22 @@ class UserAuthGuard extends BaseAuthGuard {
 }
 
 // Exported async functions for use in server components and actions
+export async function canReadUserAuth() {
+  return await UserAuthGuard.canReadUser();
+}
+
+export async function canCreateUserAuth() {
+  return await UserAuthGuard.canCreateUser();
+}
+
+export async function canUpdateUserAuth() {
+  return await UserAuthGuard.canUpdateUser();
+}
+
+export async function canDeleteUserAuth() {
+  return await UserAuthGuard.canDeleteUser();
+}
+
 export async function protectUser() {
   return await UserAuthGuard.protect();
 }

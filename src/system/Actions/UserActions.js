@@ -10,6 +10,11 @@ import bcrypt from "bcryptjs";
 import { WorkspaceMemberModel } from "../Models/WorkspaceMemberModel";
 import { RoleService } from "../Services/RoleServices";
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import {
+  canCreateUserAuth,
+  canDeleteUserAuth,
+  canUpdateUserAuth,
+} from "@/authorization/UserAuthGuard";
 
 class UserActions extends BaseAction {
   static get schema() {
@@ -23,6 +28,10 @@ class UserActions extends BaseAction {
    */
   static async create(formData) {
     await requireWorkspaceAdmin();
+
+    const userAuthorization = await canCreateUserAuth();
+
+    if (!userAuthorization.success) return userAuthorization;
 
     const result = await this.execute(formData);
 
@@ -41,7 +50,7 @@ class UserActions extends BaseAction {
 
       const role = await RoleService.getResource({
         where: {
-          name: "DEVELOPER",
+          role: "DEVELOPER",
         },
         select: {
           id: true,
@@ -79,6 +88,10 @@ class UserActions extends BaseAction {
   static async delete(userId) {
     await requireWorkspaceAdmin();
 
+    const userAuthorization = await canDeleteUserAuth();
+
+    if (!userAuthorization.success) return userAuthorization;
+
     try {
       await UserModel.delete({
         where: {
@@ -105,6 +118,10 @@ class UserActions extends BaseAction {
 
   static async update(formData) {
     await requireWorkspaceAdmin();
+
+    const userAuthorization = await canUpdateUserAuth();
+
+    if (!userAuthorization.success) return userAuthorization;
 
     const result = await this.execute(formData, AdminUpdatingUserSchema);
 

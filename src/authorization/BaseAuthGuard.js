@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import Logger from "@/lib/Logger";
 import { UserServices } from "@/system/Services/UserServices";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 
 /**
  * BaseAuthGuard - Laravel-like authorization base class
@@ -76,6 +77,40 @@ export class BaseAuthGuard {
     if (!user.isWorkspaceOwner) return this.redirectUnauthorized();
 
     return true;
+  }
+
+  static async basicAuthCheck() {
+    const session = await this.getSession();
+    if (!session) return this.redirectUnauthorized();
+
+    const workspaceExist = await WorkspaceServices.hasResource({
+      where: { id: session.workspaceId },
+      include: {
+        owner: true,
+      },
+    });
+
+    if (!workspaceExist) {
+      Logger.warn(`User ${session.id} attempted to view projects without workspace membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to perform this action."] },
+      };
+    }
+
+    const userExist = await UserServices.hasResource({
+      where: { id: session.id },
+    });
+
+    if (!userExist) {
+      Logger.warn(`User ${session.id} attempted to view projects without user membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to perform this action."] },
+      };
+    }
+
+    return session;
   }
 
   /**

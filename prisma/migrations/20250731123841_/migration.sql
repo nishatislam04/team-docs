@@ -1,14 +1,38 @@
+-- CreateEnum
+CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'PENDING', 'INACTIVE');
+
+-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'DEVELOPER', 'VIEWER', 'PROJECT_MANAGER', 'SUPPORT');
+
+-- CreateEnum
+CREATE TYPE "PermissionScope" AS ENUM ('SYSTEM', 'WORKSPACE');
+
+-- CreateEnum
+CREATE TYPE "PermissionAction" AS ENUM ('CREATE', 'READ', 'UPDATE', 'DELETE');
+
+-- CreateEnum
+CREATE TYPE "PermissionResource" AS ENUM ('WORKSPACE', 'PROJECT', 'SECTION', 'PAGE', 'USER', 'ROLE', 'PERMISSION');
+
+-- CreateEnum
+CREATE TYPE "PermissionStatus" AS ENUM ('ACTIVE', 'PENDING', 'INACTIVE');
+
+-- CreateEnum
+CREATE TYPE "WorkspaceStatus" AS ENUM ('ACTIVE', 'PENDING', 'INACTIVE');
+
+-- CreateEnum
+CREATE TYPE "ProjectStatus" AS ENUM ('ACTIVE', 'PENDING', 'INACTIVE');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "isActive" BOOLEAN NOT NULL DEFAULT true,
-    "status" TEXT NOT NULL DEFAULT 'inactive',
+    "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "workspaceId" TEXT,
+    "isWorkspaceOwner" BOOLEAN NOT NULL DEFAULT false,
     "isSuperAdmin" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -17,8 +41,9 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Role" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" TEXT,
     "description" TEXT,
+    "role" "UserRole" NOT NULL DEFAULT 'DEVELOPER',
     "isSystem" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "ownerId" TEXT,
@@ -29,10 +54,14 @@ CREATE TABLE "Role" (
 -- CreateTable
 CREATE TABLE "Permission" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" TEXT,
     "description" TEXT,
-    "scope" TEXT NOT NULL,
+    "status" "PermissionStatus" NOT NULL DEFAULT 'PENDING',
+    "scope" "PermissionScope" NOT NULL,
+    "action" "PermissionAction" NOT NULL,
+    "resource" "PermissionResource" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "workspaceId" TEXT,
     "ownerId" TEXT,
 
     CONSTRAINT "Permission_pkey" PRIMARY KEY ("id")
@@ -56,7 +85,7 @@ CREATE TABLE "Workspace" (
     "slug" TEXT NOT NULL,
     "description" TEXT,
     "logo" TEXT,
-    "status" TEXT NOT NULL DEFAULT 'inactive',
+    "status" "WorkspaceStatus" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "ownerId" TEXT NOT NULL,
@@ -89,6 +118,7 @@ CREATE TABLE "Project" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "status" "ProjectStatus" NOT NULL DEFAULT 'ACTIVE',
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );

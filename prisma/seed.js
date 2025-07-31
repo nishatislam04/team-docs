@@ -121,30 +121,35 @@ async function main() {
   const systemRoles = [
     {
       name: "ADMIN",
+      role: "ADMIN",
       description: "Full access to all settings and data",
       isSystem: true,
       ownerId: nishat.id,
     },
     {
       name: "DEVELOPER",
+      role: "DEVELOPER",
       description: "Can access and modify development resources",
       isSystem: true,
       ownerId: nishat.id,
     },
     {
       name: "VIEWER",
+      role: "VIEWER",
       description: "Can view data but cannot make changes",
       isSystem: true,
       ownerId: nishat.id,
     },
     {
       name: "PROJECT_MANAGER",
+      role: "PROJECT_MANAGER",
       description: "Manages project timelines and members",
       isSystem: true,
       ownerId: nishat.id,
     },
     {
       name: "SUPPORT",
+      role: "SUPPORT",
       description: "Handles user queries and support tickets",
       isSystem: true,
       ownerId: nishat.id,

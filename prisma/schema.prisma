@@ -62,6 +62,7 @@ model Role {
   id          String   @id @default(cuid())
   name        String?
   description String?
+  role        UserRole @unique @default(DEVELOPER)
   isSystem    Boolean  @default(false)
   createdAt   DateTime @default(now())
 
