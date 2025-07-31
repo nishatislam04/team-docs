@@ -35,7 +35,10 @@ export default function PermissionEditDialog({
     defaultValues: () => ({
       name: permission?.name || "",
       scope: permission?.scope || "",
+      projectScope: permission?.projectScope || "",
       description: permission?.description || "",
+      action: permission?.action || "",
+      resource: permission?.resource || "",
     }),
     successToast: {
       title: "Permission updated successfully",
@@ -53,7 +56,10 @@ export default function PermissionEditDialog({
       reset({
         name: permission.name,
         scope: permission.scope,
+        projectScope: permission.projectScope,
         description: permission.description || "",
+        action: permission.action || "",
+        resource: permission.resource || "",
       });
     }
   }, [isDialogOpen, reset, permission]);
@@ -105,6 +111,32 @@ export default function PermissionEditDialog({
               />
               {errors.description && (
                 <p className="mt-1 text-sm text-red-500">{errors.description.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="action">Permission Action</Label>
+              <Input
+                id="action"
+                placeholder="e.g. create, update, delete, view"
+                className="h-11"
+                {...register("action")}
+              />
+              {errors.action && (
+                <p className="mt-1 text-sm text-red-500">{errors.action.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="resource">Permission Resource</Label>
+              <Input
+                id="resource"
+                placeholder="e.g. workspace, project, page"
+                className="h-11"
+                {...register("resource")}
+              />
+              {errors.resource && (
+                <p className="mt-1 text-sm text-red-500">{errors.resource.message}</p>
               )}
             </div>
 

@@ -32,6 +32,7 @@ export default function PermissionListings({
   const handleEditClick = (permission) => {
     setSelectedPermission(permission);
     setIsEditDialogOpen(true);
+    console.log(permission, "from edit hadler");
   };
 
   const {

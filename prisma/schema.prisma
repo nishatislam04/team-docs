@@ -87,14 +87,15 @@ model Role {
 // }
 
 model Permission {
-  id          String             @id @default(cuid())
-  name        String?
-  description String?
-  status      PermissionStatus   @default(PENDING)
-  scope       PermissionScope
-  action      PermissionAction
-  resource    PermissionResource
-  createdAt   DateTime           @default(now())
+  id           String             @id @default(cuid())
+  name         String?
+  description  String?
+  status       PermissionStatus   @default(PENDING)
+  scope        PermissionScope?
+  action       PermissionAction
+  resource     PermissionResource
+  projectScope String?
+  createdAt    DateTime           @default(now())
 
   // ✅ Optional reference to User
   workspaceId String?

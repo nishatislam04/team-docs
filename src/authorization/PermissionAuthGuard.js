@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import { PermissionServices } from "@/system/Services/PermissionServices";
 
 /**
  * PermissionAuthGuard - Authorization guard for permission-related operations
@@ -11,6 +12,138 @@ import Logger from "@/lib/Logger";
  * for use in server components and actions.
  */
 class PermissionAuthGuard extends BaseAuthGuard {
+  static async canPermissionView() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "READ" },
+          { resource: "PERMISSION" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to read permission without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to read a permission."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canPermissionCreate() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "CREATE" },
+          { resource: "PERMISSION" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to create permission without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a permission."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canPermissionUpdate() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "UPDATE" },
+          { resource: "PERMISSION" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to update permission without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to update a permission."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canPermissionDelete() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "DELETE" },
+          { resource: "PERMISSION" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to delete permission without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to delete a permission."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
   /**
    * Protect permission access - users can only access their own permissions or system permissions
    * @param {string} permissionId - Permission ID to access
@@ -225,16 +358,16 @@ class PermissionAuthGuard extends BaseAuthGuard {
    * @param {string} userId - User ID
    * @returns {Promise<boolean>} True if user can create permissions
    */
-  static async canCreatePermission(userId) {
-    try {
-      // For now, all authenticated users can create custom permissions
-      // This could be extended to check workspace limits, etc.
-      return true;
-    } catch (error) {
-      Logger.error("Failed to check permission creation authorization", error);
-      return false;
-    }
-  }
+  // static async canCreatePermission(userId) {
+  //   try {
+  //     // For now, all authenticated users can create custom permissions
+  //     // This could be extended to check workspace limits, etc.
+  //     return true;
+  //   } catch (error) {
+  //     Logger.error("Failed to check permission creation authorization", error);
+  //     return false;
+  //   }
+  // }
 
   /**
    * Check if user can assign permissions to roles
@@ -367,6 +500,22 @@ class PermissionAuthGuard extends BaseAuthGuard {
 }
 
 // Exported async functions for use in server components and actions
+export async function canPermissionViewAuth() {
+  return await PermissionAuthGuard.canPermissionView();
+}
+
+export async function canCreatePermissionAuth() {
+  return await PermissionAuthGuard.canPermissionCreate();
+}
+
+export async function canUpdatePermissionAuth() {
+  return await PermissionAuthGuard.canPermissionUpdate();
+}
+
+export async function canDeletePermissionAuth() {
+  return await PermissionAuthGuard.canPermissionDelete();
+}
+
 export async function protectPermission(permissionId) {
   return await PermissionAuthGuard.protect(permissionId);
 }

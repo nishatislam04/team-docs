@@ -9,6 +9,10 @@ import { PermissionModel } from "../Models/PermissionModel";
 import { PermissionServices } from "../Services/PermissionServices";
 import { revalidatePath } from "next/cache";
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import {
+  canCreatePermissionAuth,
+  canDeletePermissionAuth,
+} from "@/authorization/PermissionAuthGuard";
 
 class PermissionActions extends BaseAction {
   static get schema() {
@@ -18,6 +22,9 @@ class PermissionActions extends BaseAction {
   static async create(formData) {
     await requireWorkspaceAdmin();
 
+    const permission = await canCreatePermissionAuth();
+    if (permission.success === false) return permission;
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -26,7 +33,10 @@ class PermissionActions extends BaseAction {
       const session = await Session.getCurrentUser();
       await PermissionModel.create({
         ...result.data,
+        status: "ACTIVE",
+        scope: "WORKSPACE",
         ownerId: session.id,
+        workspaceId: session.workspaceId,
       });
 
       revalidatePath("/permissions", "page");
@@ -83,6 +93,9 @@ class PermissionActions extends BaseAction {
 
   static async delete(permissionId) {
     await requireWorkspaceAdmin();
+
+    const permission = await canDeletePermissionAuth();
+    if (permission.success === false) return permission;
 
     try {
       await PermissionServices.deleteResource(permissionId);

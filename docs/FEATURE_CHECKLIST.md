@@ -6,6 +6,8 @@
 
 - [] after creating first proect, ui does not refresh automatically. so, w dont see the project in the list.
 
+- [] there is some issue unlocking permission create submit button. even when there is enough data. probably need to update `useServerFormAction` hook
+
 - [] role table, permission assign is not working
 
 - [] user create, status make it 'ACTIVE' by default. right now 'inactive'

@@ -34,13 +34,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function PermissionCreateDialog({
   isDialogOpen,
   setIsDialogOpen,
   setStartFetchPermissions,
 }) {
-  const [permissionScopeStatus, setPermissionScopeStatus] = useState("general");
   const [projects, setProjects] = useState([]);
 
   // ! maybe use react use() or transition not useEFFECT!
@@ -54,7 +54,9 @@ export default function PermissionCreateDialog({
     return {
       name: "",
       description: "",
-      scope: "",
+      projectScope: "",
+      action: "",
+      resource: "",
     };
   }, []);
 
@@ -90,106 +92,138 @@ export default function PermissionCreateDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <Form {...form}>
-            <form onSubmit={form.onSubmit} className="mt-6 space-y-5">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Permission Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g. create, update, delete, view"
-                        className="h-11"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <ScrollArea className="max-h-[65vh] pr-4 w-full">
+            <Form {...form}>
+              <form onSubmit={form.onSubmit} className="mt-6 space-y-5 px-2">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Permission Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. create, update, delete, view"
+                          className="h-11"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <div className="space-y-1.5">
-                <Label htmlFor="scope">Permission Scope</Label>
-                <div className="flex gap-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className={permissionScopeStatus === "general" ? "px-6 bg-gray-200" : ""}
-                    onClick={() => setPermissionScopeStatus("general")}
-                  >
-                    General
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className={permissionScopeStatus === "project" ? "px-6 bg-gray-200" : ""}
-                    onClick={() => setPermissionScopeStatus("project")}
-                  >
-                    Project Scope Permission
-                  </Button>
-                </div>
-                {permissionScopeStatus === "general" ? (
-                  <Input
-                    id="scope"
-                    placeholder="Create your general permission"
-                    className="h-11 mt-2"
-                    {...form.register("scope")}
-                  />
-                ) : (
+                <div className="space-y-1.5">
+                  <Label htmlFor="projectScope">Permission Scope</Label>
                   <FormField
                     control={form.control}
-                    name="scope"
+                    name="projectScope"
                     render={({ field }) => (
                       <FormItem>
                         <Select value={field.value} onValueChange={field.onChange}>
                           <FormControl>
                             <SelectTrigger className="w-1/2 mt-2 h-11">
-                              <SelectValue placeholder="User Status" />
+                              <SelectValue placeholder="Select a project" />
                             </SelectTrigger>
                           </FormControl>
 
                           <SelectContent>
-                            {projects.map((project) => (
-                              <SelectItem key={project.id} value={project.name}>
-                                {project.name}
+                            {projects.length > 0 ? (
+                              projects.map((project) => (
+                                <SelectItem key={project.id} value={project.name}>
+                                  {project.name}
+                                </SelectItem>
+                              ))
+                            ) : (
+                              <SelectItem disabled key="no-projects">
+                                No projects available
                               </SelectItem>
-                            ))}
+                            )}
                           </SelectContent>
                           <FormMessage />
                         </Select>
                       </FormItem>
                     )}
                   />
-                )}
-              </div>
+                </div>
 
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Description <span className="text-muted-foreground">(optional)</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="What is this permission about?" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <div className="space-y-1.5 w-full justify-start flex gap-6">
+                  <FormField
+                    control={form.control}
+                    name="action"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Permission Action</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select an action" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="CREATE">Create</SelectItem>
+                            <SelectItem value="READ">Read</SelectItem>
+                            <SelectItem value="UPDATE">Update</SelectItem>
+                            <SelectItem value="DELETE">Delete</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="resource"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Permission Resource</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select a resource" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="PROJECT">Project</SelectItem>
+                            <SelectItem value="SECTION">Section</SelectItem>
+                            <SelectItem value="PAGE">Page</SelectItem>
+                            <SelectItem value="USER">User</SelectItem>
+                            <SelectItem value="ROLE">Role</SelectItem>
+                            <SelectItem value="PERMISSION">Permission</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-              <GeneralFormErrorDispaly form={form} />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Description <span className="text-muted-foreground">(optional)</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="What is this permission about?" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <DialogFooter className="pt-4">
-                <Button type="submit" disabled={form.isSubmitDisabled}>
-                  {form.formState.isSubmitting ? "Creating..." : "Create Permission"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+                <GeneralFormErrorDispaly form={form} />
+
+                <DialogFooter className="pt-4">
+                  <Button type="submit" disabled={form.isSubmitDisabled}>
+                    {form.formState.isSubmitting ? "Creating..." : "Create Permission"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     </>

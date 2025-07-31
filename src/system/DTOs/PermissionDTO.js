@@ -5,6 +5,7 @@ export class PermissionDTO {
       name: permission.name,
       description: permission.description,
       scope: permission.scope,
+      projectScope: permission.projectScope,
       action: permission.action,
       resource: permission.resource,
       status: permission.status,
