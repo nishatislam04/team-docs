@@ -5,9 +5,14 @@ import { ProjectModel } from "../Models/ProjectModel";
 import Logger from "@/lib/Logger";
 import { Session } from "@/lib/Session";
 import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import { WorkspaceService } from "../Services/WorkspaceServices";
-import { ProjectService } from "../Services/ProjectServices";
+import { WorkspaceServices } from "../Services/WorkspaceServices";
+import { ProjectServices } from "../Services/ProjectServices";
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import {
+  canCreateProjectAuth,
+  canDeleteProjectAuth,
+  canUpdateProjectAuth,
+} from "@/authorization/ProjectAuthGuard";
 
 class ProjectAction extends BaseAction {
   static get schema() {
@@ -16,6 +21,9 @@ class ProjectAction extends BaseAction {
 
   static async create(formData) {
     await requireWorkspaceAdmin();
+    const projectAuthorization = await canCreateProjectAuth();
+
+    if (!projectAuthorization.success) return projectAuthorization;
 
     const result = await this.execute(formData);
 
@@ -23,8 +31,16 @@ class ProjectAction extends BaseAction {
 
     try {
       const session = await Session.getCurrentUser();
-      const workspace = await WorkspaceService.getResource({
+      const workspace = await WorkspaceServices.getResource({
         where: { ownerId: session.id },
+        include: {
+          owner: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
       });
 
       await ProjectModel.create({
@@ -59,12 +75,16 @@ class ProjectAction extends BaseAction {
 
   static async update(projectId, formData) {
     await requireWorkspaceAdmin();
+    const projectAuthorization = await canUpdateProjectAuth(projectId);
+
+    if (!projectAuthorization.success) return projectAuthorization;
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
 
     try {
-      await ProjectService.updateResource(projectId, result.data);
+      await ProjectServices.updateResource(projectId, result.data);
 
       return {
         data: result.data,
@@ -88,8 +108,12 @@ class ProjectAction extends BaseAction {
   static async delete(projectId) {
     await requireWorkspaceAdmin();
 
+    const projectAuthorization = await canDeleteProjectAuth(projectId);
+
+    if (!projectAuthorization.success) return projectAuthorization;
+
     try {
-      await ProjectService.deleteResource(projectId);
+      await ProjectServices.deleteResource(projectId);
 
       return {
         success: true,

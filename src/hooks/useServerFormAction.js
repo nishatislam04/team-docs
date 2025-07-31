@@ -56,6 +56,8 @@ export function useServerFormAction({
     const result = await actionFn(formData);
 
     if (result?.success === false) {
+      console.log("result in server form action", result);
+
       // Set field-level errors
       Object.entries(result.errors || {}).forEach(([key, msg]) => {
         setError(key, {

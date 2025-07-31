@@ -94,8 +94,6 @@ class WorkspaceAction extends BaseAction {
         include: { owner: { select: { id: true, username: true, email: true } } },
       });
 
-      Logger.info(workspace, "Workspace found");
-
       if (!workspace) {
         return {
           success: false,

@@ -7,6 +7,7 @@ export class PermissionDTO {
       scope: permission.scope,
       action: permission.action,
       resource: permission.resource,
+      status: permission.status,
       workspaceId: permission.workspaceId,
     };
   }

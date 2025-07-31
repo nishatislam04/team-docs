@@ -1,4 +1,3 @@
-import { Session } from "@/lib/Session";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -82,17 +81,17 @@ export default async function WorkspaceApprovalPage() {
                   </CardContent>
                 </div>
 
-                <div className="w-[10%] flex flex-col items-center justify-center gap-4">
+                <div className="w-[15%] flex flex-col items-center justify-center gap-4">
                   {/* Approve Button with Dialog */}
                   <WorkspaceApprovalDialog
                     workspace={workspace}
                     trigger={
                       <Button
-                        size="lg"
+                        size="xl"
                         className="bg-green-600 hover:bg-green-700 px-6 py-3 text-base w-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                       >
                         <CheckCircle className="h-5 w-5 mr-1 translate-x-2" />
-                        <span className="font-medium pl-2">Approve</span>
+                        <span className="font-medium ml-1">Approve</span>
                       </Button>
                     }
                   />
@@ -102,12 +101,12 @@ export default async function WorkspaceApprovalPage() {
                     workspace={workspace}
                     trigger={
                       <Button
-                        size="lg"
+                        size="xl"
                         variant="destructive"
                         className="px-6 py-3 text-base w-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                       >
-                        <XCircle className="h-5 w-5 mr-0 -translate-x-2" />
-                        <span className="font-medium">Reject</span>
+                        <XCircle className="h-5 w-5 mr-0" />
+                        <span className="font-medium mr-2">Reject</span>
                       </Button>
                     }
                   />
@@ -117,12 +116,12 @@ export default async function WorkspaceApprovalPage() {
                     workspace={workspace}
                     trigger={
                       <Button
-                        size="lg"
+                        size="xl"
                         variant="outline"
                         className="px-6 py-3 text-base w-full flex items-center justify-center shadow-md hover:shadow-lg border-2 transition-all duration-200 transform hover:scale-105 bg-white hover:bg-gray-50"
                       >
-                        <Eye className="h-5 w-5 mr-0 -translate-x-2" />
-                        <span className="font-medium">Details</span>
+                        <Eye className="h-5 w-5 mr-0" />
+                        <span className="font-medium mr-2">Details</span>
                       </Button>
                     }
                   />

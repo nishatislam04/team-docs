@@ -16,6 +16,29 @@ export class BaseService {
     }
   }
 
+  static async findFirst({ where, select, include }) {
+    try {
+      const queryOptions = {
+        ...(where && { where }),
+      };
+
+      if (include) queryOptions.include = include;
+      else if (select) queryOptions.select = select;
+
+      if (include && select)
+        throw new Error("You cannot use both 'select' and 'include' in the same Prisma query.");
+
+      const resource = await this.model.findFirst(queryOptions);
+
+      if (this.dto && typeof this.dto.toResponse === "function")
+        return this.dto.toResponse(resource);
+
+      return resource;
+    } catch (error) {
+      Logger.error(error.message, "failed findFirst on BaseService");
+    }
+  }
+
   static async getResource({ where, include = null, select = null }) {
     try {
       if (include && select)

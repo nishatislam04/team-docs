@@ -48,7 +48,7 @@ export default function HeroSection({ session, isAuthenticated, workspaceId, wor
               workspaceStatus={workspaceStatus}
             />
 
-            {session && session.isWorkspaceOwner && (
+            {session && session.isSuperAdmin && (
               <Button
                 onClick={handleClick}
                 className="bg-red-400 text-white uppercase px-6 py-4 h-10 hover:bg-red-500"

@@ -3,6 +3,11 @@
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import { Session } from "@/lib/Session";
+import { ProjectServices } from "@/system/Services/ProjectServices";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
+import { UserServices } from "@/system/Services/UserServices";
+import { PermissionServices } from "@/system/Services/PermissionServices";
 
 /**
  * ProjectAuthGuard - Authorization guard for project-related operations
@@ -11,6 +16,283 @@ import Logger from "@/lib/Logger";
  * for use in server components and actions.
  */
 class ProjectAuthGuard extends BaseAuthGuard {
+  static async canViewProjects() {
+    const session = await Session.getCurrentUser();
+
+    const workspaceExist = await WorkspaceServices.hasResource({
+      where: { id: session.workspaceId },
+      include: {
+        owner: true,
+      },
+    });
+
+    if (!workspaceExist) {
+      Logger.warn(`User ${session.id} attempted to view projects without workspace membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to view projects."] },
+      };
+    }
+
+    const userExist = await UserServices.hasResource({
+      where: { id: session.id },
+    });
+
+    if (!userExist) {
+      Logger.warn(`User ${session.id} attempted to view projects without user membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to view projects."] },
+      };
+    }
+
+    // now we check permission model
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          // { action: "VIEW" },
+          { action: "READ" },
+          { resource: "PROJECT" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    Logger.debug(permission, "permission view testing");
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to view projects without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to view projects."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  /**
+   * This is system level checking, if workspace was granted authorization to create project from system
+   * @returns
+   */
+  static async canCreateProject() {
+    const session = await Session.getCurrentUser();
+
+    const workspaceExist = await WorkspaceServices.hasResource({
+      where: { id: session.workspaceId },
+      include: {
+        owner: true,
+      },
+    });
+
+    if (!workspaceExist) {
+      Logger.warn(`User ${session.id} attempted to create project without workspace membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a project."] },
+      };
+    }
+
+    const userExist = await UserServices.hasResource({
+      where: { id: session.id },
+    });
+
+    if (!userExist) {
+      Logger.warn(`User ${session.id} attempted to create project without user membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a project."] },
+      };
+    }
+
+    // now we check permission model
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "CREATE" },
+          { resource: "PROJECT" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to create project without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a project."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  // Super admins can create projects in any workspace
+  static async canUpdateProject(projectId) {
+    const session = await Session.getCurrentUser();
+
+    const workspaceExist = await WorkspaceServices.hasResource({
+      where: { id: session.workspaceId },
+      include: {
+        owner: true,
+      },
+    });
+
+    if (!workspaceExist) {
+      Logger.warn(`User ${session.id} attempted to create project without workspace membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a project."] },
+      };
+    }
+
+    const userExist = await UserServices.hasResource({
+      where: { id: session.id },
+    });
+
+    if (!userExist) {
+      Logger.warn(`User ${session.id} attempted to create project without user membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a project."] },
+      };
+    }
+
+    const projectExist = await ProjectServices.hasResource({
+      where: {
+        AND: [
+          { id: projectId },
+          { ownerId: session.id },
+          { workspaceId: session.workspaceId },
+          { status: "ACTIVE" },
+        ],
+      },
+    });
+
+    if (!projectExist) {
+      Logger.warn(`User ${session.id} attempted to update project without project membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to update a project."] },
+      };
+    }
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "UPDATE" },
+          { resource: "PROJECT" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to update project without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to update a project."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canDeleteProject(userId, projectId) {
+    const session = await Session.getCurrentUser();
+
+    const workspaceExist = await WorkspaceServices.hasResource({
+      where: { id: session.workspaceId },
+    });
+
+    if (!workspaceExist) {
+      Logger.warn(`User ${session.id} attempted to delete project without workspace membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to delete a project."] },
+      };
+    }
+
+    const userExist = await UserServices.hasResource({
+      where: { id: session.id },
+    });
+
+    if (!userExist) {
+      Logger.warn(`User ${session.id} attempted to delete project without user membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to delete a project."] },
+      };
+    }
+
+    const projectExist = await ProjectServices.hasResource({
+      where: {
+        AND: [
+          { id: projectId },
+          { ownerId: session.id },
+          { workspaceId: session.workspaceId },
+          { status: "ACTIVE" },
+        ],
+      },
+    });
+
+    if (!projectExist) {
+      Logger.warn(`User ${session.id} attempted to delete project without project membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to delete a project."] },
+      };
+    }
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "DELETE" },
+          { resource: "PROJECT" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to delete project without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to delete a project."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
   /**
    * Protect project access by slug - requires workspace membership
    * @param {string} slug - Project slug
@@ -276,52 +558,52 @@ class ProjectAuthGuard extends BaseAuthGuard {
    * @param {string} projectId - Project ID
    * @returns {Promise<boolean>} True if user can edit
    */
-  static async canEditProject(userId, projectId) {
-    try {
-      const project = await prisma.project.findUnique({
-        where: { id: projectId },
-        include: { workspace: true },
-      });
+  // static async canEditProject(userId, projectId) {
+  //   try {
+  //     const project = await prisma.project.findUnique({
+  //       where: { id: projectId },
+  //       include: { workspace: true },
+  //     });
 
-      if (!project) return false;
+  //     if (!project) return false;
 
-      // Project owners can edit
-      if (project.ownerId === userId) return true;
+  //     // Project owners can edit
+  //     if (project.ownerId === userId) return true;
 
-      // Workspace owners can edit projects in their workspace
-      if (project.workspace.ownerId === userId) return true;
+  //     // Workspace owners can edit projects in their workspace
+  //     if (project.workspace.ownerId === userId) return true;
 
-      // Check for edit permission
-      return await this.hasPermission(userId, "edit:project", "project", projectId);
-    } catch (error) {
-      Logger.error("Failed to check project edit permission", error);
-      return false;
-    }
-  }
+  //     // Check for edit permission
+  //     return await this.hasPermission(userId, "edit:project", "project", projectId);
+  //   } catch (error) {
+  //     Logger.error("Failed to check project edit permission", error);
+  //     return false;
+  //   }
+  // }
 
-  /**
-   * Check if user can create projects in workspace
-   * @param {string} userId - User ID
-   * @param {string} workspaceId - Workspace ID
-   * @returns {Promise<boolean>} True if user can create projects
-   */
-  static async canCreateProject(userId, workspaceId) {
-    try {
-      const workspace = await prisma.workspace.findUnique({
-        where: { id: workspaceId },
-        select: { ownerId: true },
-      });
+  // /**
+  //  * Check if user can create projects in workspace
+  //  * @param {string} userId - User ID
+  //  * @param {string} workspaceId - Workspace ID
+  //  * @returns {Promise<boolean>} True if user can create projects
+  //  */
+  // static async canCreateProject(userId, workspaceId) {
+  //   try {
+  //     const workspace = await prisma.workspace.findUnique({
+  //       where: { id: workspaceId },
+  //       select: { ownerId: true },
+  //     });
 
-      // Workspace owners can create projects
-      if (workspace?.ownerId === userId) return true;
+  //     // Workspace owners can create projects
+  //     if (workspace?.ownerId === userId) return true;
 
-      // Check for create permission
-      return await this.hasPermission(userId, "create:project", "workspace", workspaceId);
-    } catch (error) {
-      Logger.error("Failed to check project creation permission", error);
-      return false;
-    }
-  }
+  //     // Check for create permission
+  //     return await this.hasPermission(userId, "create:project", "workspace", workspaceId);
+  //   } catch (error) {
+  //     Logger.error("Failed to check project creation permission", error);
+  //     return false;
+  //   }
+  // }
 
   /**
    * Get user's role in project
@@ -355,6 +637,23 @@ class ProjectAuthGuard extends BaseAuthGuard {
 }
 
 // Exported async functions for use in server components and actions
+
+export async function canViewProjectsAuth() {
+  return await ProjectAuthGuard.canViewProjects();
+}
+
+export async function canCreateProjectAuth() {
+  return await ProjectAuthGuard.canCreateProject();
+}
+
+export async function canUpdateProjectAuth(projectId) {
+  return await ProjectAuthGuard.canUpdateProject(projectId);
+}
+
+export async function canDeleteProjectAuth(projectId) {
+  return await ProjectAuthGuard.canDeleteProject(projectId);
+}
+
 export async function protectProjectBySlug(slug) {
   return await ProjectAuthGuard.protectBySlug(slug);
 }

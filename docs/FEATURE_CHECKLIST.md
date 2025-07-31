@@ -1,5 +1,11 @@
 # need to fix [code-quality]
 
+- [] instead of awaiting in server component. we will pass the data via props to client component. and then use `use()` hook to resolve the promise. which would be more performant. because, server wont wait for the data.
+
+- [] we will use react optimistic for super admin > workspace > permissions > management
+
+- [] after creating first proect, ui does not refresh automatically. so, w dont see the project in the list.
+
 - [] role table, permission assign is not working
 
 - [] user create, status make it 'ACTIVE' by default. right now 'inactive'
