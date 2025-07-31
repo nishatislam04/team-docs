@@ -62,7 +62,7 @@ model Role {
   id          String   @id @default(cuid())
   name        String?
   description String?
-  role        UserRole @unique @default(DEVELOPER)
+  role        String   @unique
   isSystem    Boolean  @default(false)
   createdAt   DateTime @default(now())
 
@@ -78,13 +78,13 @@ model Role {
   @@unique([ownerId, name]) // ✅ name must be unique only within same user
 }
 
-enum UserRole {
-  ADMIN
-  DEVELOPER
-  VIEWER
-  PROJECT_MANAGER
-  SUPPORT
-}
+// enum UserRole {
+//   ADMIN
+//   DEVELOPER
+//   VIEWER
+//   PROJECT_MANAGER
+//   SUPPORT
+// }
 
 model Permission {
   id          String             @id @default(cuid())

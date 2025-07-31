@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import { PermissionServices } from "@/system/Services/PermissionServices";
 
 /**
  * RoleAuthGuard - Authorization guard for role-related operations
@@ -11,6 +12,142 @@ import Logger from "@/lib/Logger";
  * for use in server components and actions.
  */
 class RoleAuthGuard extends BaseAuthGuard {
+  static async canViewRoles() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "VIEW" },
+          { resource: "ROLE" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to view roles without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to view roles."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canCreateRole() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "CREATE" },
+          { resource: "ROLE" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to create role without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a role."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canUpdateRole(roleId) {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    // check role exist
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "UPDATE" },
+          { resource: "ROLE" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to update role without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to update a role."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canDeleteRole(roleId) {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    // check role exist
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "DELETE" },
+          { resource: "ROLE" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to delete role without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to delete a role."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
   /**
    * Protect role access - users can only access their own roles or system roles
    * @param {string} roleId - Role ID to access
@@ -173,16 +310,16 @@ class RoleAuthGuard extends BaseAuthGuard {
    * @param {string} userId - User ID
    * @returns {Promise<boolean>} True if user can create roles
    */
-  static async canCreateRole(userId) {
-    try {
-      // For now, all authenticated users can create custom roles
-      // This could be extended to check workspace limits, etc.
-      return true;
-    } catch (error) {
-      Logger.error("Failed to check role creation permission", error);
-      return false;
-    }
-  }
+  // static async canCreateRole(userId) {
+  //   try {
+  //     // For now, all authenticated users can create custom roles
+  //     // This could be extended to check workspace limits, etc.
+  //     return true;
+  //   } catch (error) {
+  //     Logger.error("Failed to check role creation permission", error);
+  //     return false;
+  //   }
+  // }
 
   /**
    * Check if user can assign roles in given scope
@@ -285,6 +422,22 @@ class RoleAuthGuard extends BaseAuthGuard {
 }
 
 // Exported async functions for use in server components and actions
+export async function canViewRolesAuth() {
+  return await RoleAuthGuard.canViewRoles();
+}
+
+export async function canCreateRoleAuth() {
+  return await RoleAuthGuard.canCreateRole();
+}
+
+export async function canUpdateRoleAuth(roleId) {
+  return await RoleAuthGuard.canUpdateRole(roleId);
+}
+
+export async function canDeleteRoleAuth(roleId) {
+  return await RoleAuthGuard.canDeleteRole(roleId);
+}
+
 export async function protectRole(roleId) {
   return await RoleAuthGuard.protect(roleId);
 }

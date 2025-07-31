@@ -9,6 +9,11 @@ import { Session } from "@/lib/Session";
 import { revalidatePath } from "next/cache";
 import { RoleService } from "../Services/RoleServices";
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import {
+  canCreateRoleAuth,
+  canDeleteRoleAuth,
+  canUpdateRoleAuth,
+} from "@/authorization/RoleAuthGuard";
 
 class RoleActions extends BaseAction {
   static get schema() {
@@ -17,6 +22,10 @@ class RoleActions extends BaseAction {
 
   static async create(formData) {
     await requireWorkspaceAdmin();
+
+    const canCreate = await canCreateRoleAuth();
+
+    if (canCreate.success === false) return canCreate;
 
     const result = await this.execute(formData);
 
@@ -27,6 +36,7 @@ class RoleActions extends BaseAction {
 
       await RoleModel.create({
         ...result.data,
+        role: result.data.name.toUpperCase(),
         ownerId: session.id,
       });
 
@@ -53,6 +63,10 @@ class RoleActions extends BaseAction {
 
   static async update(roleId, formData) {
     await requireWorkspaceAdmin();
+
+    const canUpdate = await canUpdateRoleAuth(roleId);
+
+    if (canUpdate.success === false) return canUpdate;
 
     const result = await this.execute(formData);
 
@@ -83,6 +97,10 @@ class RoleActions extends BaseAction {
 
   static async delete(roleId) {
     await requireWorkspaceAdmin();
+
+    const canDelete = await canDeleteRoleAuth(roleId);
+
+    if (canDelete.success === false) return canDelete;
 
     try {
       await RoleService.deleteResource(roleId);
