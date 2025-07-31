@@ -3,10 +3,7 @@
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
-import { Session } from "@/lib/Session";
 import { ProjectServices } from "@/system/Services/ProjectServices";
-import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
-import { UserServices } from "@/system/Services/UserServices";
 import { PermissionServices } from "@/system/Services/PermissionServices";
 
 /**
@@ -17,34 +14,9 @@ import { PermissionServices } from "@/system/Services/PermissionServices";
  */
 class ProjectAuthGuard extends BaseAuthGuard {
   static async canViewProjects() {
-    const session = await Session.getCurrentUser();
+    const session = await this.basicAuthCheck();
 
-    const workspaceExist = await WorkspaceServices.hasResource({
-      where: { id: session.workspaceId },
-      include: {
-        owner: true,
-      },
-    });
-
-    if (!workspaceExist) {
-      Logger.warn(`User ${session.id} attempted to view projects without workspace membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to view projects."] },
-      };
-    }
-
-    const userExist = await UserServices.hasResource({
-      where: { id: session.id },
-    });
-
-    if (!userExist) {
-      Logger.warn(`User ${session.id} attempted to view projects without user membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to view projects."] },
-      };
-    }
+    if (session.success === false) return session;
 
     // now we check permission model
     const permission = await PermissionServices.findFirst({
@@ -82,34 +54,9 @@ class ProjectAuthGuard extends BaseAuthGuard {
    * @returns
    */
   static async canCreateProject() {
-    const session = await Session.getCurrentUser();
+    const session = await this.basicAuthCheck();
 
-    const workspaceExist = await WorkspaceServices.hasResource({
-      where: { id: session.workspaceId },
-      include: {
-        owner: true,
-      },
-    });
-
-    if (!workspaceExist) {
-      Logger.warn(`User ${session.id} attempted to create project without workspace membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to create a project."] },
-      };
-    }
-
-    const userExist = await UserServices.hasResource({
-      where: { id: session.id },
-    });
-
-    if (!userExist) {
-      Logger.warn(`User ${session.id} attempted to create project without user membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to create a project."] },
-      };
-    }
+    if (session.success === false) return session;
 
     // now we check permission model
     const permission = await PermissionServices.findFirst({
@@ -142,34 +89,9 @@ class ProjectAuthGuard extends BaseAuthGuard {
 
   // Super admins can create projects in any workspace
   static async canUpdateProject(projectId) {
-    const session = await Session.getCurrentUser();
+    const session = await this.basicAuthCheck();
 
-    const workspaceExist = await WorkspaceServices.hasResource({
-      where: { id: session.workspaceId },
-      include: {
-        owner: true,
-      },
-    });
-
-    if (!workspaceExist) {
-      Logger.warn(`User ${session.id} attempted to create project without workspace membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to create a project."] },
-      };
-    }
-
-    const userExist = await UserServices.hasResource({
-      where: { id: session.id },
-    });
-
-    if (!userExist) {
-      Logger.warn(`User ${session.id} attempted to create project without user membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to create a project."] },
-      };
-    }
+    if (session.success === false) return session;
 
     const projectExist = await ProjectServices.hasResource({
       where: {
@@ -219,31 +141,9 @@ class ProjectAuthGuard extends BaseAuthGuard {
   }
 
   static async canDeleteProject(userId, projectId) {
-    const session = await Session.getCurrentUser();
+    const session = await this.basicAuthCheck();
 
-    const workspaceExist = await WorkspaceServices.hasResource({
-      where: { id: session.workspaceId },
-    });
-
-    if (!workspaceExist) {
-      Logger.warn(`User ${session.id} attempted to delete project without workspace membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to delete a project."] },
-      };
-    }
-
-    const userExist = await UserServices.hasResource({
-      where: { id: session.id },
-    });
-
-    if (!userExist) {
-      Logger.warn(`User ${session.id} attempted to delete project without user membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to delete a project."] },
-      };
-    }
+    if (session.success === false) return session;
 
     const projectExist = await ProjectServices.hasResource({
       where: {

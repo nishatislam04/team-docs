@@ -3,9 +3,6 @@
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import prisma from "@/lib/prisma";
 import Logger from "@/lib/Logger";
-import { Session } from "@/lib/Session";
-import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
-import { UserServices } from "@/system/Services/UserServices";
 import { PermissionServices } from "@/system/Services/PermissionServices";
 
 /**
@@ -94,6 +91,8 @@ class UserAuthGuard extends BaseAuthGuard {
 
     if (session.success === false) return session;
 
+    // check if user exist before udpate
+
     const permission = await PermissionServices.findFirst({
       where: {
         AND: [
@@ -126,6 +125,8 @@ class UserAuthGuard extends BaseAuthGuard {
     const session = await this.basicAuthCheck();
 
     if (session.success === false) return session;
+
+    // check if user exist before delete
 
     const permission = await PermissionServices.findFirst({
       where: {
