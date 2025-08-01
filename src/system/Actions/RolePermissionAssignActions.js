@@ -81,6 +81,9 @@ class RolePermissionAssignActions extends BaseAction {
   }
 }
 
-export async function assignPermissionsToRole(prevState, formData) {
-  return await RolePermissionAssignActions.create(formData);
+export async function assignPermissionsToRole(roleId, formData) {
+  return await RolePermissionAssignActions.create({
+    roleId,
+    permissions: formData.permissions,
+  });
 }

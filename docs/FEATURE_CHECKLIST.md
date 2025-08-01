@@ -1,5 +1,13 @@
 # need to fix [code-quality]
 
+# heavy client components will be dynamic import with `ssr: false`
+
+# normal client components will be dynamic import without `ssr`
+
+- [] when we put any hidden input, on zod schema, we need to optional it. see about this
+
+- [] after signin, user redirected to landing page. it should have immidiately show 'visit your workspace' but we need to refresh for that. fix this behaviour
+
 - [] instead of awaiting in server component. we will pass the data via props to client component. and then use `use()` hook to resolve the promise. which would be more performant. because, server wont wait for the data.
 
 - [] we will use react optimistic for super admin > workspace > permissions > management
@@ -47,3 +55,11 @@
 (2) clicking on it, will generate default permissions for the workspace to be applied to members
 (3) we can assign some or one permissions to a role
 (4) then we will assign the role to a member
+
+# build optimize
+
+`first load js` refer to if the user directly load the page.
+
+- but lets say user navigate from / to /users then only 18kb will be downloaded as 18kb is this route size
+- `first load js` include `First Load JS shared by all` + `size`
+- `first load js` should be 200kb-25kb
