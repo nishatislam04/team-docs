@@ -113,7 +113,7 @@ export default function PermissionCreateDialog({
                   )}
                 />
 
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <Label htmlFor="projectScope">Permission Scope</Label>
                   <FormField
                     control={form.control}

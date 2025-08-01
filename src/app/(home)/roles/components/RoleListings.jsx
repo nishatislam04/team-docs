@@ -44,14 +44,12 @@ export default function RoleListings({
     sortBy,
     sortOrder,
     handleSort,
-    fetchError,
     showSkeleton,
     selectedRoleId,
     openPermissionAssignDialog,
     setOpenPermissionAssignDialog,
   } = useRoles(shouldStartFetchRoles, setShouldStartFetchRoles);
 
-  // State for editing role
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
 
@@ -60,12 +58,8 @@ export default function RoleListings({
     setIsEditDialogOpen(true);
   };
 
-  if (fetchError)
-    return <ClientErrorUI errorMessage={fetchError} retry={setShouldStartFetchRoles} />;
-
   return (
     <>
-      {/* Edit Role Dialog */}
       {selectedRole && (
         <RoleEditDialog
           isDialogOpen={isEditDialogOpen}
@@ -125,7 +119,7 @@ export default function RoleListings({
                 <TableRow key={role.id} className="transition-colors duration-200 hover:bg-muted">
                   {/* Your table cells content */}
                   <TableCell className="px-6 py-5 text-base font-semibold">{role.name}</TableCell>
-                  <TableCell className="px-6 py-5 text-base text-muted-foreground">
+                  <TableCell className="px-6 py-5 text-base text-muted-foreground max-w-xs overflow-hidden whitespace-nowrap truncate">
                     {role.description || (
                       <span className="text-sm italic text-gray-400">No description</span>
                     )}

@@ -12,6 +12,7 @@ import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 import {
   canCreatePermissionAuth,
   canDeletePermissionAuth,
+  canUpdatePermissionAuth,
 } from "@/authorization/PermissionAuthGuard";
 
 class PermissionActions extends BaseAction {
@@ -63,12 +64,14 @@ class PermissionActions extends BaseAction {
   static async update(permissionId, formData) {
     await requireWorkspaceAdmin();
 
+    const permission = await canUpdatePermissionAuth();
+    if (permission.success === false) return permission;
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
 
     try {
-      Logger.debug("Updating permission", { permissionId, data: result.data });
       await PermissionServices.updateResource(permissionId, result.data);
 
       revalidatePath("/permissions", "page");

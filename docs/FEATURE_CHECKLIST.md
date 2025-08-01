@@ -8,6 +8,8 @@
 
 - [] there is some issue unlocking permission create submit button. even when there is enough data. probably need to update `useServerFormAction` hook
 
+- [] general form error should gone away upon closing the dialog. we can test it with authorization
+
 - [] role table, permission assign is not working
 
 - [] user create, status make it 'ACTIVE' by default. right now 'inactive'

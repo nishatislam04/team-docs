@@ -2,14 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Edit,
-  LayoutTemplate,
-  UsersRound,
-  ArrowUpDown,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { Edit, LayoutTemplate, UsersRound } from "lucide-react";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import {
   Table,
@@ -124,7 +117,7 @@ export default function ProjectListings({
                     <TableCell className="px-6 py-5 text-base font-semibold">
                       {project.name}
                     </TableCell>
-                    <TableCell className="px-6 py-5 text-base text-muted-foreground">
+                    <TableCell className="px-6 py-5 text-base text-muted-foreground max-w-xs overflow-hidden whitespace-nowrap truncate">
                       {project.description || (
                         <span className="text-sm italic text-gray-400">No description</span>
                       )}

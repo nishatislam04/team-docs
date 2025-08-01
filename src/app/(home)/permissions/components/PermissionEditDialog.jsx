@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +18,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { updatePermissionAction } from "@/system/Actions/PermissionActions";
 import { PermissionSchema } from "@/lib/schemas/PermissionSchema";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
+import { getAllProjectsFn } from "../actions/getAllProjects";
 
 export default function PermissionEditDialog({
   isDialogOpen,
@@ -25,14 +43,17 @@ export default function PermissionEditDialog({
   setStartFetchPermissions,
   permission,
 }) {
-  const { register, errors, formAction, isPending, isSubmitDisabled, reset } = useServerFormAction({
-    schema: PermissionSchema,
-    actionFn: (formData) =>
-      updatePermissionAction({
-        permissionId: permission.id,
-        formData,
-      }),
-    defaultValues: () => ({
+  const [projects, setProjects] = useState([]);
+
+  // ! maybe use react use() or transition not useEFFECT!
+  useEffect(() => {
+    getAllProjectsFn().then((res) => {
+      setProjects(res);
+    });
+  }, []);
+
+  const defaultValues = useMemo(
+    () => ({
       name: permission?.name || "",
       scope: permission?.scope || "",
       projectScope: permission?.projectScope || "",
@@ -40,20 +61,31 @@ export default function PermissionEditDialog({
       action: permission?.action || "",
       resource: permission?.resource || "",
     }),
-    successToast: {
-      title: "Permission updated successfully",
-      description: "The permission changes have been saved.",
-    },
+    [permission]
+  );
+
+  const form = useServerFormAction({
+    schema: PermissionSchema,
+    defaultValues,
+    actionFn: (formData) =>
+      updatePermissionAction({
+        permissionId: permission.id,
+        formData,
+      }),
     onSuccess: () => {
       setIsDialogOpen(false);
       setStartFetchPermissions(true);
     },
     isDialogOpen,
+    successToast: {
+      title: "Permission updated successfully",
+      description: "Your permission is ready to use!",
+    },
   });
 
   useEffect(() => {
-    if (isDialogOpen && permission) {
-      reset({
+    if (permission && isDialogOpen) {
+      form.reset({
         name: permission.name,
         scope: permission.scope,
         projectScope: permission.projectScope,
@@ -62,7 +94,8 @@ export default function PermissionEditDialog({
         resource: permission.resource || "",
       });
     }
-  }, [isDialogOpen, reset, permission]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDialogOpen, form.reset, permission]);
 
   return (
     <>
@@ -77,81 +110,154 @@ export default function PermissionEditDialog({
             <DialogDescription>Update the information for this permission.</DialogDescription>
           </DialogHeader>
 
-          <form action={formAction} className="mt-6 space-y-5">
-            <div className="space-y-1.5">
-              <Label htmlFor="scope">Permission Scope</Label>
-              <Input
-                id="scope"
-                placeholder="e.g. workspace, project, page"
-                className="h-11"
-                {...register("scope")}
-              />
-              {errors.scope && <p className="mt-1 text-sm text-red-500">{errors.scope.message}</p>}
-            </div>
+          <ScrollArea className="max-h-[65vh] pr-4 w-full">
+            <Form {...form}>
+              <form onSubmit={form.onSubmit} className="mt-6 space-y-5 px-2">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Permission Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. create, update, delete, view"
+                          className="h-11"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <div className="space-y-1.5">
-              <Label htmlFor="name">Permission Name</Label>
-              <Input
-                id="name"
-                placeholder="e.g. create, update, delete, view"
-                className="h-11"
-                {...register("name")}
-              />
-              {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>}
-            </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="scope">Permission Scope</Label>
+                  <Input
+                    id="scope"
+                    placeholder="e.g. workspace, project, page"
+                    className="h-11"
+                    disabled
+                    {...form.register("scope")}
+                  />
+                  {form.formState.errors.scope && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {form.formState.errors.scope.message}
+                    </p>
+                  )}
+                </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="description">
-                Description <span className="text-muted-foreground">(optional)</span>
-              </Label>
-              <Textarea
-                id="description"
-                placeholder="What is this permission about?"
-                {...register("description")}
-              />
-              {errors.description && (
-                <p className="mt-1 text-sm text-red-500">{errors.description.message}</p>
-              )}
-            </div>
+                <div className="space-y-1">
+                  <Label htmlFor="projectScope">Project Permission Scope</Label>
+                  <FormField
+                    control={form.control}
+                    name="projectScope"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select value={field.value} onValueChange={field.onChange}>
+                          <FormControl>
+                            <SelectTrigger className="w-1/2 mt-2 h-11">
+                              <SelectValue placeholder="Select a project" />
+                            </SelectTrigger>
+                          </FormControl>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="action">Permission Action</Label>
-              <Input
-                id="action"
-                placeholder="e.g. create, update, delete, view"
-                className="h-11"
-                {...register("action")}
-              />
-              {errors.action && (
-                <p className="mt-1 text-sm text-red-500">{errors.action.message}</p>
-              )}
-            </div>
+                          <SelectContent>
+                            {projects.length > 0 ? (
+                              projects.map((project) => (
+                                <SelectItem key={project.id} value={project.name}>
+                                  {project.name}
+                                </SelectItem>
+                              ))
+                            ) : (
+                              <SelectItem disabled key={new Date().getTime()}>
+                                No projects available
+                              </SelectItem>
+                            )}
+                          </SelectContent>
+                          <FormMessage />
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="resource">Permission Resource</Label>
-              <Input
-                id="resource"
-                placeholder="e.g. workspace, project, page"
-                className="h-11"
-                {...register("resource")}
-              />
-              {errors.resource && (
-                <p className="mt-1 text-sm text-red-500">{errors.resource.message}</p>
-              )}
-            </div>
+                <div className="space-y-1.5 w-full justify-start flex gap-6">
+                  <FormField
+                    control={form.control}
+                    name="action"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Permission Action</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select an action" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="CREATE">Create</SelectItem>
+                            <SelectItem value="READ">Read</SelectItem>
+                            <SelectItem value="UPDATE">Update</SelectItem>
+                            <SelectItem value="DELETE">Delete</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="resource"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Permission Resource</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select a resource" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="PROJECT">Project</SelectItem>
+                            <SelectItem value="SECTION">Section</SelectItem>
+                            <SelectItem value="PAGE">Page</SelectItem>
+                            <SelectItem value="USER">User</SelectItem>
+                            <SelectItem value="ROLE">Role</SelectItem>
+                            <SelectItem value="PERMISSION">Permission</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-            {errors._form && (
-              <div className="p-4 mb-4 border-l-4 border-red-500 bg-red-50">
-                <p className="text-red-700">{errors._form.message}</p>
-              </div>
-            )}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Description <span className="text-muted-foreground">(optional)</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="What is this permission about?" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <DialogFooter className="pt-4">
-              <Button type="submit" disabled={isSubmitDisabled}>
-                {isPending ? "Updating..." : "Update Permission"}
-              </Button>
-            </DialogFooter>
-          </form>
+                <GeneralFormErrorDispaly form={form} />
+
+                <DialogFooter className="pt-4">
+                  <Button type="submit" disabled={form.isSubmitDisabled}>
+                    {form.formState.isSubmitting ? "Updating..." : "Update Permission"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     </>

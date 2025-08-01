@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import TableLoading from "@/components/loading/TableLoading";
-import ClientErrorUI from "@/components/abstracts/clientErrorUI";
 import PermissionEditDialog from "./PermissionEditDialog";
 import DeletePermissionDialog from "./DeletePermissionDialog";
 import TablePagination from "@/components/shared/TablePagination";
@@ -29,12 +28,6 @@ export default function PermissionListings({
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedPermission, setSelectedPermission] = useState(null);
 
-  const handleEditClick = (permission) => {
-    setSelectedPermission(permission);
-    setIsEditDialogOpen(true);
-    console.log(permission, "from edit hadler");
-  };
-
   const {
     data: permissions,
     totalItems,
@@ -43,15 +36,15 @@ export default function PermissionListings({
     sortOrder,
     handleSort,
     showSkeleton,
-    fetchError,
   } = usePermissions(startFetchPermissions, setStartFetchPermissions);
 
-  if (fetchError)
-    return <ClientErrorUI errorMessage={fetchError} retry={setStartFetchPermissions} />;
+  const handleEditClick = (permission) => {
+    setSelectedPermission(permission);
+    setIsEditDialogOpen(true);
+  };
 
   return (
     <>
-      {/* Edit Permission Dialog */}
       {selectedPermission && (
         <PermissionEditDialog
           isDialogOpen={isEditDialogOpen}
@@ -82,14 +75,8 @@ export default function PermissionListings({
                   <SortIcon columnName="name" sortBy={sortBy} sortOrder={sortOrder} />
                 </div>
               </TableHead>
-              <TableHead
-                className="w-[160px] px-6 py-4 cursor-pointer hover:bg-muted/80 transition-colors"
-                onClick={() => handleSort("scope")}
-              >
-                <div className="flex items-center">
-                  Scope
-                  <SortIcon columnName="scope" sortBy={sortBy} sortOrder={sortOrder} />
-                </div>
+              <TableHead className="w-[160px] px-6 py-4 cursor-pointer hover:bg-muted/80 transition-colors">
+                <div className="flex items-center">Scope</div>
               </TableHead>
               <TableHead className="w-[480px] px-6 py-4">Description</TableHead>
               <TableHead className="w-[320px] text-center px-6 py-4">Actions</TableHead>
@@ -119,7 +106,7 @@ export default function PermissionListings({
                     {permission.scope}
                   </TableCell>
 
-                  <TableCell className="px-6 py-5 text-base text-muted-foreground">
+                  <TableCell className="px-6 py-5 text-base text-muted-foreground max-w-xs overflow-hidden whitespace-nowrap truncate">
                     {permission.description || (
                       <span className="text-sm italic text-gray-400">No description</span>
                     )}
