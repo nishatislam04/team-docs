@@ -7,9 +7,14 @@ import { Session } from "@/lib/Session";
 import { revalidatePath } from "next/cache";
 import { SectionSchema } from "@/lib/schemas/SectionSchema";
 import { SectionModel } from "../Models/SectionModel";
-import { ProjectService } from "../Services/ProjectServices";
+import { ProjectServices } from "../Services/ProjectServices";
 import { SectionServices } from "../Services/SectionServices";
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import {
+  canCreateSectionAuth,
+  canDeleteSectionAuth,
+  canUpdateSectionAuth,
+} from "@/authorization/SectionAuthGuard";
 
 class SectionActions extends BaseAction {
   static get schema() {
@@ -19,6 +24,9 @@ class SectionActions extends BaseAction {
   static async create(formData) {
     await requireWorkspaceAdmin();
 
+    const canCreateSection = await canCreateSectionAuth();
+    if (canCreateSection.success === false) return canCreateSection;
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -26,7 +34,8 @@ class SectionActions extends BaseAction {
     try {
       const { name, description, projectId } = result.data;
       const session = await Session.getCurrentUser();
-      const project = await ProjectService.getResource({ id: projectId });
+      const project = await ProjectServices.getResource({ where: { id: projectId } });
+      Logger.debug(project, "project from create section");
 
       await SectionModel.create({
         name,
@@ -59,6 +68,10 @@ class SectionActions extends BaseAction {
 
   static async update(sectionId, formData) {
     await requireWorkspaceAdmin();
+
+    const canUpdateSection = await canUpdateSectionAuth();
+    if (canUpdateSection.success === false) return canUpdateSection;
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
@@ -96,6 +109,9 @@ class SectionActions extends BaseAction {
   static async delete(sectionId) {
     await requireWorkspaceAdmin();
 
+    const canDeleteSection = await canDeleteSectionAuth();
+    if (canDeleteSection.success === false) return canDeleteSection;
+
     try {
       Logger.debug(sectionId, "delete section");
       // const section = await SectionServices.getResource({
@@ -126,7 +142,7 @@ class SectionActions extends BaseAction {
   }
 }
 
-export async function createSection(prevState, formData) {
+export async function createSection(formData) {
   return await SectionActions.create(formData);
 }
 

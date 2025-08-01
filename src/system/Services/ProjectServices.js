@@ -7,26 +7,26 @@ export class ProjectServices extends BaseService {
   static modelName = "project";
   static dto = ProjectDTO;
 
-  static async getResource({ id, slug }) {
-    if (!id && !slug) return false;
+  // static async getResource({ id, slug }) {
+  //   if (!id && !slug) return false;
 
-    try {
-      const whereConditions = [];
-      if (id) whereConditions.push({ id });
-      if (slug) whereConditions.push({ slug });
+  //   try {
+  //     const whereConditions = [];
+  //     if (id) whereConditions.push({ id });
+  //     if (slug) whereConditions.push({ slug });
 
-      const project = await ProjectModel.findFirst({
-        where: {
-          OR: whereConditions,
-        },
-      });
+  //     const project = await ProjectModel.findFirst({
+  //       where: {
+  //         OR: whereConditions,
+  //       },
+  //     });
 
-      const projectDTO = ProjectDTO.toResponse(project);
-      return projectDTO;
-    } catch (error) {
-      Logger.error(error.message, `project fetch fail`);
-    }
-  }
+  //     const projectDTO = ProjectDTO.toResponse(project);
+  //     return projectDTO;
+  //   } catch (error) {
+  //     Logger.error(error.message, `project fetch fail`);
+  //   }
+  // }
 
   static async updateResource(id, data) {
     try {

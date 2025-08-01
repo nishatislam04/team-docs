@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import { PermissionServices } from "@/system/Services/PermissionServices";
 
 /**
  * SectionAuthGuard - Authorization guard for section-related operations
@@ -11,6 +12,138 @@ import Logger from "@/lib/Logger";
  * for use in server components and actions.
  */
 class SectionAuthGuard extends BaseAuthGuard {
+  static async canReadSection() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const section = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "READ" },
+          { resource: "SECTION" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (section.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to read section without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to read a section."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canCreateSection() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const section = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "CREATE" },
+          { resource: "SECTION" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (section.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to create section without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a section."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canUpdateSection() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const section = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "UPDATE" },
+          { resource: "SECTION" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (section.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to update section without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to update a section."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canDeleteSection() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const section = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "DELETE" },
+          { resource: "SECTION" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (section.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to delete section without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to delete a section."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
   /**
    * Protect section access by ID - requires project access
    * @param {string} sectionId - Section ID to access
@@ -190,28 +323,28 @@ class SectionAuthGuard extends BaseAuthGuard {
    * @param {string} projectId - Project ID
    * @returns {Promise<boolean>} True if user can create sections
    */
-  static async canCreateSection(userId, projectId) {
-    try {
-      const project = await prisma.project.findUnique({
-        where: { id: projectId },
-        include: { workspace: true },
-      });
+  // static async canCreateSection(userId, projectId) {
+  //   try {
+  //     const project = await prisma.project.findUnique({
+  //       where: { id: projectId },
+  //       include: { workspace: true },
+  //     });
 
-      if (!project) return false;
+  //     if (!project) return false;
 
-      // Project owners can create sections
-      if (project.ownerId === userId) return true;
+  //     // Project owners can create sections
+  //     if (project.ownerId === userId) return true;
 
-      // Workspace owners can create sections in their projects
-      if (project.workspace.ownerId === userId) return true;
+  //     // Workspace owners can create sections in their projects
+  //     if (project.workspace.ownerId === userId) return true;
 
-      // Check for create permission
-      return await this.hasPermission(userId, "create:section", "project", projectId);
-    } catch (error) {
-      Logger.error("Failed to check section creation permission", error);
-      return false;
-    }
-  }
+  //     // Check for create permission
+  //     return await this.hasPermission(userId, "create:section", "project", projectId);
+  //   } catch (error) {
+  //     Logger.error("Failed to check section creation permission", error);
+  //     return false;
+  //   }
+  // }
 
   /**
    * Check if user can edit section
@@ -288,6 +421,22 @@ class SectionAuthGuard extends BaseAuthGuard {
 }
 
 // Exported async functions for use in server components and actions
+export async function canReadSectionAuth() {
+  return await SectionAuthGuard.canReadSection();
+}
+
+export async function canCreateSectionAuth() {
+  return await SectionAuthGuard.canCreateSection();
+}
+
+export async function canUpdateSectionAuth() {
+  return await SectionAuthGuard.canEditSection();
+}
+
+export async function canDeleteSectionAuth() {
+  return await SectionAuthGuard.canDeleteSection();
+}
+
 export async function protectSectionById(sectionId) {
   return await SectionAuthGuard.protectBySectionId(sectionId);
 }

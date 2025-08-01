@@ -210,7 +210,7 @@ model WorkspaceMember {
 model Project {
   id          String        @id @default(cuid())
   name        String
-  slug        String
+  slug        String        @unique
   description String?
   icon        String?
   color       String?

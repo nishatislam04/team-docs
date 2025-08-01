@@ -6,7 +6,7 @@ import Logger from "@/lib/Logger";
 import { Session } from "@/lib/Session";
 import { PageSchema } from "@/lib/schemas/PageSchema";
 import { PageModel } from "../Models/PageModel";
-import { ProjectService } from "../Services/ProjectServices";
+import { ProjectServices } from "../Services/ProjectServices";
 import { SectionServices } from "../Services/SectionServices";
 import { PageServices } from "../Services/PageServices";
 import { revalidatePath } from "next/cache";
@@ -30,8 +30,8 @@ class PageActions extends BaseAction {
       const section = await SectionServices.getResource({
         where: { id: sectionId },
       });
-      const project = await ProjectService.getResource({
-        id: section.projectId,
+      const project = await ProjectServices.getResource({
+        where: { id: section.projectId },
       });
 
       await PageModel.create({
