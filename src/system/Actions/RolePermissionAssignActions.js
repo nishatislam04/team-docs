@@ -5,8 +5,8 @@ import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
 import Logger from "@/lib/Logger";
 import { Session } from "@/lib/Session";
 import { RolePermissionAssignSchema } from "@/lib/schemas/RolePermissionAssignSchema";
-import { RolePermissionAssignModel } from "../Models/RolePermissionAssignModel";
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import { RolePermissionAssignServices } from "../Services/RolePermissionAssignServices";
 
 class RolePermissionAssignActions extends BaseAction {
   static get schema() {
@@ -24,42 +24,12 @@ class RolePermissionAssignActions extends BaseAction {
       const session = await Session.getCurrentUser();
       const { roleId, permissions } = result.data;
 
-      // ✅ Fetch current assignments from DB
-      const existing = await RolePermissionAssignModel.findByRoleId(roleId);
-      const existingIds = new Set(existing.map((p) => p.permissionId));
-      const newIds = new Set(permissions);
-
-      // ✅ Calculate new to add
-      const toAdd = permissions.filter((id) => !existingIds.has(id));
-      // ✅ Calculate which to delete
-      const toRemove = [...existingIds].filter((id) => !newIds.has(id));
-
-      // ✅ Upsert new permissions
-      await Promise.all(
-        toAdd.map((permissionId) =>
-          RolePermissionAssignModel.upsert({
-            where: {
-              roleId_permissionId: {
-                roleId,
-                permissionId,
-              },
-            },
-            create: {
-              roleId,
-              permissionId,
-              ownerId: session.id,
-            },
-            update: {
-              ownerId: session.id,
-            },
-          })
-        )
-      );
-
-      // ✅ Delete removed permissions
-      await Promise.all(
-        toRemove.map((permissionId) => RolePermissionAssignModel.delete(roleId, permissionId))
-      );
+      await RolePermissionAssignServices.performPermissionAssignment({
+        roleId,
+        permissions,
+        ownerId: session.id,
+        workspaceId: session.workspaceId,
+      });
 
       return {
         data: result.data,

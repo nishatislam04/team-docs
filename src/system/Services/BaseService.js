@@ -7,6 +7,11 @@ export class BaseService {
     return prisma[this.modelName];
   }
 
+  /**
+   * Check if resource exists
+   * @param {*} param0
+   * @returns
+   */
   static async hasResource({ where }) {
     try {
       const hasResource = await this.model.findFirst({ where });
@@ -16,6 +21,11 @@ export class BaseService {
     }
   }
 
+  /**
+   * Fetch First Resource
+   * @param {*} param0
+   * @returns
+   */
   static async findFirst({ where, select, include }) {
     try {
       const queryOptions = {
@@ -39,6 +49,11 @@ export class BaseService {
     }
   }
 
+  /**
+   * Fetch Single Resource
+   * @param {*} param0
+   * @returns
+   */
   static async getResource({ where, include = null, select = null }) {
     try {
       if (include && select)
@@ -60,6 +75,11 @@ export class BaseService {
     }
   }
 
+  /**
+   * Count Resources
+   * @param {*} param0
+   * @returns
+   */
   static async countResources({ where = {} }) {
     try {
       const count = await this.model.count({ where });
@@ -70,6 +90,11 @@ export class BaseService {
     }
   }
 
+  /**
+   * Fetch All Resources
+   * @param {*} param0
+   * @returns
+   */
   static async getAllResources({
     where = {},
     orderBy = { createdAt: "desc" },

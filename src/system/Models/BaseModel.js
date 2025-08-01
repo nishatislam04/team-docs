@@ -43,7 +43,7 @@ export class BaseModel {
     return await this.model.delete({ where });
   }
 
-  static async deleteMany(where) {
+  static async deleteMany({ where }) {
     return await this.model.deleteMany({ where });
   }
 
