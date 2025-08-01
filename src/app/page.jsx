@@ -4,7 +4,6 @@ import FeaturedSection from "./_components/FeaturedSection";
 import Footer from "./_components/Footer";
 import { Session } from "@/lib/Session";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
-import Logger from "@/lib/Logger";
 
 export const dynamic = "force-dynamic";
 

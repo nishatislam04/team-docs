@@ -14,17 +14,16 @@ trigger: always_on
 
 - Follow Next.js V15+ patterns and using App Router.
 - Use server components by default, client components only when necessary
+
 - Directory structure:
-- if specific hook, then create the hook near the directory (like app/user/hook/) otherwise at src/hooks/
-- if a page needed to be split into components, then put it near the directory (like app/user/components/) otherwise src/components/
-- if client component need to fetch something from server we create the server function near the route (like app/user/actions/) and use react useTransition hook to fetch data & show loading state
-- if a feature need zustand store, create it near the route (like app/user/store)
-- always try to create server function instead of route handler.
-- using authjs jwt with posgres database with prisma orm with credentials login only.
-- use nextjs dynamic to load the client component lazily with loading sapinner and add no ssr option.
-- each page should contains most nextjs common file conventions (like not-found, error, unauthorized etc)
-- to protect route, utilize middleware, server function & server component
-- handle edge cases on server component
+- extract client component complex render logic to a custom hook with naming ex `useUser()` near the directory
+- extract the jsx logic into sub component by putting it near it's directory otherwise src/components/
+- if client component need to fetch something, we export server action near it's directory and use react `useTransition` hook to fetch data & show loading state
+- create required zustand store near it's directory
+- always create server function (server action) instead of route handler to fetch data from client component.
+- using authjs jwt with prisma-postgres database with prisma orm with credentials login only.
+- use nextjs dynamic to load the client component lazily with loading spinner and add `ssr: no` option.
+- each route should contains nextjs most common file conventions (like not-found.jsx, error.jsx, unauthorized.jsx, loading.jsx etc)
 
 # Styling & UI
 
@@ -39,7 +38,6 @@ trigger: always_on
 
 - Use React Hook Form for form handling.
 - Use Zod for validation.
-- use useActionState hook to manage form with formAction.
 - use useTransition for fetch & loading state.
 - Implement proper error boundaries
 - Use server actions for form submissions
@@ -48,6 +46,7 @@ trigger: always_on
 # State Management & Logic
 
 - Use React Context for:
+  - do not try to use react context, unless it is really necessary
   - Theme
   - Authentication state
   - App-wide UI state (modals, toasts)
@@ -59,28 +58,26 @@ trigger: always_on
 
 # Backend & Database
 
-- Use Prisma for database access.
-- we are using postgres db.
+- use specific service classes to access database info
 
 # Performance
 
 - Use `next/dynamic` for lazy loading components
 - Implement proper loading states with `Suspense`
-- Use `unstable_cache` for data caching
+- Use React `cache()` for data caching
 - Optimize images with `next/image`
 - Use `React.memo` for expensive components
 - Implement proper code splitting
-- Monitor performance using Web Vitals
 
 # Error Handling
 
 - Use error boundaries for client-side errors
 - Implement proper error pages:
-  - `error.js` - Client-side errors
-  - `not-found.js` - 404 errors
-  - `global-error.js` - Root error boundary
-- use custom Logger class to print out errors
-- Provide user-friendly error messages
+  - `error.jsx` - Client-side errors
+  - `not-found.jsx` - 404 errors
+  - `global-error.jsx` - Root error boundary
+- use custom Logger class to print out errors.
+- Provide user-friendly error messages with current context
 
 # Documentation
 
@@ -94,5 +91,7 @@ trigger: always_on
 - Sanitize all user inputs
 - Protect against XSS, CSRF, and other common vulnerabilities
 - Use environment variables for sensitive data
-- Implement rate limiting
-- Use HTTPS in production
+
+# coding style
+
+- this is my logging utility. Logger.debug(value, "message"). when auto suggest via tab completion, follow this design. first argument is value & second value is message.
