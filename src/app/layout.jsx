@@ -1,3 +1,4 @@
+import { SessionProvider } from "next-auth/react";
 import "./styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -16,7 +17,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        {children}
+        <SessionProvider>{children}</SessionProvider>
         <Toaster />
       </body>
     </html>
