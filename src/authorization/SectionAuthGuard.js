@@ -430,7 +430,7 @@ export async function canCreateSectionAuth() {
 }
 
 export async function canUpdateSectionAuth() {
-  return await SectionAuthGuard.canEditSection();
+  return await SectionAuthGuard.canUpdateSection();
 }
 
 export async function canDeleteSectionAuth() {

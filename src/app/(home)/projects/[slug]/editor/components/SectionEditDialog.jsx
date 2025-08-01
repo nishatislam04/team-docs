@@ -1,5 +1,6 @@
 "use client";
 
+import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,8 +11,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { SectionSchema } from "@/lib/schemas/SectionSchema";
@@ -27,34 +35,23 @@ export default function SectionEditDialog({ section, isDialogOpen, setIsDialogOp
     [section]
   );
 
-  const successToast = useMemo(
-    () => ({
-      title: "Section updated successfully",
-      description: "Your section has been updated!",
-    }),
-    []
-  );
-
   const handleSuccess = useCallback(() => {
     setIsDialogOpen(false);
   }, [setIsDialogOpen]);
 
-  const { register, errors, formAction, isPending, isSubmitDisabled } =
-    useServerFormAction({
-      schema: SectionSchema,
-      actionFn: (prevState, formData) => 
-        updateSectionAction(prevState, { 
-          sectionId: section?.id, 
-          formData 
-        }),
-      defaultValues,
-      successToast,
-      onSuccess: handleSuccess,
-    });
+  const form = useServerFormAction({
+    schema: SectionSchema,
+    defaultValues,
+    actionFn: (formData) => updateSectionAction(section?.id, formData),
+    onSuccess: handleSuccess,
+    isDialogOpen,
+    successToast: {
+      title: "Section updated successfully",
+      description: "Your section has been updated!",
+    },
+  });
 
-  if (!section) {
-    return null;
-  }
+  if (!section) return null;
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -64,57 +61,55 @@ export default function SectionEditDialog({ section, isDialogOpen, setIsDialogOp
 
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-semibold">
-            Edit Section
-          </DialogTitle>
-          <DialogDescription>
-            Update the details of this section.
-          </DialogDescription>
+          <DialogTitle className="text-2xl font-semibold">Edit Section</DialogTitle>
+          <DialogDescription>Update the details of this section.</DialogDescription>
         </DialogHeader>
 
-        <form action={formAction} className="mt-6 space-y-5">
-          <div className="space-y-1.5">
-            <Label htmlFor="name">Section Name</Label>
-            <Input
-              id="name"
-              placeholder="e.g. Introductions, Getting Started etc"
-              className="h-11"
-              {...register("name")}
+        <Form {...form}>
+          <form onSubmit={form.onSubmit} className="mt-6 space-y-5">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Section Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="e.g. Project Management, Team Management"
+                      className="h-11"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
-            )}
-          </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="description">
-              Description{" "}
-              <span className="text-muted-foreground">(optional)</span>
-            </Label>
-            <Textarea
-              id="description"
-              placeholder="What is this section about?"
-              {...register("description")}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Description <span className="text-muted-foreground">(optional)</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="What is this section about?" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.description && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
 
-          {errors._form && (
-            <div className="p-4 mb-4 border-l-4 border-red-500 bg-red-50">
-              <p className="text-red-700">{errors._form.message}</p>
-            </div>
-          )}
+            <GeneralFormErrorDispaly form={form} />
 
-          <DialogFooter className="pt-4">
-            <Button type="submit" disabled={isSubmitDisabled}>
-              {isPending ? "Updating..." : "Update Section"}
-            </Button>
-          </DialogFooter>
-        </form>
+            <DialogFooter className="pt-4">
+              <Button type="submit" disabled={form.isSubmitDisabled}>
+                {form.formState.isPending ? "Updating..." : "Update Section"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

@@ -5,8 +5,11 @@ import ProjectEditorDialogs from "./ProjectEditorDialogs";
 import { useEffect } from "react";
 import { useProjectStore } from "../../store/useProjectStore";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default function ProjectEditorShell({ hasSection, project, sections }) {
+export default function ProjectEditorShell({ hasSection, project, sections, canReadPermission }) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const setProject = useProjectStore((state) => state.setProject);
   const setSections = useProjectStore((state) => state.setSections);
@@ -38,6 +41,11 @@ export default function ProjectEditorShell({ hasSection, project, sections }) {
       selectByNames(sectionParam, pageParam);
     }
   }, [searchParams, sections]);
+
+  if (canReadPermission.success === false) {
+    toast.error(canReadPermission.errors._form[0]);
+    return router.replace("/");
+  }
 
   return (
     <>

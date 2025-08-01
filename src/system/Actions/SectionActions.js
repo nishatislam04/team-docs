@@ -70,6 +70,7 @@ class SectionActions extends BaseAction {
     await requireWorkspaceAdmin();
 
     const canUpdateSection = await canUpdateSectionAuth();
+    Logger.debug(canUpdateSection, "canUpdateSection");
     if (canUpdateSection.success === false) return canUpdateSection;
 
     const result = await this.execute(formData);
@@ -77,7 +78,6 @@ class SectionActions extends BaseAction {
     if (!result.success) return result;
 
     try {
-      Logger.debug("Updating section", { sectionId, data: result.data });
       const section = await SectionServices.getSection(sectionId);
       const project = section.project;
 
@@ -146,7 +146,7 @@ export async function createSection(formData) {
   return await SectionActions.create(formData);
 }
 
-export async function updateSectionAction(prevState, { sectionId, formData }) {
+export async function updateSectionAction(sectionId, formData) {
   return await SectionActions.update(sectionId, formData);
 }
 

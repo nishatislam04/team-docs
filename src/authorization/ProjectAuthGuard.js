@@ -34,8 +34,6 @@ class ProjectAuthGuard extends BaseAuthGuard {
       },
     });
 
-    Logger.debug(permission, "permission view testing");
-
     if (permission.status !== "ACTIVE") {
       Logger.warn(`User ${session.id} attempted to view projects without permission`);
       return {
