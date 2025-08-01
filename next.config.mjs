@@ -21,7 +21,7 @@ const nextConfig = {
   },
   experimental: {
     authInterrupts: true,
-    // ppr: "incremental",
+    ppr: "incremental",
     // Forward browser logs to the terminal for easier debugging
     browserDebugInfoInTerminal: true,
 
