@@ -12,6 +12,7 @@ export class WorkspaceDTO {
         id: workspace.ownerId,
         username: workspace.owner.username,
         email: workspace?.owner?.email,
+        status: workspace?.owner?.status,
         createdAt: workspace?.owner?.createdAt?.toISOString(),
       },
     };

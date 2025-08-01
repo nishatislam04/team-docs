@@ -136,40 +136,40 @@ export class WorkspaceServices extends BaseService {
     }
   }
 
-  /**
-   * Get detailed workspace information including owner details
-   * @param {string} workspaceId - The workspace ID
-   * @returns {Object|null} Detailed workspace information or null if not found
-   */
-  static async getWorkspaceDetails(workspaceId) {
-    try {
-      const workspace = await WorkspaceModel.findUnique({
-        where: { id: workspaceId },
-        include: {
-          owner: {
-            select: {
-              id: true,
-              username: true,
-              email: true,
-              createdAt: true,
-              status: true,
-            },
-          },
-          _count: {
-            select: {
-              members: true,
-              projects: true,
-            },
-          },
-        },
-      });
+  // /**
+  //  * Get detailed workspace information including owner details
+  //  * @param {string} workspaceId - The workspace ID
+  //  * @returns {Object|null} Detailed workspace information or null if not found
+  //  */
+  // static async getWorkspaceDetails(workspaceId) {
+  //   try {
+  //     const workspace = await WorkspaceModel.findUnique({
+  //       where: { id: workspaceId },
+  //       include: {
+  //         owner: {
+  //           select: {
+  //             id: true,
+  //             username: true,
+  //             email: true,
+  //             createdAt: true,
+  //             status: true,
+  //           },
+  //         },
+  //         _count: {
+  //           select: {
+  //             members: true,
+  //             projects: true,
+  //           },
+  //         },
+  //       },
+  //     });
 
-      if (!workspace) return null;
+  //     if (!workspace) return null;
 
-      return this.dto.toResponse(workspace);
-    } catch (error) {
-      Logger.error(error.message, "Get workspace details failed");
-      return null;
-    }
-  }
+  //     return this.dto.toResponse(workspace);
+  //   } catch (error) {
+  //     Logger.error(error.message, "Get workspace details failed");
+  //     return null;
+  //   }
+  // }
 }

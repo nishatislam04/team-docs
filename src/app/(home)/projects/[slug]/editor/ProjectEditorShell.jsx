@@ -8,7 +8,13 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function ProjectEditorShell({ hasSection, project, sections, canReadPermission }) {
+export default function ProjectEditorShell({
+  hasSection,
+  project,
+  sections,
+  canReadSectionPermission,
+  canReadPagePermission,
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const setProject = useProjectStore((state) => state.setProject);
@@ -42,8 +48,13 @@ export default function ProjectEditorShell({ hasSection, project, sections, canR
     }
   }, [searchParams, sections]);
 
-  if (canReadPermission.success === false) {
-    toast.error(canReadPermission.errors._form[0]);
+  if (canReadSectionPermission.success === false) {
+    toast.error(canReadSectionPermission.errors._form[0]);
+    return router.replace("/");
+  }
+
+  if (canReadPagePermission.success === false) {
+    toast.error(canReadPagePermission.errors._form[0]);
     return router.replace("/");
   }
 

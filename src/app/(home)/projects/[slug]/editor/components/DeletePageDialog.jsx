@@ -21,7 +21,6 @@ export default function DeletePageDialog({ page, isDialogOpen, setIsDialogOpen }
   const handleDelete = async () => {
     try {
       setIsDeleting(true);
-      Logger.debug("Deleting page", { pageId: page.id });
       const result = await deletePageAction(null, page.id);
 
       if (result.success) {

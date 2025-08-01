@@ -166,7 +166,6 @@ export class EditorService extends BaseService {
    * @returns {Promise<Object>} Load result
    */
   static async loadContent(pageId) {
-    Logger.debug(pageId, "Loading content");
     try {
       this.validateRequired({ pageId }, ["pageId"]);
 

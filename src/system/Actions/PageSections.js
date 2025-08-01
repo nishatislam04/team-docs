@@ -11,6 +11,11 @@ import { SectionServices } from "../Services/SectionServices";
 import { PageServices } from "../Services/PageServices";
 import { revalidatePath } from "next/cache";
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import {
+  canCreatePageAuth,
+  canDeletePageAuth,
+  canUpdatePageAuth,
+} from "@/authorization/PageAuthGuard";
 
 class PageActions extends BaseAction {
   static get schema() {
@@ -20,8 +25,10 @@ class PageActions extends BaseAction {
   static async create(formData) {
     await requireWorkspaceAdmin();
 
-    const result = await this.execute(formData);
+    const permission = await canCreatePageAuth();
+    if (permission.success === false) return permission;
 
+    const result = await this.execute(formData);
     if (!result.success) return result;
 
     try {
@@ -73,12 +80,14 @@ class PageActions extends BaseAction {
   static async update(pageId, formData) {
     await requireWorkspaceAdmin();
 
+    const permission = await canUpdatePageAuth();
+    if (permission.success === false) return permission;
+
     const result = await this.execute(formData);
 
     if (!result.success) return result;
 
     try {
-      Logger.debug("Updating page", { pageId, data: result.data });
       const page = await PageServices.getPage(pageId);
       const project = page.section.project;
 
@@ -110,8 +119,10 @@ class PageActions extends BaseAction {
   static async delete(pageId) {
     await requireWorkspaceAdmin();
 
+    const permission = await canDeletePageAuth();
+    if (permission.success === false) return permission;
+
     try {
-      Logger.debug("Deleting page", { pageId });
       const page = await PageServices.getPage(pageId);
       const project = page.section.project;
 
@@ -135,7 +146,6 @@ class PageActions extends BaseAction {
 
   static async duplicate(pageId) {
     try {
-      Logger.debug("Duplicating page", { pageId });
       const session = await Session.getCurrentUser();
 
       // Get the original page to find its project for revalidation
@@ -163,11 +173,11 @@ class PageActions extends BaseAction {
   }
 }
 
-export async function createPage(prevState, formData) {
+export async function createPage(formData) {
   return await PageActions.create(formData);
 }
 
-export async function updatePageAction(prevState, { pageId, formData }) {
+export async function updatePageAction(pageId, formData) {
   return await PageActions.update(pageId, formData);
 }
 

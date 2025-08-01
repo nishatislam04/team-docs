@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import { PermissionServices } from "@/system/Services/PermissionServices";
 
 /**
  * PageAuthGuard - Authorization guard for page-related operations
@@ -11,6 +12,138 @@ import Logger from "@/lib/Logger";
  * for use in server components and actions.
  */
 class PageAuthGuard extends BaseAuthGuard {
+  static async canReadPage() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "READ" },
+          { resource: "PAGE" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to read page without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to read a page."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canCreatePage() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "CREATE" },
+          { resource: "PAGE" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to create page without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a page."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canUpdatePage() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "UPDATE" },
+          { resource: "PAGE" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to update page without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to update a page."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  static async canDeletePage() {
+    const session = await this.basicAuthCheck();
+
+    if (session.success === false) return session;
+
+    const permission = await PermissionServices.findFirst({
+      where: {
+        AND: [
+          { workspaceId: session.workspaceId },
+          { ownerId: session.id },
+          { scope: "SYSTEM" },
+          { action: "DELETE" },
+          { resource: "PAGE" },
+        ],
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (permission.status !== "ACTIVE") {
+      Logger.warn(`User ${session.id} attempted to delete page without permission`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to delete a page."] },
+      };
+    }
+
+    return {
+      success: true,
+    };
+  }
+
   /**
    * Protect page access by ID - requires section/project access
    * @param {string} pageId - Page ID to access
@@ -245,41 +378,41 @@ class PageAuthGuard extends BaseAuthGuard {
     return { page, membership };
   }
 
-  /**
-   * Check if user can create pages in section
-   * @param {string} userId - User ID
-   * @param {string} sectionId - Section ID
-   * @returns {Promise<boolean>} True if user can create pages
-   */
-  static async canCreatePage(userId, sectionId) {
-    try {
-      const section = await prisma.section.findUnique({
-        where: { id: sectionId },
-        include: {
-          project: {
-            include: { workspace: true },
-          },
-        },
-      });
+  // /**
+  //  * Check if user can create pages in section
+  //  * @param {string} userId - User ID
+  //  * @param {string} sectionId - Section ID
+  //  * @returns {Promise<boolean>} True if user can create pages
+  //  */
+  // static async canCreatePage(userId, sectionId) {
+  //   try {
+  //     const section = await prisma.section.findUnique({
+  //       where: { id: sectionId },
+  //       include: {
+  //         project: {
+  //           include: { workspace: true },
+  //         },
+  //       },
+  //     });
 
-      if (!section) return false;
+  //     if (!section) return false;
 
-      // Section owners can create pages
-      if (section.ownerId === userId) return true;
+  //     // Section owners can create pages
+  //     if (section.ownerId === userId) return true;
 
-      // Project owners can create pages in their sections
-      if (section.project.ownerId === userId) return true;
+  //     // Project owners can create pages in their sections
+  //     if (section.project.ownerId === userId) return true;
 
-      // Workspace owners can create pages in their workspace
-      if (section.project.workspace.ownerId === userId) return true;
+  //     // Workspace owners can create pages in their workspace
+  //     if (section.project.workspace.ownerId === userId) return true;
 
-      // Check for create permission
-      return await this.hasPermission(userId, "create:page", "section", sectionId);
-    } catch (error) {
-      Logger.error("Failed to check page creation permission", error);
-      return false;
-    }
-  }
+  //     // Check for create permission
+  //     return await this.hasPermission(userId, "create:page", "section", sectionId);
+  //   } catch (error) {
+  //     Logger.error("Failed to check page creation permission", error);
+  //     return false;
+  //   }
+  // }
 
   /**
    * Check if user can edit page
@@ -392,6 +525,22 @@ class PageAuthGuard extends BaseAuthGuard {
 }
 
 // Exported async functions for use in server components and actions
+export async function canReadPageAuth() {
+  return await PageAuthGuard.canReadPage();
+}
+
+export async function canCreatePageAuth() {
+  return await PageAuthGuard.canCreatePage();
+}
+
+export async function canUpdatePageAuth() {
+  return await PageAuthGuard.canUpdatePage();
+}
+
+export async function canDeletePageAuth() {
+  return await PageAuthGuard.canDeletePage();
+}
+
 export async function protectPageById(pageId) {
   return await PageAuthGuard.protectByPageId(pageId);
 }
