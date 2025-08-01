@@ -4,7 +4,6 @@ import FeaturedSection from "./_components/FeaturedSection";
 import Footer from "./_components/Footer";
 import { getWorkspaceFn } from "./_components/actions/getWorkspace";
 
-// export const dynamic = "force-dynamic";
 export const experimental_ppr = true;
 
 export default async function LandingPage() {

@@ -1,13 +1,13 @@
 import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
 import WorkspaceShell from "./WorkspaceShell";
 import { Session } from "@/lib/Session";
-import { WorkspaceService } from "@/system/Services/WorkspaceServices";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 
 export default async function WorkspacePage() {
   await requireWorkspaceActive();
   const user = await Session.getCurrentUser();
 
-  const hasWorkspace = await WorkspaceService.hasResource({
+  const hasWorkspace = await WorkspaceServices.hasResource({
     where: { ownerId: user.id },
   });
 
