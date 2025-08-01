@@ -1,19 +1,20 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 import { ArrowRight, Clock, AlertCircle, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useCurrentSession } from "@/hooks/useCurrentSession";
 
 export function useActionButton({
   registrationSuccess,
   registrationData,
   isAuthenticated,
-  session,
-  workspaceId,
-  workspaceStatus,
+  workspace,
   resetRegistrationState,
   openFormDialog,
 }) {
   const router = useRouter();
+  const userSession = useCurrentSession();
+  const { workspaceId, workspaceStatus } = use(workspace);
   const [buttonText, setButtonText] = useState("Get Started for Free");
   const [buttonIcon, setButtonIcon] = useState(null);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -38,14 +39,14 @@ export function useActionButton({
       }
 
       if (isAuthenticated) {
-        if (session && session?.status !== "ACTIVE") {
+        if (userSession && userSession?.status !== "ACTIVE") {
           setButtonText("Account Inactive");
           setButtonIcon(<AlertCircle className="ml-2 h-4 w-4" />);
           setIsDisabled(true);
           return;
         }
         if (workspaceId) {
-          if (session && session?.status === "ACTIVE" && workspaceStatus === "ACTIVE") {
+          if (userSession && userSession?.status === "ACTIVE" && workspaceStatus === "ACTIVE") {
             setButtonText("Visit your workspace");
             setButtonIcon(<ArrowRight className="ml-2 h-4 w-4" />);
             setIsDisabled(false);
@@ -71,18 +72,11 @@ export function useActionButton({
     };
 
     checkUserStatus();
-  }, [
-    isAuthenticated,
-    workspaceId,
-    workspaceStatus,
-    session,
-    registrationSuccess,
-    registrationData,
-  ]);
+  }, [isAuthenticated, workspaceId, workspaceStatus, registrationSuccess, registrationData]);
 
   // * Reset registration state after server props are updated
   useEffect(() => {
-    if (registrationSuccess && (workspaceId || session)) {
+    if (registrationSuccess && (workspaceId || userSession)) {
       // Server props have been updated, reset the registration state
       const timer = setTimeout(() => {
         resetRegistrationState();
@@ -90,7 +84,7 @@ export function useActionButton({
 
       return () => clearTimeout(timer);
     }
-  }, [registrationSuccess, workspaceId, session, resetRegistrationState]);
+  }, [registrationSuccess, workspaceId, userSession, resetRegistrationState]);
 
   // * handle click
   const handleButtonClick = () => {
@@ -103,7 +97,7 @@ export function useActionButton({
       isAuthenticated &&
       workspaceId &&
       workspaceStatus === "ACTIVE" &&
-      session?.status === "ACTIVE"
+      userSession?.status === "ACTIVE"
     ) {
       // Redirect to workspace when button is clicked
       router.push(`/home`);

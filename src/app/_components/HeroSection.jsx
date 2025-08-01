@@ -6,13 +6,13 @@ import ActionButton from "./ActionButton";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { MoveUpRight } from "lucide-react";
+import { useCurrentSession } from "@/hooks/useCurrentSession";
+import { Suspense } from "react";
 
-export default function HeroSection({ session, isAuthenticated, workspaceId, workspaceStatus }) {
+export default function HeroSection({ workspace }) {
   const router = useRouter();
-
-  const handleClick = () => {
-    router.push("/admin");
-  };
+  const userSession = useCurrentSession();
+  const isAuthenticated = !!userSession;
 
   return (
     <section className="container px-4 py-16 mx-auto md:py-24">
@@ -41,16 +41,13 @@ export default function HeroSection({ session, isAuthenticated, workspaceId, wor
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <div className="w-full flex items-center justify-center gap-2">
-            <ActionButton
-              session={session}
-              isAuthenticated={isAuthenticated}
-              workspaceId={workspaceId}
-              workspaceStatus={workspaceStatus}
-            />
+            <Suspense fallback={<div>Loading Action Button...</div>}>
+              <ActionButton isAuthenticated={isAuthenticated} workspace={workspace} />
+            </Suspense>
 
-            {session && session.isSuperAdmin && (
+            {userSession && userSession.isSuperAdmin && (
               <Button
-                onClick={handleClick}
+                onClick={() => router.push("/admin")}
                 className="bg-red-400 text-white uppercase px-6 py-4 h-10 hover:bg-red-500"
               >
                 Go to Admin Panel

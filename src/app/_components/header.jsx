@@ -15,13 +15,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut, Settings } from "lucide-react";
 import { signOut } from "next-auth/react";
 import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
+import { useCurrentSession } from "@/hooks/useCurrentSession";
 
 /**
  * Header component that displays navigation and auth state
  * @param {Object} props - Component props
  * @param {Object|null} props.session - User session object or null if not authenticated
  */
-export default function Header({ session }) {
+export default function Header() {
+  const userSession = useCurrentSession();
   // Function to get initials from name for avatar fallback
   const getInitials = (name) => {
     if (!name) return "TD";
@@ -41,7 +43,7 @@ export default function Header({ session }) {
       </Link>
 
       <div className="flex items-center space-x-4">
-        {session ? (
+        {userSession ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -51,12 +53,12 @@ export default function Header({ session }) {
               >
                 <Avatar className="w-10 h-10 border border-border/50 shadow-sm">
                   <AvatarImage
-                    src={session.image}
-                    alt={session.username || "User"}
+                    src={userSession?.image}
+                    alt={userSession?.username || "User"}
                     className="object-cover"
                   />
                   <AvatarFallback className="text-sm font-medium bg-primary/5">
-                    {getInitials(session.username)}
+                    {getInitials(userSession?.username)}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -72,18 +74,20 @@ export default function Header({ session }) {
                 <div className="flex items-center gap-3">
                   <Avatar className="w-10 h-10 border-2 border-background shadow-sm">
                     <AvatarImage
-                      src={session.image}
-                      alt={session.username || "User"}
+                      src={userSession?.image}
+                      alt={userSession?.username || "User"}
                       className="object-cover"
                     />
                     <AvatarFallback className="text-sm font-medium bg-primary/5">
-                      {getInitials(session.username)}
+                      {getInitials(userSession?.username)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <p className="text-sm font-semibold truncate">{session.username || "User"}</p>
+                    <p className="text-sm font-semibold truncate">
+                      {userSession?.username || "User"}
+                    </p>
                     <p className="text-xs truncate text-muted-foreground max-w-[180px]">
-                      {session.email || ""}
+                      {userSession?.email || ""}
                     </p>
                   </div>
                 </div>

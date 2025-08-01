@@ -13,7 +13,7 @@ import RegistrationDialog from "./registration/RegistrationDialog";
 //   loading: <DialogLoading />,
 // });
 
-export default function ActionButton({ session, isAuthenticated, workspaceId, workspaceStatus }) {
+export default function ActionButton({ isAuthenticated, workspace }) {
   const { openFormDialog, registrationSuccess, registrationData, resetRegistrationState } =
     useRegistrationStore();
 
@@ -21,9 +21,7 @@ export default function ActionButton({ session, isAuthenticated, workspaceId, wo
     registrationSuccess,
     registrationData,
     isAuthenticated,
-    session,
-    workspaceId,
-    workspaceStatus,
+    workspace,
     resetRegistrationState,
     openFormDialog,
   });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,6 +16,7 @@ import {
 import { Zap, Users, Moon, Shield, Globe, Palette, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ActionButton from "./ActionButton";
+import { useCurrentSession } from "@/hooks/useCurrentSession";
 
 const featureCategories = [
   { value: "core", label: "Core Features" },
@@ -23,12 +24,9 @@ const featureCategories = [
   { value: "custom", label: "Customization" },
 ];
 
-export default function FeaturedSection({
-  session,
-  isAuthenticated,
-  workspaceId,
-  workspaceStatus,
-}) {
+export default function FeaturedSection({ workspace }) {
+  const userSession = useCurrentSession();
+  const isAuthenticated = !!userSession;
   const [activeCategory, setActiveCategory] = useState("core");
   const [shouldReduceMotion, setShouldReduceMotion] = useState(false);
   const { ref: sectionRef, inView } = useInView({ threshold: 0.1, triggerOnce: false });
@@ -195,12 +193,9 @@ export default function FeaturedSection({
             Ready to transform your team&apos;s documentation experience?
           </p>
           <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <ActionButton
-              session={session}
-              isAuthenticated={isAuthenticated}
-              workspaceId={workspaceId}
-              workspaceStatus={workspaceStatus}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+              <ActionButton isAuthenticated={isAuthenticated} workspace={workspace} />
+            </Suspense>
           </div>
         </motion.div>
       </div>
