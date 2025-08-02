@@ -31,6 +31,7 @@ class ProjectAction extends BaseAction {
 
     try {
       const session = await Session.getCurrentUser();
+
       const workspace = await WorkspaceServices.getResource({
         where: { ownerId: session.id },
         include: {

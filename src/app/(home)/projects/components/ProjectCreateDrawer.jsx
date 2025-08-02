@@ -29,7 +29,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 
-export default function ProjectDrawer({ isDrawerOpen, setIsDrawerOpen, setStartFetchProjects }) {
+export default function ProjectCreateDrawer({
+  isDrawerOpen,
+  setIsDrawerOpen,
+  setStartFetchProjects,
+}) {
   const hasShownToastRef = useRef(false);
 
   const defaultValues = useMemo(
@@ -65,10 +69,8 @@ export default function ProjectDrawer({ isDrawerOpen, setIsDrawerOpen, setStartF
   });
 
   const nameValue = form.watch("name");
-  const slugValue = form.watch("slug");
 
   useEffect(() => {
-    if (!isDrawerOpen || !nameValue) return;
     form.setValue(
       "slug",
       slugify(nameValue, {
@@ -78,14 +80,7 @@ export default function ProjectDrawer({ isDrawerOpen, setIsDrawerOpen, setStartF
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nameValue, form.setValue, isDrawerOpen]);
-
-  useEffect(() => {
-    if (isDrawerOpen) {
-      form.reset(defaultValues);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDrawerOpen, form.reset, defaultValues]);
+  }, [nameValue, form.setValue]);
 
   return (
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
@@ -162,7 +157,7 @@ export default function ProjectDrawer({ isDrawerOpen, setIsDrawerOpen, setStartF
                     Cancel
                   </Button>
                 </DrawerClose>
-                <Button type="submit" disabled={!slugValue || form.isSubmitDisabled}>
+                <Button type="submit" disabled={form.isSubmitDisabled}>
                   {form.formState.isSubmitting ? "Creating..." : "Create Project"}
                 </Button>
               </DrawerFooter>

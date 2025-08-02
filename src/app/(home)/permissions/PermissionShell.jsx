@@ -1,30 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import PermissionListings from "./components/PermissionListings";
+import { Suspense, use, useState } from "react";
 import dynamic from "next/dynamic";
-import { Spinner } from "@/components/ui/spinner";
 import NoPermissionUI from "./components/NoPermissionUI";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import DialogLoading from "@/components/loading/DialogLoading";
+import TableLoading from "@/components/loading/TableLoading";
 
-const PermissionCreateDrawerLazy = dynamic(
-  () => import("@/app/(home)/permissions/components/PermissionCreateDialog"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="fixed inset-0 z-[9999] bg-black/40 flex items-center justify-center">
-        <div className="relative w-[600px] h-[500px] bg-muted border rounded-lg shadow-lg flex items-center justify-center">
-          <Spinner size="medium">Opening drawer...</Spinner>
-        </div>
-      </div>
-    ),
-  }
-);
+const PermissionCreateDrawerLazy = dynamic(() => import("./components/PermissionCreateDialog"), {
+  ssr: false,
+  loading: () => <DialogLoading />,
+});
 
-export default function PermissionShell({ hasPermission, canReadPermission }) {
+const PermissionListingsLazy = dynamic(() => import("./components/PermissionListings"), {
+  loading: () => <TableLoading />,
+});
+
+export default function PermissionShell({
+  hasPermissionPromise,
+  canReadPermission,
+  projectsPromise,
+}) {
   const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const hasPermission = use(hasPermissionPromise);
   const [startFetchPermissions, setStartFetchPermissions] = useState(hasPermission ? true : false);
 
   if (canReadPermission.success === false) {
@@ -35,20 +35,26 @@ export default function PermissionShell({ hasPermission, canReadPermission }) {
   return (
     <>
       {isDialogOpen && (
-        <PermissionCreateDrawerLazy
-          isDialogOpen={isDialogOpen}
-          setIsDialogOpen={setIsDialogOpen}
-          setStartFetchPermissions={setStartFetchPermissions}
-        />
+        <Suspense fallback={<DialogLoading />}>
+          <PermissionCreateDrawerLazy
+            projectsPromise={projectsPromise}
+            isDialogOpen={isDialogOpen}
+            setIsDialogOpen={setIsDialogOpen}
+            setStartFetchPermissions={setStartFetchPermissions}
+          />
+        </Suspense>
       )}
 
       {hasPermission ? (
-        <PermissionListings
-          hasPermission={hasPermission}
-          setIsDialogOpen={setIsDialogOpen}
-          startFetchPermissions={startFetchPermissions}
-          setStartFetchPermissions={setStartFetchPermissions}
-        />
+        <Suspense fallback={<TableLoading />}>
+          <PermissionListingsLazy
+            hasPermission={hasPermission}
+            setIsDialogOpen={setIsDialogOpen}
+            startFetchPermissions={startFetchPermissions}
+            setStartFetchPermissions={setStartFetchPermissions}
+            projectsPromise={projectsPromise}
+          />
+        </Suspense>
       ) : (
         <NoPermissionUI setIsDialogOpen={setIsDialogOpen} />
       )}

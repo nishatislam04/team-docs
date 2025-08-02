@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { use, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,7 +24,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { createPermissions } from "@/system/Actions/PermissionActions";
 import { PermissionSchema } from "@/lib/schemas/PermissionSchema";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
-import { getAllProjectsFn } from "./../actions/getAllProjects";
 import {
   Form,
   FormControl,
@@ -40,15 +39,9 @@ export default function PermissionCreateDialog({
   isDialogOpen,
   setIsDialogOpen,
   setStartFetchPermissions,
+  projectsPromise,
 }) {
-  const [projects, setProjects] = useState([]);
-
-  // ! maybe use react use() or transition not useEFFECT!
-  useEffect(() => {
-    getAllProjectsFn().then((res) => {
-      setProjects(res);
-    });
-  }, []);
+  const projects = use(projectsPromise);
 
   const defaultValues = useMemo(() => {
     return {
@@ -60,16 +53,14 @@ export default function PermissionCreateDialog({
     };
   }, []);
 
-  const handleSuccess = useCallback(() => {
-    setIsDialogOpen(false);
-    setStartFetchPermissions(true);
-  }, [setIsDialogOpen, setStartFetchPermissions]);
-
   const form = useServerFormAction({
     schema: PermissionSchema,
     defaultValues,
     actionFn: createPermissions,
-    onSuccess: handleSuccess,
+    onSuccess: () => {
+      setIsDialogOpen(false);
+      setStartFetchPermissions(true);
+    },
     isDialogOpen,
     successToast: {
       title: "Permission created successfully",

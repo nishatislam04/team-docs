@@ -1,8 +1,20 @@
 # need to fix [code-quality]
 
-# heavy client components will be dynamic import with `ssr: false`
+# assigdev need heavy-editing
 
-# normal client components will be dynamic import without `ssr`
+# heavy client components will be dynamic import with `ssr: false` which may or may not render. for example create, edit dialog
+
+# normal client components will be dynamic import without `ssr`. like table or listings component
+
+# code split with `next/dynamic ssr: false` for create, edit, delete component AND listings component without `ssr: false`
+
+# next/cache common components like loading component
+
+# `model layer` should NOT exist on `actions layer`. here is the dataflow
+
+# actions > services > models. `service layer` re-throw erorrs which will be caught in `actions layer`.
+
+# need to explore nextjs docs next.config.js section & update my section accordingly
 
 - [] when we put any hidden input, on zod schema, we need to optional it. see about this
 

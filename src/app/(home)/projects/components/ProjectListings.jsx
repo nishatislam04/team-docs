@@ -12,14 +12,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ProjectTableLoading from "./ProjectTableLoading";
 import { useProjects } from "../hooks/useProjects";
 import ClientErrorUI from "@/components/abstracts/clientErrorUI";
 import { useRouter } from "next/navigation";
-import ProjectEditDrawer from "./ProjectEditDrawer";
+import dynamic from "next/dynamic";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
-import TablePagination from "@/components/shared/TablePagination";
 import SortIcon from "@/components/shared/SortIcon";
+import DrawerLoading from "@/components/loading/DrawerLoading";
+import TableLoading from "@/components/loading/TableLoading";
+import PaginationLoading from "@/components/loading/PaginationLoading";
+
+const ProjectEditDrawerLazy = dynamic(() => import("./ProjectEditDrawer"), {
+  ssr: false,
+  loading: () => <DrawerLoading />,
+});
+
+const TablePaginationLazy = dynamic(() => import("@/components/shared/TablePagination"), {
+  ssr: false,
+  loading: () => <PaginationLoading />,
+});
 
 export default function ProjectListings({
   hasProjects,
@@ -64,7 +75,7 @@ export default function ProjectListings({
 
       {/* Project Edit Drawer */}
       {selectedProject && (
-        <ProjectEditDrawer
+        <ProjectEditDrawerLazy
           isDrawerOpen={isEditDrawerOpen}
           setIsDrawerOpen={setIsEditDrawerOpen}
           setStartFetchProjects={setStartFetchProjects}
@@ -105,7 +116,7 @@ export default function ProjectListings({
                 </TableRow>
               ) : showSkeleton || projects.length === 0 ? (
                 /* If still loading */
-                <ProjectTableLoading />
+                <TableLoading columns={3} />
               ) : (
                 /* If roles are loaded */
                 projects.map((project) => (
@@ -149,7 +160,6 @@ export default function ProjectListings({
                         className="flex gap-1 items-center bg-green-100 cursor-pointer"
                         onClick={() => {
                           router.push(`/projects/${project.slug}/assign-dev`);
-                          router.refresh();
                         }}
                       >
                         <UsersRound className="w-4 h-4" /> Assign Dev
@@ -169,7 +179,11 @@ export default function ProjectListings({
 
       {/* Pagination */}
       {hasProjects && !showSkeleton && projects.length > 0 && (
-        <TablePagination totalItems={totalItems} itemsPerPage={pageSize} className="mt-6 mb-8" />
+        <TablePaginationLazy
+          totalItems={totalItems}
+          itemsPerPage={pageSize}
+          className="mt-6 mb-8"
+        />
       )}
     </section>
   );

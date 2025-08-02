@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import {
   Table,
   TableBody,
@@ -13,17 +13,29 @@ import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import TableLoading from "@/components/loading/TableLoading";
-import PermissionEditDialog from "./PermissionEditDialog";
-import DeletePermissionDialog from "./DeletePermissionDialog";
-import TablePagination from "@/components/shared/TablePagination";
 import { usePermissions } from "../hooks/usePermissions";
 import SortIcon from "@/components/shared/SortIcon";
+import dynamic from "next/dynamic";
+import DeletePermissionModal from "./DeletePermissionModal";
+import DialogLoading from "@/components/loading/DialogLoading";
+import PaginationLoading from "@/components/loading/PaginationLoading";
+
+const PermissionEditDialogLazy = dynamic(() => import("./PermissionEditDialog"), {
+  ssr: false,
+  loading: () => <DialogLoading />,
+});
+
+const TablePaginationLazy = dynamic(() => import("@/components/shared/TablePagination"), {
+  ssr: false,
+  loading: () => <PaginationLoading />,
+});
 
 export default function PermissionListings({
   hasPermission,
   setIsDialogOpen,
   startFetchPermissions,
   setStartFetchPermissions,
+  projectsPromise,
 }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedPermission, setSelectedPermission] = useState(null);
@@ -46,12 +58,15 @@ export default function PermissionListings({
   return (
     <>
       {selectedPermission && (
-        <PermissionEditDialog
-          isDialogOpen={isEditDialogOpen}
-          setIsDialogOpen={setIsEditDialogOpen}
-          setStartFetchPermissions={setStartFetchPermissions}
-          permission={selectedPermission}
-        />
+        <Suspense fallback={<DialogLoading />}>
+          <PermissionEditDialogLazy
+            isDialogOpen={isEditDialogOpen}
+            setIsDialogOpen={setIsEditDialogOpen}
+            setStartFetchPermissions={setStartFetchPermissions}
+            permission={selectedPermission}
+            projectsPromise={projectsPromise}
+          />
+        </Suspense>
       )}
 
       <section className="flex justify-between items-start mb-8 w-full max-h-14">
@@ -123,7 +138,7 @@ export default function PermissionListings({
                       Edit
                     </Button>
 
-                    <DeletePermissionDialog
+                    <DeletePermissionModal
                       permission={permission}
                       setStartFetchPermissions={setStartFetchPermissions}
                     />
@@ -137,7 +152,7 @@ export default function PermissionListings({
 
       {/* Pagination */}
       {hasPermission && !showSkeleton && permissions.length > 0 && (
-        <TablePagination totalItems={totalItems} itemsPerPage={pageSize} className="mb-8" />
+        <TablePaginationLazy totalItems={totalItems} itemsPerPage={pageSize} className="mb-8" />
       )}
     </>
   );

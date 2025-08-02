@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -35,22 +35,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
-import { getAllProjectsFn } from "../actions/getAllProjects";
 
 export default function PermissionEditDialog({
   isDialogOpen,
   setIsDialogOpen,
   setStartFetchPermissions,
   permission,
+  projectsPromise,
 }) {
-  const [projects, setProjects] = useState([]);
-
-  // ! maybe use react use() or transition not useEFFECT!
-  useEffect(() => {
-    getAllProjectsFn().then((res) => {
-      setProjects(res);
-    });
-  }, []);
+  const projects = use(projectsPromise);
 
   const defaultValues = useMemo(
     () => ({

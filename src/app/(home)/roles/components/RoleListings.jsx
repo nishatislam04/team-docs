@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Pencil } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -17,11 +16,10 @@ import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import { useRoles } from "../hooks/useRoles";
 import TableLoading from "@/components/loading/TableLoading";
 import DialogLoading from "@/components/loading/DialogLoading";
-import ClientErrorUI from "@/components/abstracts/clientErrorUI";
-import RoleEditDialog from "./RoleEditDialog";
 import DeleteRoleDialog from "./DeleteRoleDialog";
-import TablePagination from "@/components/shared/TablePagination";
 import SortIcon from "@/components/shared/SortIcon";
+import { Spinner } from "@/components/ui/spinner";
+import PaginationLoading from "@/components/loading/PaginationLoading";
 
 const LoadRolePermissionDialogLazy = dynamic(
   () => import("@/app/(home)/role-permission-assign/RolePermissionDialog"),
@@ -30,6 +28,18 @@ const LoadRolePermissionDialogLazy = dynamic(
     loading: () => <DialogLoading />,
   }
 );
+
+// lazy load pagination
+const TablePaginationLazy = dynamic(() => import("@/components/shared/TablePagination"), {
+  ssr: false,
+  loading: () => <PaginationLoading />,
+});
+
+// lazy load edit dialog
+const RoleEditDialogLazy = dynamic(() => import("./RoleEditDialog"), {
+  ssr: false,
+  loading: () => <DialogLoading />,
+});
 
 export default function RoleListings({
   hasRoles,
@@ -61,7 +71,7 @@ export default function RoleListings({
   return (
     <>
       {selectedRole && (
-        <RoleEditDialog
+        <RoleEditDialogLazy
           isDialogOpen={isEditDialogOpen}
           setIsDialogOpen={setIsEditDialogOpen}
           setShouldStartFetchRoles={setShouldStartFetchRoles}
@@ -177,7 +187,7 @@ export default function RoleListings({
 
       {/* Pagination */}
       {hasRoles && !showSkeleton && allRoles.length > 0 && (
-        <TablePagination totalItems={totalItems} itemsPerPage={pageSize} className="mb-8" />
+        <TablePaginationLazy totalItems={totalItems} itemsPerPage={pageSize} className="mb-8" />
       )}
     </>
   );

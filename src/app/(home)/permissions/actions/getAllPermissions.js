@@ -16,7 +16,9 @@ export async function getAllPermissionsFn(options = {}) {
   const session = await Session.getCurrentUser();
   const { page = 1, pageSize = 10, sortBy = "name", sortOrder = "asc" } = options;
 
-  const whereClause = { ownerId: session.id };
+  const whereClause = {
+    AND: [{ ownerId: session.id }, { scope: "WORKSPACE" }, { workspaceId: session.workspaceId }],
+  };
 
   // Get total count for pagination
   const totalItems = await PermissionServices.countResources({ where: whereClause });
