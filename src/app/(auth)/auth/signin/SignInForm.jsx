@@ -3,12 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -23,14 +20,8 @@ import { signin } from "./signinAction";
 import { signInSchema } from "./signinSchema";
 
 export default function SignInForm() {
-  const router = useRouter();
-
-  const [formState, formAction, isPending] = useActionState(signin, {
-    message: null,
-    errors: null,
-  });
-
   const form = useForm({
+    mode: "onChange",
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -38,124 +29,100 @@ export default function SignInForm() {
     },
   });
 
-  useEffect(() => {
-    if (!formState) return;
+  const onSubmit = async (data) => {
+    try {
+      const result = await signin(data);
 
-    console.log("FormState changed:", JSON.stringify(formState, null, 2));
-
-    // Handle successful signin first - don't do any form operations
-    if (formState?.type === "success") {
-      console.log("Success detected, redirecting...");
-      // Use setTimeout to ensure the success UI shows briefly before redirect
-      setTimeout(() => {
-        router.refresh(); // Refresh to update session state
-        router.push("/"); // Navigate to root
-      }, 500);
-      return;
-    }
-
-    // Only handle errors if it's not a success and there are actual errors
-    if (formState?.type !== "success" && formState?.errors) {
-      console.log("Handling errors:", formState.errors);
-      Object.entries(formState.errors).forEach(([field, message]) => {
-        form.setError(field, {
-          type: "server",
-          message: Array.isArray(message) ? message[0] : message,
-        });
-      });
-
-      if (formState.data) {
-        form.reset(formState.data, { keepErrors: true });
+      if (result.type === "success") {
+        window.location.href = "/"; // we wont use router as our root page is cached.
+      } else if (result.type === "error" || result.type === "fail") {
+        if (result.errors) {
+          Object.entries(result.errors).forEach(([field, message]) => {
+            form.setError(field, {
+              type: "server",
+              message: Array.isArray(message) ? message[0] : message,
+            });
+          });
+        }
+        form.setValue("password", "");
       }
-
-      form.setValue("password", "");
+    } catch (error) {
+      console.error("Signin error:", error);
+      form.setError("_form", {
+        type: "server",
+        message: "Something went wrong. Please try again.",
+      });
     }
-  }, [formState, form, router]);
+  };
 
   return (
     <div className="w-full max-w-md mx-auto">
-      {formState?.type === "success" ? (
-        <Card className="border-blue-200 shadow-xl animate-pulse">
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl text-blue-600">Signin is in Process...</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center py-6 space-y-4">
-            <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-            <p className="text-sm text-center text-gray-600">
-              Redirecting to your Homepage. Please wait...
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <Form {...form}>
-          <form action={formAction} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-lg">Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="your@email.com"
-                      className="h-12 text-lg"
-                      {...field}
-                      onChange={(e) => {
-                        form.clearErrors("email");
-                        field.onChange(e);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-base" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-lg">Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      className="h-12 text-lg"
-                      {...field}
-                      onChange={(e) => {
-                        form.clearErrors("password");
-                        field.onChange(e);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-base" />
-                </FormItem>
-              )}
-            />
-
-            {(formState?.errors?._form || form.formState.errors._form) && (
-              <div className="space-y-1 text-sm text-red-500">
-                {formState?.errors?._form
-                  ? formState.errors._form.map((msg, index) => <p key={index}>{msg}</p>)
-                  : form.formState.errors._form && <p>{form.formState.errors._form.message}</p>}
-              </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="your@email.com"
+                    className="h-12 text-lg"
+                    {...field}
+                    onChange={(e) => {
+                      form.clearErrors("email");
+                      field.onChange(e);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage className="text-base" />
+              </FormItem>
             )}
+          />
 
-            <SubmitButton isPending={isPending} />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-lg">Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    className="h-12 text-lg"
+                    {...field}
+                    onChange={(e) => {
+                      form.clearErrors("password");
+                      field.onChange(e);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage className="text-base" />
+              </FormItem>
+            )}
+          />
 
-            <div className="pt-4 text-center">
-              <p className="text-sm text-muted-foreground">
-                Don&apos;t have an account?{" "}
-                <Link href="/auth/signup" className="text-blue-600 hover:underline">
-                  Sign up
-                </Link>
-              </p>
+          {form.formState.errors._form && (
+            <div className="space-y-1 text-sm text-red-500">
+              <p>{form.formState.errors._form.message}</p>
             </div>
-          </form>
-        </Form>
-      )}
+          )}
+
+          <SubmitButton isPending={form.formState.isSubmitting} />
+
+          <div className="pt-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Don&apos;t have an account?{" "}
+              <Link href="/auth/signup" className="text-blue-600 hover:underline">
+                Sign up
+              </Link>
+            </p>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }

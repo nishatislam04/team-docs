@@ -1,7 +1,7 @@
 "use client";
+import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +11,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useCurrentSession } from "@/hooks/useCurrentSession";
 import { LogOut, Settings } from "lucide-react";
 import { signOut } from "next-auth/react";
-import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
-import { useCurrentSession } from "@/hooks/useCurrentSession";
+import Image from "next/image";
+import Link from "next/link";
 
 /**
  * Header component that displays navigation and auth state

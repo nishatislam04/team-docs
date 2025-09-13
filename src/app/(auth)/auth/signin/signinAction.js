@@ -5,12 +5,9 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { signInSchema } from "./signinSchema";
 
-export async function signin(prevState, formData) {
+export async function signin(data) {
   try {
-    const validatedFields = signInSchema.safeParse({
-      email: formData.get("email"),
-      password: formData.get("password"),
-    });
+    const validatedFields = signInSchema.safeParse(data);
 
     if (!validatedFields.success)
       return {
@@ -27,7 +24,7 @@ export async function signin(prevState, formData) {
 
     if (!existingUser) {
       return {
-        type: "error",
+        type: "fail",
         errors: { _form: ["Invalid email or password"] },
       };
     }
@@ -39,6 +36,7 @@ export async function signin(prevState, formData) {
         password,
         redirect: false,
       });
+      revalidatePath("/");
     } catch (authError) {
       console.error("authjs signin error:", authError);
       return {

@@ -1,9 +1,8 @@
 "use client";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 export default function ComingSoonWrapper({
   children,
@@ -30,12 +29,12 @@ export default function ComingSoonWrapper({
               }
             }}
             className={cn(
-              "relative group inline-block select-none cursor-not-allowed opacity-30 transition duration-300 ease-in-out",
+              "w-full relative group inline-block select-none cursor-not-allowed opacity-30 transition duration-300 ease-in-out",
               className
             )}
           >
             {/* Children get dimmed look */}
-            <div className="pointer-events-none blur-[0.3px] grayscale contrast-75 brightness-90">
+            <div className="w-full pointer-events-none blur-[0.3px] grayscale contrast-75 brightness-90">
               {children}
             </div>
 

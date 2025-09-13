@@ -1,8 +1,8 @@
-import Header from "./_components/header";
-import HeroSection from "./_components/HeroSection";
+import { getWorkspaceFn } from "./_components/actions/getWorkspace";
 import FeaturedSection from "./_components/FeaturedSection";
 import Footer from "./_components/Footer";
-import { getWorkspaceFn } from "./_components/actions/getWorkspace";
+import Header from "./_components/header";
+import HeroSection from "./_components/HeroSection";
 
 export const experimental_ppr = true;
 
