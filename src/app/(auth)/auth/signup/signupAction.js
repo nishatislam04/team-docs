@@ -4,15 +4,11 @@ import { signIn } from "@/app/auth";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { signUpSchema } from "./signupSchema";
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-export async function signup(prevState, formData) {
+export async function signup(data) {
   try {
-    const validatedFields = signUpSchema.safeParse({
-      username: formData.get("username"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-    });
+    const validatedFields = signUpSchema.safeParse(data);
 
     if (!validatedFields.success)
       return {
@@ -28,7 +24,7 @@ export async function signup(prevState, formData) {
     });
     if (existingUserName)
       return {
-        type: "error",
+        type: "fail",
         errors: { _form: ["User already exists with this username"] },
       };
 
@@ -37,7 +33,7 @@ export async function signup(prevState, formData) {
     });
     if (existingUserEmail)
       return {
-        type: "error",
+        type: "fail",
         errors: { _form: ["User already exists with this email"] },
       };
 
@@ -72,12 +68,12 @@ export async function signup(prevState, formData) {
       };
     }
 
-    // return {
-    // 	type: "success",
-    // 	success: true,
-    // 	message: "Signup successful!",
-    // 	redirectTo: "/",
-    // };
+    revalidatePath("/");
+    return {
+      type: "success",
+      success: true,
+      message: "Signup successful!",
+    };
   } catch (error) {
     console.error("signup error: ", error);
 
@@ -87,6 +83,4 @@ export async function signup(prevState, formData) {
       errors: { _form: ["Something went wrong on our side"] },
     };
   }
-
-  redirect("/");
 }
