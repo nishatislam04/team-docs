@@ -1,13 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useActionState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { useActionState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -17,7 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 import { signin } from "./signinAction";
 import { signInSchema } from "./signinSchema";
@@ -41,7 +41,22 @@ export default function SignInForm() {
   useEffect(() => {
     if (!formState) return;
 
-    if (formState?.errors) {
+    console.log("FormState changed:", JSON.stringify(formState, null, 2));
+
+    // Handle successful signin first - don't do any form operations
+    if (formState?.type === "success") {
+      console.log("Success detected, redirecting...");
+      // Use setTimeout to ensure the success UI shows briefly before redirect
+      setTimeout(() => {
+        router.refresh(); // Refresh to update session state
+        router.push("/"); // Navigate to root
+      }, 500);
+      return;
+    }
+
+    // Only handle errors if it's not a success and there are actual errors
+    if (formState?.type !== "success" && formState?.errors) {
+      console.log("Handling errors:", formState.errors);
       Object.entries(formState.errors).forEach(([field, message]) => {
         form.setError(field, {
           type: "server",
@@ -54,10 +69,6 @@ export default function SignInForm() {
       }
 
       form.setValue("password", "");
-    }
-
-    if (formState?.type === "success") {
-      router.push(formState.redirectTo);
     }
   }, [formState, form, router]);
 
@@ -78,7 +89,6 @@ export default function SignInForm() {
       ) : (
         <Form {...form}>
           <form action={formAction} className="space-y-6">
-            {/* Email Field */}
             <FormField
               control={form.control}
               name="email"
@@ -102,7 +112,6 @@ export default function SignInForm() {
               )}
             />
 
-            {/* Password Field */}
             <FormField
               control={form.control}
               name="password"
@@ -126,19 +135,16 @@ export default function SignInForm() {
               )}
             />
 
-            {/* Global form-level errors */}
-            {formState?.errors?._form && (
+            {(formState?.errors?._form || form.formState.errors._form) && (
               <div className="space-y-1 text-sm text-red-500">
-                {formState.errors._form.map((msg, index) => (
-                  <p key={index}>{msg}</p>
-                ))}
+                {formState?.errors?._form
+                  ? formState.errors._form.map((msg, index) => <p key={index}>{msg}</p>)
+                  : form.formState.errors._form && <p>{form.formState.errors._form.message}</p>}
               </div>
             )}
 
-            {/* Submit Button */}
             <SubmitButton isPending={isPending} />
 
-            {/* Navigation */}
             <div className="pt-4 text-center">
               <p className="text-sm text-muted-foreground">
                 Don&apos;t have an account?{" "}

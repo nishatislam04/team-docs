@@ -138,8 +138,10 @@ export default function Header() {
           </DropdownMenu>
         ) : (
           <>
-            <Button>
-              <Link href="/auth/signin">Sign In</Link>
+            <Button className="p-0">
+              <Link className="px-4 py-2" href="/auth/signin">
+                Sign In
+              </Link>
             </Button>
           </>
         )}

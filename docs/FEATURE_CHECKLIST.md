@@ -2,6 +2,8 @@
 
 # assigdev need heavy-editing
 
+# to trigger fetch, we will use zustand store instead of using react state
+
 # heavy client components will be dynamic import with `ssr: false` which may or may not render. for example create, edit dialog
 
 # normal client components will be dynamic import without `ssr`. like table or listings component

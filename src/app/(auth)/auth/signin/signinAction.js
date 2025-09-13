@@ -1,9 +1,9 @@
 "use server";
 
 import { signIn } from "@/app/auth";
-import { signInSchema } from "./signinSchema";
 import prisma from "@/lib/prisma";
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { signInSchema } from "./signinSchema";
 
 export async function signin(prevState, formData) {
   try {
@@ -54,11 +54,12 @@ export async function signin(prevState, formData) {
       };
     }
 
-    // return {
-    //   type: "success",
-    //   message: "Signin successful!",
-    //   redirectTo: "/",
-    // };
+    // Success case - return success state instead of redirecting
+    revalidatePath("/");
+    return {
+      type: "success",
+      message: "Signin successful",
+    };
   } catch (error) {
     console.error("signin error (outer):", error);
 
@@ -67,5 +68,4 @@ export async function signin(prevState, formData) {
       errors: { _form: ["Something went wrong on our side"] },
     };
   }
-  redirect("/");
 }

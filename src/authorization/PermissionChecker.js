@@ -228,45 +228,45 @@ export class PermissionChecker {
    * @param {string} resourceId - Resource ID
    * @returns {Promise<boolean>} True if user owns resource
    */
-  static async checkResourceOwnership(userId, resourceType, resourceId) {
-    try {
-      switch (resourceType) {
-        case "workspace":
-          const workspace = await prisma.workspace.findUnique({
-            where: { id: resourceId },
-            select: { ownerId: true },
-          });
-          return workspace?.ownerId === userId;
+  // static async checkResourceOwnership(userId, resourceType, resourceId) {
+  //   try {
+  //     switch (resourceType) {
+  //       case "workspace":
+  //         const workspace = await prisma.workspace.findUnique({
+  //           where: { id: resourceId },
+  //           select: { ownerId: true },
+  //         });
+  //         return workspace?.ownerId === userId;
 
-        case "project":
-          const project = await prisma.project.findUnique({
-            where: { id: resourceId },
-            select: { ownerId: true },
-          });
-          return project?.ownerId === userId;
+  //       case "project":
+  //         const project = await prisma.project.findUnique({
+  //           where: { id: resourceId },
+  //           select: { ownerId: true },
+  //         });
+  //         return project?.ownerId === userId;
 
-        case "section":
-          const section = await prisma.section.findUnique({
-            where: { id: resourceId },
-            select: { ownerId: true },
-          });
-          return section?.ownerId === userId;
+  //       case "section":
+  //         const section = await prisma.section.findUnique({
+  //           where: { id: resourceId },
+  //           select: { ownerId: true },
+  //         });
+  //         return section?.ownerId === userId;
 
-        case "page":
-          const page = await prisma.page.findUnique({
-            where: { id: resourceId },
-            select: { ownerId: true },
-          });
-          return page?.ownerId === userId;
+  //       case "page":
+  //         const page = await prisma.page.findUnique({
+  //           where: { id: resourceId },
+  //           select: { ownerId: true },
+  //         });
+  //         return page?.ownerId === userId;
 
-        default:
-          return false;
-      }
-    } catch (error) {
-      Logger.error("Failed to check resource ownership", error);
-      return false;
-    }
-  }
+  //       default:
+  //         return false;
+  //     }
+  //   } catch (error) {
+  //     Logger.error("Failed to check resource ownership", error);
+  //     return false;
+  //   }
+  // }
 
   /**
    * Check multiple permissions at once

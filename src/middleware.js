@@ -33,6 +33,7 @@ export default auth(async function middleware(request) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 
+  // Handle root path - allow access for both authenticated and unauthenticated users
   if (pathname === "/") {
     return NextResponse.next({
       request: {
@@ -43,10 +44,6 @@ export default auth(async function middleware(request) {
 
   if (!session && !pathname.startsWith("/auth")) {
     return NextResponse.redirect(new URL("/auth/signin", request.url));
-  }
-
-  if (session && pathname === "/") {
-    return NextResponse.redirect(new URL("/home", request.url));
   }
 
   return NextResponse.next({
