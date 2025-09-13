@@ -1,10 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useRegistrationStore } from "./store/useRegistrationStore";
-import dynamic from "next/dynamic";
-import DialogLoading from "@/components/loading/DialogLoading";
 import { useActionButton } from "./hooks/useActionButton";
 import RegistrationDialog from "./registration/RegistrationDialog";
+import useRegistrationStore from "./store/useRegistrationStore";
 // import RegistrationDialog from "./registration";
 
 // Dynamically import the registration dialog

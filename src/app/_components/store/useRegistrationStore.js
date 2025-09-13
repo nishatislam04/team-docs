@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 
-export const useRegistrationStore = create((set) => ({
+const useRegistrationStore = create((set) => ({
   isFormDialogOpen: false, // first dialog
   isPendingDialogOpen: false, // second dialog
   registrationSuccess: false,
@@ -28,3 +28,5 @@ export const useRegistrationStore = create((set) => ({
       isPendingDialogOpen: false,
     }),
 }));
+
+export default useRegistrationStore;
