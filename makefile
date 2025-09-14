@@ -1,6 +1,8 @@
 .PHONY: size
 .PHONY: flush
 
+BUN = bun
+
 # Run dev migration with timestamp
 # docker compose exec team-docs-local bunx prisma migrate dev
 migrate:
@@ -114,3 +116,25 @@ size:
 
 	@echo "💥 Total Docker Disk Usage:"
 	@docker system df
+
+## ----------------------------
+## BUN
+## ----------------------------
+
+# Install dependencies (respect package.json + bun.lockb)
+bun-install:
+	$(BUN) install
+
+# Install fresh (clear lockfile + reinstall)
+bun-reinstall:
+	rm -f bun.lockb
+	rm -rf node_modules
+	$(BUN) install
+
+# Upgrade all dependencies
+bun-upgrade:
+	$(BUN) update
+
+# Show outdated packages
+bun-outdated:
+	$(BUN) outdated
