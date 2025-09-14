@@ -10,7 +10,11 @@
     "vercel-build": "bunx prisma generate --no-engine && bunx prisma migrate deploy && bun run build",
     "start": "next start",
     "analyze": "ANALYZE=true next build --no-lint",
-    "local-dev": "concurrently -k -n \"STUDIO,NEXT\" -c \"cyan,green\" \"BROWSER=none bunx prisma studio\" \"bun run dev\""
+    "local-dev": "concurrently -k -n \"STUDIO,NEXT\" -c \"cyan,green\" \"BROWSER=none bunx prisma studio\" \"bun run dev\"",
+    "deploy:preview": "vercel",
+    "deploy:prod": "vercel --prod",
+    "vercel:env:pull": "vercel env pull .env.local",
+    "vercel:env:push": "vercel env pull .env && vercel env pull .env.local"
   },
   "prisma": {
     "seed": "bun prisma/seed.js"
