@@ -9,6 +9,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig = {
   poweredByHeader: false,
   typedRoutes: true,
+  productionBrowserSourceMaps: true, // generate source maps for the js, which might be security issue. but we are ignoring the security issue for now
   // Add security headers
   async headers() {
     return [
@@ -20,23 +21,17 @@ const nextConfig = {
   },
   experimental: {
     authInterrupts: true,
-    ppr: "incremental",
     cacheComponents: true,
     reactCompiler: true,
     useCache: true,
     useLightningcss: true,
     viewTransition: true, // react
     webVitalsAttribution: ["CLS", "LCP", "INP", "FCP", "TTFB"],
-    productionBrowserSourceMaps: true, // generate source maps for the js, which might be security issue. but we are ignoring the security issue for now
-
     // Forward browser logs to the terminal for easier debugging
     browserDebugInfoInTerminal: {
       depthLimit: 20,
       edgeLimit: 150,
     },
-
-    // Explore route composition and segment overrides via DevTools
-    devtoolSegmentExplorer: true,
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
