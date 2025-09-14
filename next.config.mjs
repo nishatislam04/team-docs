@@ -1,5 +1,5 @@
-import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 import bundleAnalyzer from "@next/bundle-analyzer";
+import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -8,8 +8,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
-  reactStrictMode: true,
-  compress: true,
+  typedRoutes: true,
   // Add security headers
   async headers() {
     return [
@@ -22,17 +21,22 @@ const nextConfig = {
   experimental: {
     authInterrupts: true,
     ppr: "incremental",
-    // Forward browser logs to the terminal for easier debugging
-    browserDebugInfoInTerminal: true,
+    cacheComponents: true,
+    reactCompiler: true,
+    useCache: true,
+    useLightningcss: true,
+    viewTransition: true, // react
+    webVitalsAttribution: ["CLS", "LCP", "INP", "FCP", "TTFB"],
+    productionBrowserSourceMaps: true, // generate source maps for the js, which might be security issue. but we are ignoring the security issue for now
 
-    // Activate new client-side router improvements
-    clientSegmentCache: true,
+    // Forward browser logs to the terminal for easier debugging
+    browserDebugInfoInTerminal: {
+      depthLimit: 20,
+      edgeLimit: 150,
+    },
 
     // Explore route composition and segment overrides via DevTools
     devtoolSegmentExplorer: true,
-
-    // Enable persistent caching for the turbopack dev server and build.
-    // turbopackPersistentCaching: true,
   },
   webpack: (config, { isServer }) => {
     if (isServer) {

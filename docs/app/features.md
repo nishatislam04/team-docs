@@ -7,18 +7,21 @@ Team-Docs is a comprehensive collaborative documentation platform with advanced 
 ## 📋 Feature Categories
 
 ### 1. Core Platform Features
+
 - [Workspace Management](#workspace-management)
 - [Project Organization](#project-organization)
 - [Content Creation & Editing](#content-creation--editing)
 - [Search & Discovery](#search--discovery)
 
 ### 2. User & Access Management
+
 - [Authentication System](#authentication-system)
 - [Role-Based Access Control](#role-based-access-control)
 - [User Management](#user-management)
 - [Permission System](#permission-system)
 
 ### 3. Advanced Features
+
 - [Rich Text Editor](#rich-text-editor)
 - [Real-time Collaboration](#real-time-collaboration)
 - [Admin Dashboard](#admin-dashboard)
@@ -29,17 +32,20 @@ Team-Docs is a comprehensive collaborative documentation platform with advanced 
 ## 🏢 Workspace Management
 
 ### Overview
+
 Multi-tenant workspace system allowing organizations to maintain isolated documentation environments.
 
 ### Key Features
 
 #### Workspace Creation & Setup
+
 - **Workspace Registration**: Users can create new workspaces with approval workflow
 - **Workspace Approval**: Admin-controlled approval system for new workspaces
 - **Workspace Settings**: Customizable workspace configuration and branding
 - **Member Management**: Invite and manage workspace members
 
 #### Workspace Status System
+
 ```javascript
 enum WorkspaceStatus {
   ACTIVE    // Fully operational workspace
@@ -49,6 +55,7 @@ enum WorkspaceStatus {
 ```
 
 #### Implementation Details
+
 - **Database Model**: Workspace table with owner relationship
 - **Security**: Workspace-scoped data access throughout the application
 - **UI Components**: Workspace selector, settings panel, member management
@@ -56,6 +63,7 @@ enum WorkspaceStatus {
 ### Usage Examples
 
 #### Creating a Workspace
+
 ```javascript
 // Workspace creation flow
 const createWorkspace = async (workspaceData) => {
@@ -64,7 +72,7 @@ const createWorkspace = async (workspaceData) => {
     slug: workspaceData.slug,
     description: workspaceData.description,
     ownerId: currentUser.id,
-    status: 'PENDING' // Requires admin approval
+    status: "PENDING", // Requires admin approval
   });
   return workspace;
 };
@@ -75,22 +83,26 @@ const createWorkspace = async (workspaceData) => {
 ## 📁 Project Organization
 
 ### Overview
+
 Hierarchical content organization system: Workspace → Projects → Sections → Pages
 
 ### Project Features
 
 #### Project Management
+
 - **Project Creation**: Rich project setup with metadata
 - **Project Settings**: Icons, colors, descriptions, and visibility
 - **Project Members**: Team assignment with role-based permissions
 - **Project Status**: Active, archived, and draft states
 
 #### Section Organization
+
 - **Nested Sections**: Hierarchical section structure
 - **Section Ordering**: Drag-and-drop section reordering
 - **Section Permissions**: Granular access control per section
 
 #### Page Management
+
 - **Rich Content Pages**: TipTap-powered rich text editing
 - **Page Metadata**: Titles, descriptions, and custom properties
 - **Page Ordering**: Custom page ordering within sections
@@ -135,18 +147,21 @@ Page {
 ### Rich Text Editor System
 
 #### TipTap Integration
+
 - **Notion-like Experience**: Familiar editing interface
 - **Slash Commands**: Quick formatting with `/` commands
 - **Bubble Menus**: Contextual formatting options
 - **Block Types**: Headers, lists, quotes, code blocks, and more
 
 #### Advanced Editing Features
+
 - **Collapsible Blocks**: Toggle blocks for better organization
 - **Link Management**: Smart link insertion and editing
 - **Image Support**: Drag-and-drop image uploads
 - **Code Highlighting**: Syntax highlighting for code blocks
 
 #### Content Structure
+
 ```javascript
 // TipTap content structure
 {
@@ -166,6 +181,7 @@ Page {
 ```
 
 ### Content Management
+
 - **Auto-save**: Automatic content saving during editing
 - **Version History**: Track content changes over time (planned)
 - **Content Export**: Export pages in various formats (planned)
@@ -178,28 +194,32 @@ Page {
 ### Advanced Search System
 
 #### Full-Text Search
+
 - **PostgreSQL Integration**: Advanced full-text search capabilities
 - **Multi-Content Search**: Search across projects, sections, and pages
 - **Intelligent Ranking**: Relevance-based result ordering
 - **Real-time Results**: Instant search with debouncing
 
 #### Search Features
+
 - **Keyboard Shortcuts**: Ctrl+K / Cmd+K for quick access
 - **Search Highlighting**: Matched text highlighting in results
 - **Smart Navigation**: Direct navigation to search results
 - **Search Scoping**: Workspace-limited search results
 
 #### Search Implementation
+
 ```javascript
 // Search query example
 const searchResults = await SearchService.searchAll(
   "project documentation", // Search query
-  workspaceId,             // Workspace scope
-  20                       // Result limit
+  workspaceId, // Workspace scope
+  20 // Result limit
 );
 ```
 
 ### Discovery Features
+
 - **Recent Pages**: Quick access to recently viewed content
 - **Popular Content**: Most accessed pages and projects
 - **Content Recommendations**: AI-powered content suggestions (planned)
@@ -211,12 +231,14 @@ const searchResults = await SearchService.searchAll(
 ### Authentication Methods
 
 #### Credentials Authentication
+
 - **Email/Password**: Secure credential-based login
 - **Password Hashing**: bcrypt with salt rounds
 - **Session Management**: JWT-based session handling
 - **Password Reset**: Secure password recovery flow
 
 #### Security Features
+
 - **Session Validation**: Server-side session verification
 - **CSRF Protection**: Cross-site request forgery prevention
 - **Rate Limiting**: Login attempt rate limiting
@@ -231,14 +253,14 @@ export const authConfig = {
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
         // Validation and user lookup logic
         const user = await validateCredentials(credentials);
         return user;
-      }
-    })
+      },
+    }),
   ],
   session: { strategy: "jwt" },
   callbacks: {
@@ -249,8 +271,8 @@ export const authConfig = {
         token.isSuperAdmin = user.isSuperAdmin;
       }
       return token;
-    }
-  }
+    },
+  },
 };
 ```
 
@@ -261,6 +283,7 @@ export const authConfig = {
 ### Permission System
 
 #### Role Hierarchy
+
 1. **Super Admin**: Full system access
 2. **Workspace Owner**: Workspace management
 3. **Project Admin**: Project-level administration
@@ -268,6 +291,7 @@ export const authConfig = {
 5. **Viewer**: Read-only access
 
 #### Permission Scopes
+
 - **System Level**: Super admin permissions
 - **Workspace Level**: Workspace management permissions
 - **Project Level**: Project-specific permissions
@@ -279,17 +303,18 @@ export const authConfig = {
 // Permission checking example
 const hasPermission = await PermissionService.checkPermission({
   userId: currentUser.id,
-  resource: 'project',
+  resource: "project",
   resourceId: projectId,
-  action: 'update'
+  action: "update",
 });
 
 if (!hasPermission) {
-  throw new Error('Insufficient permissions');
+  throw new Error("Insufficient permissions");
 }
 ```
 
 #### Custom Roles
+
 - **Role Creation**: Create custom roles with specific permissions
 - **Role Assignment**: Assign roles to users at different scopes
 - **Permission Inheritance**: Hierarchical permission inheritance
@@ -302,18 +327,21 @@ if (!hasPermission) {
 ### Admin Features
 
 #### Workspace Management
+
 - **Workspace Approval**: Review and approve new workspace requests
 - **Workspace Monitoring**: Monitor workspace activity and usage
 - **Workspace Settings**: Global workspace configuration
 - **Bulk Operations**: Batch operations on multiple workspaces
 
 #### User Administration
+
 - **User Management**: Create, update, and deactivate users
 - **Role Assignment**: Assign system-level roles to users
 - **Activity Monitoring**: Track user activity and login patterns
 - **Bulk User Operations**: Import/export user data
 
 #### System Monitoring
+
 - **Usage Analytics**: System usage statistics and trends
 - **Performance Metrics**: Application performance monitoring
 - **Error Tracking**: System error logging and alerting
@@ -345,18 +373,21 @@ AdminLayout {
 ## 🔧 Technical Features
 
 ### Performance Optimizations
+
 - **Server Components**: Default server-side rendering
 - **Dynamic Imports**: Lazy loading for better performance
 - **Image Optimization**: Next.js Image component usage
 - **Caching Strategy**: Intelligent caching at multiple levels
 
 ### Developer Experience
+
 - **TypeScript**: Full type safety throughout the application
 - **ESLint/Prettier**: Code quality and formatting
 - **Hot Reload**: Fast development iteration
 - **Docker Support**: Containerized development environment
 
 ### Monitoring & Logging
+
 - **Custom Logger**: Structured logging throughout the application
 - **Error Boundaries**: Graceful error handling
 - **Performance Monitoring**: Web Vitals tracking
@@ -367,12 +398,14 @@ AdminLayout {
 ## 🚧 Upcoming Features
 
 ### Short-term Roadmap
+
 - **Real-time Collaboration**: Live editing with multiple users
 - **Advanced Search Filters**: Content type and date filtering
 - **Content Templates**: Reusable page and section templates
 - **Mobile App**: React Native companion application
 
 ### Long-term Vision
+
 - **AI Integration**: Content suggestions and auto-completion
 - **Advanced Analytics**: Detailed usage analytics and insights
 - **API Ecosystem**: Public API for third-party integrations
@@ -380,4 +413,4 @@ AdminLayout {
 
 ---
 
-*This features documentation is continuously updated as new features are implemented. For the latest feature status and implementation details, refer to the project repository and changelog.*
+_This features documentation is continuously updated as new features are implemented. For the latest feature status and implementation details, refer to the project repository and changelog._
