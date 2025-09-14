@@ -10,7 +10,7 @@ export default async function LandingPage() {
   const workspace = getWorkspaceFn();
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="bg-background min-h-screen">
       <Header />
 
       <HeroSection workspace={workspace} />

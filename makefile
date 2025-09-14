@@ -96,7 +96,7 @@ flush:
 
 # Show container status
 status:
-	docker ps | grep postgres || echo "Postgres is not running"
+	docker ps || echo "Postgres is not running"
 
 size:
 	@echo "🔍 Project Folder Size:"
