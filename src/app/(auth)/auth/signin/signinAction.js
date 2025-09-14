@@ -2,7 +2,6 @@
 
 import { signIn } from "@/app/auth";
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
 import { signInSchema } from "./signinSchema";
 
 export async function signin(data) {
@@ -36,7 +35,6 @@ export async function signin(data) {
         password,
         redirect: false,
       });
-      revalidatePath("/");
     } catch (authError) {
       console.error("authjs signin error:", authError);
       return {
@@ -52,8 +50,6 @@ export async function signin(data) {
       };
     }
 
-    // Success case - return success state instead of redirecting
-    revalidatePath("/");
     return {
       type: "success",
       message: "Signin successful",

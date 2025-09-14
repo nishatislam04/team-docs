@@ -1,7 +1,7 @@
-import { ThemeProvider } from "@/provider/ThemeProvider";
-import { SessionProvider } from "next-auth/react";
 import ConditionalAdminLayout from "@/components/layout/admin/ConditionalAdminLayout";
 import { Session } from "@/lib/Session";
+import { ThemeProvider } from "@/provider/ThemeProvider";
+import { SessionProvider } from "next-auth/react";
 
 export const dynamic = "force-dynamic";
 

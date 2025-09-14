@@ -57,6 +57,12 @@ build-prod:
 	docker compose build --no-cache team-docs-prod prisma-studio
 	docker compose up team-docs-prod prisma-studio
 
+preview: 
+	bun run deploy:preview
+
+production: 
+	bun run deploy:prod
+
 # View Postgres logs
 up:
 	docker compose up

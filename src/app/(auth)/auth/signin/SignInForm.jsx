@@ -56,7 +56,7 @@ export default function SignInForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="mx-auto w-full max-w-md">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
@@ -114,7 +114,7 @@ export default function SignInForm() {
           <SubmitButton isPending={form.formState.isSubmitting} />
 
           <div className="pt-4 text-center">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Don&apos;t have an account?{" "}
               <Link href="/auth/signup" className="text-blue-600 hover:underline">
                 Sign up
@@ -129,8 +129,8 @@ export default function SignInForm() {
 
 function SubmitButton({ isPending }) {
   return (
-    <Button type="submit" className="w-full h-12 text-lg font-semibold" disabled={isPending}>
-      {isPending && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
+    <Button type="submit" className="h-12 w-full text-lg font-semibold" disabled={isPending}>
+      {isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
       Sign In
     </Button>
   );

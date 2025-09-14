@@ -20,11 +20,11 @@ const nextConfig = {
     ];
   },
   experimental: {
+    ppr: "incremental",
     authInterrupts: true,
-    cacheComponents: true,
+    // cacheComponents: true,
     reactCompiler: true,
     useCache: true,
-    useLightningcss: true,
     viewTransition: true, // react
     webVitalsAttribution: ["CLS", "LCP", "INP", "FCP", "TTFB"],
     // Forward browser logs to the terminal for easier debugging
