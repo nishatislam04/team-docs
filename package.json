@@ -72,6 +72,8 @@
     "@tiptap/pm": "^2.11.9",
     "@tiptap/react": "^2.11.9",
     "@tiptap/starter-kit": "^2.11.9",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
     "babel-plugin-react-compiler": "^19.1.0-rc.3",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",

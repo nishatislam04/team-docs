@@ -1,4 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SessionProvider } from "next-auth/react";
 import "./styles/globals.css";
 
@@ -17,7 +19,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          {children}
+          <SpeedInsights />
+          <Analytics />
+        </SessionProvider>
         <Toaster />
       </body>
     </html>
