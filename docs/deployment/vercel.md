@@ -47,13 +47,3 @@ bun run deploy:preview
 ```bash
 bun run deploy:prod
 ```
-
-This deploys current working tree to Production (main/master policy is up to your workflow). Ensure your repo is in a clean state and tests pass.
-
-## Common operations
-
-- Open dashboard:
-
-```bash
-vercel dashboard
-```

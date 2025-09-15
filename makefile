@@ -40,15 +40,8 @@ deploy:
 # docker compose up team-docs-local prisma-studio 
 dev:
 	bunx prisma generate
-	@if ! pgrep -f "prisma studio.*--port 5555" > /dev/null; then \
-		echo "Starting Prisma Studio on port 5555..."; \
-		BROWSER=none bunx prisma studio --port 5555 & \
-	else \
-		echo "Prisma Studio already running on port 5555"; \
-	fi
 	bun run local-dev
-
-
+	
 build-dev:
 	docker compose build --no-cache team-docs-local prisma-studio
 

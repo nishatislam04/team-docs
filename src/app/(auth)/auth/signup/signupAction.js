@@ -3,8 +3,6 @@
 import { signIn } from "@/app/auth";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { signUpSchema } from "./signupSchema";
 
 export async function signup(data) {
@@ -68,9 +66,6 @@ export async function signup(data) {
         errors: { _form: ["signin error"] },
       };
     }
-
-    revalidatePath("/");
-    redirect("/");
     return {
       type: "success",
       success: true,
