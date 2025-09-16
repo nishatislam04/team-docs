@@ -11,7 +11,7 @@ export default async function ProjectPage({ searchParams }) {
   const hasProjectsPromise = getHasProjects();
   const projectPromise = getAllProjectsFn({
     page: Number(params.page) || 1,
-    pageSize: Number(params.pageSize) || 2,
+    pageSize: Number(params.pageSize) || 10,
     sortBy: params.sortBy || "name",
     sortOrder: params.sortOrder || "asc",
   });

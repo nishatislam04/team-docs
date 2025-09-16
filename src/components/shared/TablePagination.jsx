@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
@@ -11,6 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { motion } from "framer-motion";
+import { usePathname, useSearchParams } from "next/navigation";
 
 /**
  * Reusable pagination component for tables with query string management

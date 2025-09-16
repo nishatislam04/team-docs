@@ -30,10 +30,9 @@ export default function ProjectShell({ hasProjectsPromise, projectPromise }) {
 
       {hasProjects ? (
         <ProjectListingsLazy
-          hasProjects={hasProjects}
-          startFetchProjects={startFetchProjects}
-          setStartFetchProjects={setStartFetchProjects}
           projects={projects}
+          hasProjects={hasProjects}
+          setStartFetchProjects={setStartFetchProjects}
         />
       ) : (
         <NoProjectUI />

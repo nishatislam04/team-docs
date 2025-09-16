@@ -2,7 +2,6 @@
 
 import DrawerLoading from "@/components/loading/DrawerLoading";
 import PaginationLoading from "@/components/loading/PaginationLoading";
-import TableLoading from "@/components/loading/TableLoading";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import SortIcon from "@/components/shared/SortIcon";
 import { Button } from "@/components/ui/button";
@@ -35,23 +34,10 @@ const TablePaginationLazy = dynamic(() => import("@/components/shared/TablePagin
 // ! so we can pass full projects from server component & consume the promise in this child component. its working just fine
 // ! the thing is the pagination does not works yet
 
-export default function ProjectListings({
-  hasProjects,
-  startFetchProjects,
-  setStartFetchProjects,
-  projects,
-}) {
+export default function ProjectListings({ hasProjects, setStartFetchProjects, projects }) {
   const router = useRouter();
   const { setIsDrawerOpen } = useProjectDrawerStore();
-  const {
-    // data: projects,
-    totalItems,
-    pageSize,
-    sortBy,
-    sortOrder,
-    handleSort,
-    showSkeleton,
-  } = useProjects(startFetchProjects, setStartFetchProjects);
+  const { sortBy, sortOrder, handleSort } = useProjects();
 
   // State for editing project
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -105,7 +91,7 @@ export default function ProjectListings({
             </TableHeader>
 
             <TableBody>
-              {/* If no roles exist */}
+              {/* If no project exist */}
               {!hasProjects ? (
                 <TableRow>
                   <TableCell
@@ -115,11 +101,7 @@ export default function ProjectListings({
                     No projects found.
                   </TableCell>
                 </TableRow>
-              ) : showSkeleton || projects.data.length === 0 ? (
-                /* If still loading */
-                <TableLoading columns={3} />
               ) : (
-                /* If roles are loaded */
                 projects.data.map((project) => (
                   <TableRow
                     key={project.id}
@@ -179,7 +161,7 @@ export default function ProjectListings({
       </section>
 
       {/* Pagination */}
-      {hasProjects && !showSkeleton && projects.data.length > 0 && (
+      {hasProjects && projects.data.length > 0 && (
         <TablePaginationLazy
           totalItems={projects.totalItems}
           itemsPerPage={projects.pageSize}
