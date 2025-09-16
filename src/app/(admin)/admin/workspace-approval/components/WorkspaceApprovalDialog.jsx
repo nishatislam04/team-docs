@@ -31,7 +31,7 @@ export default function WorkspaceApprovalDialog({ workspace, trigger, onSuccess 
   const handleApprove = () => {
     startTransition(async () => {
       try {
-        const result = await approveWorkspace(workspace.id);
+        const result = await approveWorkspace(workspace.id, workspace.owner.id);
 
         if (result.success) {
           setIsOpen(false);

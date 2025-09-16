@@ -9,6 +9,7 @@ import Logger from "@/lib/Logger";
 import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
 import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { Session } from "@/lib/Session";
+import { revalidatePath } from "next/cache";
 import { ProjectModel } from "../Models/ProjectModel";
 import { ProjectServices } from "../Services/ProjectServices";
 import { WorkspaceServices } from "../Services/WorkspaceServices";
@@ -53,6 +54,8 @@ class ProjectAction extends BaseAction {
           connect: { id: session.id },
         },
       });
+
+      revalidatePath("/projects");
 
       return {
         data: result.data,

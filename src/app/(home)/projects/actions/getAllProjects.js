@@ -1,5 +1,6 @@
 "use server";
 
+import Logger from "@/lib/Logger";
 import { Session } from "@/lib/Session";
 import { ProjectServices } from "@/system/Services/ProjectServices";
 
@@ -14,12 +15,17 @@ import { ProjectServices } from "@/system/Services/ProjectServices";
  */
 export async function getAllProjectsFn(options = {}) {
   const workspaceId = await Session.getWorkspaceIdForUser();
-  const { page = 1, pageSize = 10, sortBy = "name", sortOrder = "asc" } = options;
+  const { page = 1, pageSize = 2, sortBy = "name", sortOrder = "asc" } = options;
 
   const whereClause = { workspaceId };
 
   // Get total count for pagination
   const totalItems = await ProjectServices.countResources({ where: whereClause });
+
+  Logger.debug(
+    { page, pageSize, sortBy, sortOrder, whereClause, totalItems },
+    "executed getAllProjectsFn"
+  );
 
   // Calculate pagination parameters
   const skip = (page - 1) * pageSize;

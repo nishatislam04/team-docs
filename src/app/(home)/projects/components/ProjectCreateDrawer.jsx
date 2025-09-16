@@ -28,13 +28,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { createProjectAction } from "@/system/Actions/ProjectActions";
+import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 
-export default function ProjectCreateDrawer({
-  isDrawerOpen,
-  setIsDrawerOpen,
-  setStartFetchProjects,
-}) {
+// export default function ProjectCreateDrawer({
+//   isDrawerOpen,
+//   setIsDrawerOpen,
+//   setStartFetchProjects,
+// }) {
+export default function ProjectCreateDrawer({ setStartFetchProjects }) {
   const hasShownToastRef = useRef(false);
+  const { isDrawerOpen, setIsDrawerOpen, setIsDrawerClose } = useProjectDrawerStore();
 
   const defaultValues = useMemo(
     () => ({
@@ -54,14 +57,15 @@ export default function ProjectCreateDrawer({
       hasShownToastRef.current = true;
 
       form.reset();
-      setIsDrawerOpen(false);
+      setIsDrawerClose();
+      // setIsDrawerOpen(false);
       setStartFetchProjects(true);
 
       setTimeout(() => {
         hasShownToastRef.current = false;
       }, 500);
     },
-    isDrawerOpen,
+    // isDrawerOpen,
     successToast: {
       title: "Project created successfully",
       description: "Your new project is ready to use!",

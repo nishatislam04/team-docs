@@ -8,10 +8,5 @@ import { getAllProjectsFn } from "../actions/getAllProjects";
  * @returns {Object} An object containing paginated projects data, state, and handlers.
  */
 export function useProjects(shouldStartFetch, setShouldStartFetch) {
-	return usePaginatedFetch(
-		getAllProjectsFn,
-		shouldStartFetch,
-		setShouldStartFetch
-	);
+  return usePaginatedFetch(getAllProjectsFn, shouldStartFetch, setShouldStartFetch);
 }
-

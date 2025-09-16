@@ -72,14 +72,10 @@ export class BaseAuthGuard {
   static async isWorkspaceAdmin() {
     const session = await this.requireAuth();
 
-    Logger.debug(session, "session from isWorkspaceAdmin");
-
     const user = await UserServices.getResource({
       where: { id: session.id },
       select: { isWorkspaceOwner: true },
     });
-
-    Logger.error(user, "user does not exist on isWorkspaceAdmin");
 
     if (!user.isWorkspaceOwner) return notify("user does not exist");
 

@@ -7,6 +7,7 @@ import { Session } from "@/lib/Session";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { PermissionModel } from "../Models/PermissionModel";
+import { UserModel } from "../Models/UserModel";
 import { WorkspaceModel } from "../Models/WorkspaceModel";
 import { WorkspaceServices } from "../Services/WorkspaceServices";
 import { BaseAction } from "./BaseAction";
@@ -79,7 +80,7 @@ class WorkspaceAction extends BaseAction {
    * @param {string} workspaceId - The ID of the workspace to approve
    * @returns {Object} Action result with success/error status
    */
-  static async approve(workspaceId) {
+  static async approve(workspaceId, workspaceOwnerId) {
     try {
       // Validate workspace ID
       const workspaceIdSchema = z.string().cuid("Invalid workspace ID");
@@ -116,13 +117,10 @@ class WorkspaceAction extends BaseAction {
         data: { status: "ACTIVE" },
       });
 
-      // ! we need to pass user id from the client side, and use the user to udpate the user
-
-      // update user to be a workspace owner
-      // await UserModel.update({
-      //   where: { id: session.id },
-      //   data: { isWorkspaceOwner: true },
-      // });
+      await UserModel.update({
+        where: { id: workspaceOwnerId },
+        data: { isWorkspaceOwner: true },
+      });
 
       // generate permissions for this workspace
       await this.generatePermissions(validatedId, workspace.owner.id);
@@ -303,8 +301,8 @@ export async function createWorkspace(prevState, formData) {
   return await WorkspaceAction.create(formData);
 }
 
-export async function approveWorkspace(workspaceId) {
-  return await WorkspaceAction.approve(workspaceId);
+export async function approveWorkspace(workspaceId, workspaceOwnerId) {
+  return await WorkspaceAction.approve(workspaceId, workspaceOwnerId);
 }
 
 export async function rejectWorkspace(workspaceId) {

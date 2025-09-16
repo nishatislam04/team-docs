@@ -31,6 +31,7 @@ export function useStartFetch(serverAction, shouldStartFetch, setShouldStartFetc
     };
 
     if (shouldStartFetch) fetchData();
+    // }, [serverAction]);
   }, [shouldStartFetch, serverAction, setShouldStartFetch]);
 
   return {

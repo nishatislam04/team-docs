@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Edit, LayoutTemplate, UsersRound } from "lucide-react";
+import DrawerLoading from "@/components/loading/DrawerLoading";
+import PaginationLoading from "@/components/loading/PaginationLoading";
+import TableLoading from "@/components/loading/TableLoading";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
+import SortIcon from "@/components/shared/SortIcon";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -12,15 +14,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useProjects } from "../hooks/useProjects";
-import ClientErrorUI from "@/components/abstracts/clientErrorUI";
-import { useRouter } from "next/navigation";
+import { Edit, LayoutTemplate, UsersRound } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useProjects } from "../hooks/useProjects";
+import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
-import SortIcon from "@/components/shared/SortIcon";
-import DrawerLoading from "@/components/loading/DrawerLoading";
-import TableLoading from "@/components/loading/TableLoading";
-import PaginationLoading from "@/components/loading/PaginationLoading";
 
 const ProjectEditDrawerLazy = dynamic(() => import("./ProjectEditDrawer"), {
   ssr: false,
@@ -32,13 +32,16 @@ const TablePaginationLazy = dynamic(() => import("@/components/shared/TablePagin
   loading: () => <PaginationLoading />,
 });
 
+// ! so we can pass full projects from server component & consume the promise in this child component. its working just fine
+// ! the thing is the pagination does not works yet
+
 export default function ProjectListings({
   hasProjects,
-  setIsDrawerOpen,
   startFetchProjects,
   setStartFetchProjects,
 }) {
   const router = useRouter();
+  const { setIsDrawerOpen } = useProjectDrawerStore();
   const {
     data: projects,
     totalItems,
@@ -46,7 +49,6 @@ export default function ProjectListings({
     sortBy,
     sortOrder,
     handleSort,
-    fetchError,
     showSkeleton,
   } = useProjects(startFetchProjects, setStartFetchProjects);
 
@@ -59,12 +61,10 @@ export default function ProjectListings({
     setIsEditDrawerOpen(true);
   };
 
-  if (fetchError) return <ClientErrorUI errorMessage={fetchError} retry={setStartFetchProjects} />;
-
   return (
     <section className="space-y-8">
-      {/* Header with Create Button */}
-      <section className="flex justify-between items-start pb-4 w-full max-h-14 border-b">
+      {/* Create Button */}
+      <section className="flex max-h-14 w-full items-start justify-between border-b pb-4">
         <h1 className="text-3xl font-bold tracking-tight">Your Projects</h1>
         <div className="ml-auto">
           <CreateButtonShared onClick={() => setIsDrawerOpen(true)}>
@@ -83,14 +83,14 @@ export default function ProjectListings({
         />
       )}
 
-      {/* Project List */}
+      {/* Project Listings */}
       <section className="mt-8 space-y-4">
-        <div className="overflow-auto relative rounded-2xl border shadow-lg bg-background">
+        <div className="bg-background relative overflow-auto rounded-2xl border shadow-lg">
           <Table className="overflow-scroll">
-            <TableHeader className="sticky top-0 z-10 bg-muted">
+            <TableHeader className="bg-muted sticky top-0 z-10">
               <TableRow className="text-lg font-semibold tracking-wide">
                 <TableHead
-                  className="w-[160px] px-6 py-4 cursor-pointer hover:bg-muted/80 transition-colors"
+                  className="hover:bg-muted/80 w-[160px] cursor-pointer px-6 py-4 transition-colors"
                   onClick={() => handleSort("name")}
                 >
                   <div className="flex items-center">
@@ -99,7 +99,7 @@ export default function ProjectListings({
                   </div>
                 </TableHead>
                 <TableHead className="w-[300px] px-6 py-4">Description</TableHead>
-                <TableHead className="w-[320px] text-center px-6 py-4">Actions</TableHead>
+                <TableHead className="w-[320px] px-6 py-4 text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -109,7 +109,7 @@ export default function ProjectListings({
                 <TableRow>
                   <TableCell
                     colSpan={4}
-                    className="py-10 text-lg text-center text-muted-foreground"
+                    className="text-muted-foreground py-10 text-center text-lg"
                   >
                     No projects found.
                   </TableCell>
@@ -122,47 +122,47 @@ export default function ProjectListings({
                 projects.map((project) => (
                   <TableRow
                     key={project.id}
-                    className="transition-colors duration-200 hover:bg-muted"
+                    className="hover:bg-muted transition-colors duration-200"
                   >
                     {/* Your table cells content */}
                     <TableCell className="px-6 py-5 text-base font-semibold">
                       {project.name}
                     </TableCell>
-                    <TableCell className="px-6 py-5 text-base text-muted-foreground max-w-xs overflow-hidden whitespace-nowrap truncate">
+                    <TableCell className="text-muted-foreground max-w-xs truncate overflow-hidden px-6 py-5 text-base whitespace-nowrap">
                       {project.description || (
-                        <span className="text-sm italic text-gray-400">No description</span>
+                        <span className="text-sm text-gray-400 italic">No description</span>
                       )}
                     </TableCell>
 
-                    <TableCell className="flex gap-3 justify-center items-center px-6 py-5">
+                    <TableCell className="flex items-center justify-center gap-3 px-6 py-5">
                       <Button
                         variant="outline"
                         size="sm"
-                        className="flex gap-1 items-center cursor-pointer"
+                        className="flex cursor-pointer items-center gap-1"
                         onClick={() => {
                           router.push(`/projects/${project.slug}/editor`);
                           router.refresh();
                         }}
                       >
-                        <LayoutTemplate className="w-4 h-4" /> View
+                        <LayoutTemplate className="h-4 w-4" /> View
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        className="flex gap-1 items-center bg-yellow-100 cursor-pointer"
+                        className="flex cursor-pointer items-center gap-1 bg-yellow-100"
                         onClick={() => handleEditClick(project)}
                       >
-                        <Edit className="w-4 h-4" /> Edit
+                        <Edit className="h-4 w-4" /> Edit
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="flex gap-1 items-center bg-green-100 cursor-pointer"
+                        className="flex cursor-pointer items-center gap-1 bg-green-100"
                         onClick={() => {
                           router.push(`/projects/${project.slug}/assign-dev`);
                         }}
                       >
-                        <UsersRound className="w-4 h-4" /> Assign Dev
+                        <UsersRound className="h-4 w-4" /> Assign Dev
                       </Button>
                       <DeleteConfirmationDialog
                         project={project}

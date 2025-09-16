@@ -8,5 +8,6 @@ export async function getHasProjects() {
   const hasProjects = await ProjectServices.hasResource({
     where: { workspaceId },
   });
+
   return hasProjects;
 }

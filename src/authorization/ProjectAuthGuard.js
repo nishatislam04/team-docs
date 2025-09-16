@@ -69,8 +69,6 @@ class ProjectAuthGuard extends BaseAuthGuard {
       },
     });
 
-    Logger.debug(permission);
-
     if (permission.status !== "ACTIVE") {
       Logger.warn(`User ${session.id} attempted to create project without permission`);
       notify("You do not have permission to create a project");
