@@ -1,12 +1,12 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle, XCircle, Clock, User, Calendar, Eye, Mail } from "lucide-react";
-import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
-import WorkspaceDetailsDialog from "./components/WorkspaceDetailsDialog";
-import WorkspaceApprovalDialog from "./components/WorkspaceApprovalDialog";
-import WorkspaceRejectionDialog from "./components/WorkspaceRejectionDialog";
 import { protectAdmin } from "@/authorization/AdminAuthGuard";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
+import { Calendar, CheckCircle, Clock, Eye, Mail, User, XCircle } from "lucide-react";
+import WorkspaceApprovalDialog from "./components/WorkspaceApprovalDialog";
+import WorkspaceDetailsDialog from "./components/WorkspaceDetailsDialog";
+import WorkspaceRejectionDialog from "./components/WorkspaceRejectionDialog";
 
 export default async function WorkspaceApprovalPage() {
   await protectAdmin();
@@ -14,15 +14,15 @@ export default async function WorkspaceApprovalPage() {
   const pendingWorkspaces = await WorkspaceServices.getPendingWorkspaces();
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="space-y-8 p-8">
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">Workspace Approval</h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-muted-foreground text-lg">
             Review and manage pending workspace requests
           </p>
         </div>
-        <Badge variant="secondary" className="text-base px-4 py-2">
+        <Badge variant="secondary" className="px-4 py-2 text-base">
           {pendingWorkspaces.length} Pending
         </Badge>
       </div>
@@ -31,10 +31,10 @@ export default async function WorkspaceApprovalPage() {
         {pendingWorkspaces.length === 0 ? (
           <Card className="p-8">
             <CardContent className="flex items-center justify-center py-16">
-              <div className="text-center space-y-4">
-                <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
+              <div className="space-y-4 text-center">
+                <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
                 <h3 className="text-2xl font-semibold">All caught up!</h3>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-muted-foreground text-lg">
                   No pending workspace requests at the moment.
                 </p>
               </div>
@@ -42,7 +42,7 @@ export default async function WorkspaceApprovalPage() {
           </Card>
         ) : (
           pendingWorkspaces.map((workspace) => (
-            <Card key={workspace.id} className="p-4 hover:shadow-lg transition-shadow">
+            <Card key={workspace.id} className="p-4 transition-shadow hover:shadow-lg">
               <div className="flex gap-6">
                 <div className="w-[95%]">
                   <CardHeader className="p-0 pb-3">
@@ -51,20 +51,20 @@ export default async function WorkspaceApprovalPage() {
                         {workspace.name}
                         <Badge
                           variant="outline"
-                          className="text-yellow-600 border-yellow-600 px-3 py-1 text-sm"
+                          className="border-yellow-600 px-3 py-1 text-sm text-yellow-600"
                         >
-                          <Clock className="h-4 w-4 mr-2" />
+                          <Clock className="mr-2 h-4 w-4" />
                           Pending
                         </Badge>
                       </CardTitle>
-                      <CardDescription className="text-base leading-relaxed min-h-20">
+                      <CardDescription className="min-h-20 text-base leading-relaxed">
                         {workspace.description || "No description provided"}
                       </CardDescription>
                     </div>
                   </CardHeader>
 
                   <CardContent className="p-0">
-                    <div className="flex items-center gap-6 text-base text-muted-foreground">
+                    <div className="text-muted-foreground flex items-center gap-6 text-base">
                       <div className="flex items-center gap-2">
                         <User className="h-5 w-5" />
                         <span>{workspace.owner?.username}</span>
@@ -81,17 +81,17 @@ export default async function WorkspaceApprovalPage() {
                   </CardContent>
                 </div>
 
-                <div className="w-[15%] flex flex-col items-center justify-center gap-4">
+                <div className="flex w-[15%] flex-col items-center justify-center gap-4">
                   {/* Approve Button with Dialog */}
                   <WorkspaceApprovalDialog
                     workspace={workspace}
                     trigger={
                       <Button
                         size="xl"
-                        className="bg-green-600 hover:bg-green-700 px-6 py-3 text-base w-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                        className="flex w-full transform items-center justify-center bg-green-600 px-6 py-3 text-base shadow-lg transition-all duration-200 hover:scale-105 hover:bg-green-700 hover:shadow-xl"
                       >
-                        <CheckCircle className="h-5 w-5 mr-1 translate-x-2" />
-                        <span className="font-medium ml-1">Approve</span>
+                        <CheckCircle className="mr-1 h-5 w-5 translate-x-2" />
+                        <span className="ml-1 font-medium">Approve</span>
                       </Button>
                     }
                   />
@@ -103,10 +103,10 @@ export default async function WorkspaceApprovalPage() {
                       <Button
                         size="xl"
                         variant="destructive"
-                        className="px-6 py-3 text-base w-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                        className="flex w-full transform items-center justify-center px-6 py-3 text-base shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
                       >
-                        <XCircle className="h-5 w-5 mr-0" />
-                        <span className="font-medium mr-2">Reject</span>
+                        <XCircle className="mr-0 h-5 w-5" />
+                        <span className="mr-2 font-medium">Reject</span>
                       </Button>
                     }
                   />
@@ -118,10 +118,10 @@ export default async function WorkspaceApprovalPage() {
                       <Button
                         size="xl"
                         variant="outline"
-                        className="px-6 py-3 text-base w-full flex items-center justify-center shadow-md hover:shadow-lg border-2 transition-all duration-200 transform hover:scale-105 bg-white hover:bg-gray-50"
+                        className="flex w-full transform items-center justify-center border-2 bg-white px-6 py-3 text-base shadow-md transition-all duration-200 hover:scale-105 hover:bg-gray-50 hover:shadow-lg"
                       >
-                        <Eye className="h-5 w-5 mr-0" />
-                        <span className="font-medium mr-2">Details</span>
+                        <Eye className="mr-0 h-5 w-5" />
+                        <span className="mr-2 font-medium">Details</span>
                       </Button>
                     }
                   />

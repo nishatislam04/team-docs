@@ -1,11 +1,10 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { BaseAuthGuard } from "./BaseAuthGuard";
-import Logger from "@/lib/Logger";
-import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
-import { UserServices } from "@/system/Services/UserServices";
 import { Session } from "@/lib/Session";
+import { notify } from "@/lib/utils";
+import { UserServices } from "@/system/Services/UserServices";
+import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
+import { BaseAuthGuard } from "./BaseAuthGuard";
 
 /**
  * WorkspaceAuthGuard - Authorization guard for workspace-related operations
@@ -21,23 +20,22 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
   static async requireWorkspaceActive() {
     const session = await this.requireAuth();
 
-    if (!session) return this.redirectUnauthorized();
-
     const workspaceId = session.workspaceId || Session.getWorkspaceId();
 
     const workspaceExists = await UserServices.hasResource({
       where: { workspaceId },
     });
-    if (!workspaceExists) return this.redirectUnauthorized();
+
+    if (!workspaceExists) return notify("Workspace not found");
 
     const workspace = await WorkspaceServices.getResource({
       where: { id: session.workspaceId },
       include: { owner: true },
     });
 
-    if (!workspace) return this.redirectUnauthorized();
+    if (!workspace) return notify("Workspace not found");
 
-    if (workspace.status !== "ACTIVE") return this.redirectUnauthorized();
+    if (workspace.status !== "ACTIVE") return notify("workspace was not active");
 
     return true;
   }

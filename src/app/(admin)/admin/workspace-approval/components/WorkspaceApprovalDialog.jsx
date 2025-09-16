@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useAdminRefresh } from "@/components/layout/admin/AdminRefreshContext";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,11 +11,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { CheckCircle, Loader2 } from "lucide-react";
-import { approveWorkspace } from "@/system/Actions/WorkspaceActions";
-import { toast } from "sonner";
 import Logger from "@/lib/Logger";
-import { useAdminRefresh } from "@/components/layout/admin/AdminRefreshContext";
+import { approveWorkspace } from "@/system/Actions/WorkspaceActions";
+import { CheckCircle, Loader2 } from "lucide-react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 
 /**
  * Workspace Approval Confirmation Dialog
@@ -70,10 +70,10 @@ export default function WorkspaceApprovalDialog({ workspace, trigger, onSuccess 
           </AlertDialogTitle>
           <AlertDialogDescription className="space-y-2">
             Are you sure you want to approve the workspace{" "}
-            <span className="font-semibold text-foreground">&quot;{workspace.name}&quot;</span>?
-            <span className="text-sm block mt-2">
+            <span className="text-foreground font-semibold">&quot;{workspace.name}&quot;</span>?
+            <span className="mt-2 block text-sm">
               This action will activate the workspace and allow the owner{" "}
-              <span className="font-medium text-foreground">{workspace.owner?.username}</span> to
+              <span className="text-foreground font-medium">{workspace.owner?.username}</span> to
               start using it immediately.
             </span>
           </AlertDialogDescription>
@@ -88,12 +88,12 @@ export default function WorkspaceApprovalDialog({ workspace, trigger, onSuccess 
           >
             {isPending ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Approving...
               </>
             ) : (
               <>
-                <CheckCircle className="h-4 w-4 mr-2" />
+                <CheckCircle className="mr-2 h-4 w-4" />
                 Approve Workspace
               </>
             )}

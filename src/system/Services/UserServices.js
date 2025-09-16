@@ -1,7 +1,7 @@
 import Logger from "@/lib/Logger";
-import { BaseService } from "./BaseService";
-import { UserModel } from "../Models/UserModel";
 import { UserDTO } from "../DTOs/UserDTO";
+import { UserModel } from "../Models/UserModel";
+import { BaseService } from "./BaseService";
 
 export class UserServices extends BaseService {
   static modelName = "user";
@@ -16,7 +16,7 @@ export class UserServices extends BaseService {
     try {
       const users = await UserModel.findMany({
         where: {
-          workspaceId: workspaceId,
+          workspaceId,
           isWorkspaceOwner: false,
         },
         select: {

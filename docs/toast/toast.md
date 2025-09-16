@@ -193,14 +193,6 @@ The system uses CSS variables that can be customized:
 }
 ```
 
-## Mobile Responsiveness
-
-On mobile devices (< 640px):
-
-- Toasts span the full width with margins
-- Animation changes from horizontal slide to vertical slide
-- Positioning adjusts for better mobile UX
-
 ## API Reference
 
 ### useToast Hook
@@ -247,12 +239,3 @@ import {
   dismissAllToasts,
 } from "@/lib/toast";
 ```
-
-## Best Practices
-
-1. **Use appropriate types**: Match the toast type to the message context
-2. **Keep messages concise**: Use clear, actionable messages
-3. **Provide context**: Include helpful descriptions when needed
-4. **Handle errors gracefully**: Always show user-friendly error messages
-5. **Use convenience methods**: Leverage pre-configured methods for common cases
-6. **Test on mobile**: Ensure toasts work well on all screen sizes

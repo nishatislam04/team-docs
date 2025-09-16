@@ -1,8 +1,8 @@
-import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import prisma from "@/lib/prisma";
-import bcrypt from "bcryptjs";
 import authConfig from "@/lib/auth.config";
+import prisma from "@/lib/prisma";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import bcrypt from "bcryptjs";
+import NextAuth from "next-auth";
 
 const credentialsProvider = authConfig.providers.find((p) => p.id === "credentials");
 

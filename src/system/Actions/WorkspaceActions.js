@@ -1,15 +1,15 @@
 "use server";
 
-import { WorkspaceSchema } from "@/lib/schemas/workspaceSchema";
-import { BaseAction } from "./BaseAction";
-import { WorkspaceModel } from "../Models/WorkspaceModel";
-import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
 import Logger from "@/lib/Logger";
+import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
+import { WorkspaceSchema } from "@/lib/schemas/workspaceSchema";
 import { Session } from "@/lib/Session";
-import { WorkspaceServices } from "../Services/WorkspaceServices";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { PermissionModel } from "../Models/PermissionModel";
+import { WorkspaceModel } from "../Models/WorkspaceModel";
+import { WorkspaceServices } from "../Services/WorkspaceServices";
+import { BaseAction } from "./BaseAction";
 
 class WorkspaceAction extends BaseAction {
   static get schema() {
@@ -115,6 +115,14 @@ class WorkspaceAction extends BaseAction {
         where: { id: validatedId },
         data: { status: "ACTIVE" },
       });
+
+      // ! we need to pass user id from the client side, and use the user to udpate the user
+
+      // update user to be a workspace owner
+      // await UserModel.update({
+      //   where: { id: session.id },
+      //   data: { isWorkspaceOwner: true },
+      // });
 
       // generate permissions for this workspace
       await this.generatePermissions(validatedId, workspace.owner.id);

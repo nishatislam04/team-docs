@@ -6,15 +6,13 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "NODE_ENV=production next build --turbopack --no-lint",
-    "vercel-build-with-seed": "bunx prisma generate --no-engine && bunx prisma migrate deploy && bunx prisma db seed && bun run build",
     "vercel-build": "bunx prisma generate --no-engine && bunx prisma migrate deploy && bun run build",
     "start": "next start",
     "analyze": "ANALYZE=true next build --no-lint",
     "local-dev": "concurrently -k -n \"POSTGRES,STUDIO,NEXT\" -c \"yellow,cyan,green\" \"bunx prisma dev \"  \"BROWSER=none bunx prisma studio\" \"bun run dev\"",
     "deploy:preview": "bunx vercel",
     "deploy:prod": "bunx vercel --prod",
-    "vercel:env:pull": "bunx vercel env pull .env.local",
-    "vercel:env:push": "bunx vercel env pull .env && bunx vercel env pull .env.local"
+    "vercel:env:pull": "bunx vercel env pull .env.local"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.8.0",

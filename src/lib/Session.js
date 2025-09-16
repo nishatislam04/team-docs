@@ -1,6 +1,7 @@
 import { auth } from "@/app/auth";
-import { forbidden } from "next/navigation";
 import { UserModel } from "@/system/Models/UserModel";
+import { forbidden } from "next/navigation";
+import { cache } from "react";
 import Logger from "./Logger";
 
 export class Session {
@@ -13,7 +14,7 @@ export class Session {
       const session = await auth();
       return session?.user || null;
     } catch (err) {
-      Logger.error(err.message, "failed to get current user session");
+      Logger.error(err.message, "Failed to get current user session");
     }
   }
 
@@ -47,10 +48,12 @@ export class Session {
    */
   static async getWorkspaceId(id) {
     try {
-      const user = await UserModel.findUnique({
-        where: { id },
-        select: { workspaceId: true },
-      });
+      const user = cache(
+        await UserModel.findUnique({
+          where: { id },
+          select: { workspaceId: true },
+        })
+      );
 
       return user?.workspaceId;
     } catch (err) {

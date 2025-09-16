@@ -1,7 +1,9 @@
-import { Session } from "@/lib/Session";
 import Logger from "@/lib/Logger";
+import { Session } from "@/lib/Session";
+import { notify } from "@/lib/utils";
 import { UserServices } from "@/system/Services/UserServices";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
+import { redirect } from "next/navigation";
 
 /**
  * BaseAuthGuard - Laravel-like authorization base class
@@ -20,7 +22,7 @@ export class BaseAuthGuard {
     try {
       return await Session.getCurrentUser();
     } catch (err) {
-      Logger.error(err.message, "failed to get user session from base auth guard");
+      Logger.error(err.message, "failed to get user session from Base auth guard");
       return null;
     }
   }
@@ -33,7 +35,7 @@ export class BaseAuthGuard {
    */
   static async requireAuth() {
     const session = await this.getSession();
-    if (!session) return this.redirectUnauthorized();
+    if (!session) return notify("You need to be an Auth user");
     return session;
   }
 
@@ -69,14 +71,17 @@ export class BaseAuthGuard {
    */
   static async isWorkspaceAdmin() {
     const session = await this.requireAuth();
-    if (!session) return this.redirectUnauthorized();
+
+    Logger.debug(session, "session from isWorkspaceAdmin");
 
     const user = await UserServices.getResource({
       where: { id: session.id },
       select: { isWorkspaceOwner: true },
     });
 
-    if (!user.isWorkspaceOwner) return this.redirectUnauthorized();
+    Logger.error(user, "user does not exist on isWorkspaceAdmin");
+
+    if (!user.isWorkspaceOwner) return notify("user does not exist");
 
     return true;
   }
@@ -91,7 +96,7 @@ export class BaseAuthGuard {
    */
   static async basicAuthCheck() {
     const session = await this.getSession();
-    if (!session) return this.redirectUnauthorized();
+    if (!session) return notify("You need to be an Auth user");
 
     const workspaceId = session.workspaceId || Session.getWorkspaceId();
 
@@ -101,10 +106,7 @@ export class BaseAuthGuard {
 
     if (!userExist) {
       Logger.warn(`User ${session.id} attempted to view projects without user membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to perform this action."] },
-      };
+      notify("User does not exist");
     }
 
     const workspaceExist = await WorkspaceServices.hasResource({
@@ -116,10 +118,7 @@ export class BaseAuthGuard {
 
     if (!workspaceExist) {
       Logger.warn(`User ${session.id} attempted to view projects without workspace membership`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to perform this action."] },
-      };
+      notify("workspace does not exist");
     }
 
     return session;
@@ -133,5 +132,9 @@ export class BaseAuthGuard {
   static isOwner(resourceOwnerId) {
     const session = this.getSession();
     return session?.id === resourceOwnerId;
+  }
+
+  static redirectUnauthorized() {
+    redirect("/?unauthorized=1");
   }
 }

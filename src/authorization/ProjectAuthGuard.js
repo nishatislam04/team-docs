@@ -1,10 +1,10 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
-import { ProjectServices } from "@/system/Services/ProjectServices";
+import { notify } from "@/lib/utils";
 import { PermissionServices } from "@/system/Services/PermissionServices";
+import { ProjectServices } from "@/system/Services/ProjectServices";
+import { BaseAuthGuard } from "./BaseAuthGuard";
 
 /**
  * ProjectAuthGuard - Authorization guard for project-related operations
@@ -36,10 +36,7 @@ class ProjectAuthGuard extends BaseAuthGuard {
 
     if (permission.status !== "ACTIVE") {
       Logger.warn(`User ${session.id} attempted to view projects without permission`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to view projects."] },
-      };
+      notify("You are not permitted to view this project");
     }
 
     return {
@@ -72,12 +69,11 @@ class ProjectAuthGuard extends BaseAuthGuard {
       },
     });
 
+    Logger.debug(permission);
+
     if (permission.status !== "ACTIVE") {
       Logger.warn(`User ${session.id} attempted to create project without permission`);
-      return {
-        success: false,
-        errors: { _form: ["You do not have permission to create a project."] },
-      };
+      notify("You do not have permission to create a project");
     }
 
     return {

@@ -2,6 +2,8 @@ import { PrismaClient } from "@/generated/client";
 
 const prisma = new PrismaClient();
 
+// ! add nishat project permissions
+
 async function main() {
   console.log("🌱 Starting seeding process...");
 
@@ -16,6 +18,7 @@ async function main() {
       isWorkspaceOwner: true,
     },
   });
+
   console.log("✅ Created nishat user");
 
   // Create workspace for Admin
@@ -28,6 +31,7 @@ async function main() {
       status: "ACTIVE",
     },
   });
+
   console.log("✅ Created workspace");
 
   // assign workspace to admin user

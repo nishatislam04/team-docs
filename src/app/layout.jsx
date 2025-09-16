@@ -1,6 +1,6 @@
+import { AuthorizationToastProvider } from "@/components/abstracts/authorization-toast-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+// import { Analytics } from "@vercel/analytics/next";
 import { SessionProvider } from "next-auth/react";
 import "./styles/globals.css";
 
@@ -21,9 +21,10 @@ export default function RootLayout({ children }) {
       <body>
         <SessionProvider>
           {children}
-          <SpeedInsights />
-          <Analytics />
+          {/* <SpeedInsights /> */}
+          {/* <Analytics /> */}
         </SessionProvider>
+        <AuthorizationToastProvider />
         <Toaster />
       </body>
     </html>

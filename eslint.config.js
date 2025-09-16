@@ -40,7 +40,7 @@ export default [
       "react/display-name": "off",
 
       // General consistency
-      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-console": ["warn", { allow: ["warn", "error", "log"] }],
       "prefer-const": "error",
       eqeqeq: ["error", "smart"],
       "object-shorthand": ["error", "always"],

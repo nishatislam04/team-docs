@@ -1,7 +1,7 @@
 "use client";
 
+import { AlertTriangle, CheckCircle, Info, XCircle } from "lucide-react";
 import { toast as sonnerToast } from "sonner";
-import { CheckCircle, XCircle, AlertTriangle, Info } from "lucide-react";
 
 /**
  * Enhanced toast utility with modern design and animations
@@ -35,7 +35,7 @@ const createToast = (type, title, description, options = {}) => {
     dismissible: true,
     closeButton: true,
     ...options,
-    icon: Icon ? <Icon className="w-5 h-5" /> : undefined,
+    icon: Icon ? <Icon className="h-5 w-5" /> : undefined,
   };
 
   // Use the appropriate sonner method based on type

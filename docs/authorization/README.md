@@ -1,5 +1,23 @@
 # Authorization System Documentation
 
+## IMPORTANT NOTICE: showing authorization toast. generic message
+
+- to show authorization toast in the app, we added a query params `/?uanthorized=1` on the `BaseAuthGuard.redirectUnauthorized()`
+- then on the root layout we added new component `<AuthorizationToastProvider />`
+- this will show our generic authorization toast message & then redirect the user to `/` route.
+
+## IMPORTANT NOTICE: showing authorization toast. specific message
+
+- when we want to show specific toast message like "you are not permitted to view this project. this is how to set it up
+
+- in specific server side auth guard class
+
+```js
+redirect("/?unauthorized=" + encodeURIComponent("You are not permitted to view this project"));
+```
+
+- then `<AuthorizationToastProvider />` component will render the toast message!
+
 ## Overview
 
 This directory contains comprehensive documentation for the Laravel-like authorization system implemented for the Next.js application. The system provides role-based access control (RBAC), permission management, resource ownership validation, and fine-grained access control.
@@ -7,6 +25,7 @@ This directory contains comprehensive documentation for the Laravel-like authori
 ## Documentation Structure
 
 ### Core Documentation
+
 - **[Getting Started](getting-started.md)** - Quick start guide and basic usage
 - **[Architecture](architecture.md)** - System architecture and design patterns
 - **[Guards Reference](guards.md)** - Complete reference for all authorization guards
@@ -14,12 +33,14 @@ This directory contains comprehensive documentation for the Laravel-like authori
 - **[Integration Guide](integration.md)** - How to integrate authorization in your code
 
 ### Advanced Topics
+
 - **[Best Practices](best-practices.md)** - Authorization best practices and patterns
 - **[Performance](performance.md)** - Performance optimization and caching strategies
 - **[Security](security.md)** - Security considerations and guidelines
 - **[Migration](migration.md)** - Migrating from existing authorization systems
 
 ### Examples and Tutorials
+
 - **[Examples](examples/)** - Code examples and usage patterns
 - **[Tutorials](tutorials/)** - Step-by-step tutorials
 - **[API Reference](api/)** - Complete API documentation
@@ -49,11 +70,11 @@ import { hasPermission } from "@/authorization/BaseAuthGuard";
 export async function updateProject(projectId, data) {
   const session = await requireAuth();
   const canEdit = await hasPermission(session.id, "edit:project", "project", projectId);
-  
+
   if (!canEdit) {
     throw new Error("Insufficient permissions");
   }
-  
+
   // Update logic here
 }
 ```
@@ -61,24 +82,28 @@ export async function updateProject(projectId, data) {
 ## Key Features
 
 ### 🔐 Comprehensive Authorization
+
 - **Resource Guards** - Specialized protection for each resource type
 - **Permission System** - Fine-grained RBAC with scoped permissions
 - **Ownership Validation** - Automatic ownership-based access control
 - **Membership Checking** - Workspace and project membership validation
 
 ### 🚀 Next.js Optimized
+
 - **Server-Side Only** - All authorization logic runs on the server
 - **"use server" Compatible** - Exports only async functions as required
 - **Performance Focused** - Efficient database queries and batch operations
 - **Error Handling** - Automatic forbidden/not-found responses
 
 ### 🛠️ Developer Friendly
+
 - **Laravel-Like API** - Familiar patterns for PHP developers
 - **TypeScript Support** - Full type safety with JSDoc annotations
 - **Comprehensive Docs** - Detailed documentation with examples
 - **Testing Support** - Built-in testing utilities and patterns
 
 ### 🔧 Flexible Architecture
+
 - **Class-Based Internal** - Clean internal organization with classes
 - **Function Exports** - Server-compatible async function exports
 - **Modular Design** - Easy to extend and customize
