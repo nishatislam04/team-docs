@@ -18,8 +18,10 @@ const ProjectListingsLazy = dynamic(() => import("./components/ProjectListings")
 
 export default function ProjectShell({ hasProjectsPromise, projectPromise }) {
   const hasProjects = use(hasProjectsPromise);
-  const projects = use(projectPromise); // ! we will not use it yet.
-  const [startFetchProjects, setStartFetchProjects] = useState(hasProjects ? true : false);
+  const projects = projectPromise ? use(projectPromise) : null;
+  const [startFetchProjects, setStartFetchProjects] = useState(
+    projects ? false : hasProjects ? true : false
+  );
   const { isDrawerOpen } = useProjectDrawerStore();
 
   return (
@@ -31,6 +33,7 @@ export default function ProjectShell({ hasProjectsPromise, projectPromise }) {
           hasProjects={hasProjects}
           startFetchProjects={startFetchProjects}
           setStartFetchProjects={setStartFetchProjects}
+          projects={projects}
         />
       ) : (
         <NoProjectUI />

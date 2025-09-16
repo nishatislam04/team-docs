@@ -39,11 +39,12 @@ export default function ProjectListings({
   hasProjects,
   startFetchProjects,
   setStartFetchProjects,
+  projects,
 }) {
   const router = useRouter();
   const { setIsDrawerOpen } = useProjectDrawerStore();
   const {
-    data: projects,
+    // data: projects,
     totalItems,
     pageSize,
     sortBy,
@@ -114,12 +115,12 @@ export default function ProjectListings({
                     No projects found.
                   </TableCell>
                 </TableRow>
-              ) : showSkeleton || projects.length === 0 ? (
+              ) : showSkeleton || projects.data.length === 0 ? (
                 /* If still loading */
                 <TableLoading columns={3} />
               ) : (
                 /* If roles are loaded */
-                projects.map((project) => (
+                projects.data.map((project) => (
                   <TableRow
                     key={project.id}
                     className="hover:bg-muted transition-colors duration-200"
@@ -178,10 +179,10 @@ export default function ProjectListings({
       </section>
 
       {/* Pagination */}
-      {hasProjects && !showSkeleton && projects.length > 0 && (
+      {hasProjects && !showSkeleton && projects.data.length > 0 && (
         <TablePaginationLazy
-          totalItems={totalItems}
-          itemsPerPage={pageSize}
+          totalItems={projects.totalItems}
+          itemsPerPage={projects.pageSize}
           className="mt-6 mb-8"
         />
       )}

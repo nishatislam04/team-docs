@@ -75,7 +75,7 @@ export default [
       "jsx-a11y/no-static-element-interactions": "warn",
 
       // unicorn best practices
-      "unicorn/filename-case": ["error", { case: "kebabCase" }],
+      // "unicorn/filename-case": ["error", { case: "kebabCase" }],
       "unicorn/no-null": "off",
       "unicorn/prefer-query-selector": "error",
       "unicorn/prefer-node-protocol": "error",
