@@ -3,20 +3,18 @@
 import { useEffect, useMemo, useRef } from "react";
 import slugify from "slugify";
 
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
   DrawerDescription,
   DrawerFooter,
-  DrawerClose,
+  DrawerHeader,
+  DrawerTitle,
 } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
 
-import { useServerFormAction } from "@/hooks/useServerFormAction";
-import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
-import { updateProjectAction } from "@/system/Actions/ProjectActions";
+import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import {
   Form,
   FormControl,
@@ -27,7 +25,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
+import { useServerFormAction } from "@/hooks/useServerFormAction";
+import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
+import { updateProjectAction } from "@/system/Actions/ProjectActions";
 
 export default function ProjectEditDrawer({
   isDrawerOpen,
@@ -101,10 +101,10 @@ export default function ProjectEditDrawer({
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
       <DrawerContent
         side="right"
-        className="w-full max-w-md min-h-screen h-screen ml-auto border-l shadow-xl"
+        className="ml-auto h-screen min-h-screen w-full max-w-md border-l shadow-xl"
       >
         <Form {...form}>
-          <form onSubmit={form.onSubmit} className="flex flex-col h-full justify-between">
+          <form onSubmit={form.onSubmit} className="flex h-full flex-col justify-between">
             <DrawerHeader className="ml-2">
               <DrawerTitle className="text-3xl">Edit Project</DrawerTitle>
               <DrawerDescription className="pl-1">
@@ -112,7 +112,7 @@ export default function ProjectEditDrawer({
               </DrawerDescription>
             </DrawerHeader>
 
-            <div className="flex flex-col flex-1 px-6 py-4 space-y-6 overflow-y-auto mt-auto h-full">
+            <div className="mt-auto flex h-full flex-1 flex-col space-y-6 overflow-y-auto px-6 py-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -136,7 +136,7 @@ export default function ProjectEditDrawer({
                     <FormControl>
                       <Input
                         readOnly
-                        className="px-4 py-2 w-full rounded-md border border-gray-200"
+                        className="w-full rounded-md border border-gray-200 px-4 py-2"
                         {...field}
                       />
                     </FormControl>
@@ -166,7 +166,7 @@ export default function ProjectEditDrawer({
               <GeneralFormErrorDispaly form={form} />
             </div>
 
-            <DrawerFooter className="border-t mt-auto">
+            <DrawerFooter className="mt-auto border-t">
               <DrawerClose asChild>
                 <Button type="button" variant="ghost">
                   Cancel

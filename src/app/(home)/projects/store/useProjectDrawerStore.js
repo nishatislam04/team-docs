@@ -3,12 +3,12 @@
 import { create } from "zustand";
 
 /**
- * This is the controller of drawer
+ * This is the controller of drawer for creating project
  */
 export const useProjectDrawerStore = create((set) => ({
   isDrawerOpen: false,
 
-  setIsDrawerOpen: () => set({ isDrawerOpen: true }),
+  setIsDrawerOpen: (open = true) => set({ isDrawerOpen: Boolean(open) }),
 
   setIsDrawerClose: () => set({ isDrawerOpen: false }),
 }));
