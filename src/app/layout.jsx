@@ -1,6 +1,7 @@
-import { AuthorizationToastProvider } from "@/components/abstracts/authorization-toast-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from "react";
 // import { Analytics } from "@vercel/analytics/next";
+import { AuthorizationToastProvider } from "@/components/abstracts/authorization-toast-provider";
 import { SessionProvider } from "next-auth/react";
 import "./styles/globals.css";
 
@@ -9,11 +10,6 @@ export const metadata = {
   description:
     "Company documentation collaboration system with workspace, projects, sections and pages",
 };
-
-/**
- * ! check if our useToast work properly for this <Toaster  />
- * ! like provide some options.
- */
 
 export default function RootLayout({ children }) {
   return (
@@ -24,7 +20,9 @@ export default function RootLayout({ children }) {
           {/* <SpeedInsights /> */}
           {/* <Analytics /> */}
         </SessionProvider>
-        <AuthorizationToastProvider />
+        <Suspense fallback={null}>
+          <AuthorizationToastProvider />
+        </Suspense>
         <Toaster />
       </body>
     </html>
