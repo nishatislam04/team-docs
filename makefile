@@ -24,7 +24,6 @@ reset:
 	bunx prisma migrate reset --force --skip-seed
 
 # Seed DB
-# docker compose exec team-docs-local bunx prisma db seed
 seed:
 	bunx prisma db seed
 

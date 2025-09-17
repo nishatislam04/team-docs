@@ -3,7 +3,7 @@
 import { create } from "zustand";
 
 /**
- * This is dialog controller for project editor
+ * This is dialog controller for project editor pages
  */
 export const usePageDialogStore = create((set) => ({
   /**

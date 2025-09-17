@@ -3,7 +3,7 @@
 import { create } from "zustand";
 
 /**
- * This is the controller of drawer for creating project
+ * This is the controller of drawer for creating, editing project
  */
 export const useProjectDrawerStore = create((set) => ({
   /**

@@ -3,7 +3,7 @@
 import { create } from "zustand";
 
 /**
- * This is the controller of selected project
+ * This is the controller of selected project in project-listings
  */
 export const useSelectedProjectStore = create((set) => ({
   /**

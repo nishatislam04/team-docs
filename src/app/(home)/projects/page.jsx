@@ -4,11 +4,11 @@ import LazyPageLoading from "@/components/loading/LazyPageLoading";
 import { Suspense } from "react";
 import { getAllProjectsFn } from "./actions/getAllProjects";
 import { getHasProjects } from "./actions/getHasProjects";
-import ProjectShell from "./ProjectShell";
+import ProjectListings from "./components/ProjectListings";
 
 export default async function ProjectPage({ searchParams }) {
-  await requireWorkspaceActive();
-  await canViewProjectsAuth();
+  await Promise.all([requireWorkspaceActive(), canViewProjectsAuth()]);
+
   const params = await searchParams;
   const hasProjectsPromise = getHasProjects();
   const projectPromise = getAllProjectsFn({
@@ -19,8 +19,8 @@ export default async function ProjectPage({ searchParams }) {
   });
 
   return (
-    <Suspense fallback={<LazyPageLoading>Loading Projects...</LazyPageLoading>}>
-      <ProjectShell hasProjectsPromise={hasProjectsPromise} projectPromise={projectPromise} />
+    <Suspense fallback={<LazyPageLoading>Resolving Page...</LazyPageLoading>}>
+      <ProjectListings projectsPromise={projectPromise} hasProjectsPromise={hasProjectsPromise} />
     </Suspense>
   );
 }

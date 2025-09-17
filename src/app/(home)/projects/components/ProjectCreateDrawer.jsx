@@ -80,7 +80,7 @@ export default function ProjectCreateDrawer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nameValue, form.setValue]);
 
-  if (!isCreateDrawerOpen) return null;
+  // if (!isCreateDrawerOpen) return null;
 
   return (
     <Drawer open={isCreateDrawerOpen} onOpenChange={setIsCreateDrawerOpen}>
