@@ -41,6 +41,9 @@ deploy:
 dev:
 	bunx prisma generate
 	bun run local-dev
+
+build: 
+	bun run build
 	
 build-dev:
 	docker compose build --no-cache team-docs-local prisma-studio
@@ -49,6 +52,9 @@ build-dev:
 build-prod:
 	docker compose build --no-cache team-docs-prod prisma-studio
 	docker compose up team-docs-prod prisma-studio
+
+start:
+	bun run start
 
 preview: 
 	bun run deploy:preview
@@ -62,9 +68,6 @@ up:
 
 down: 
 	docker compose down
-
-build: 
-	docker compose build --no-cache
 
 restart:
 	docker compose down && docker compose up 
