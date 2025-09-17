@@ -1,13 +1,13 @@
 import SignUpForm from "./SignUpForm";
 
 export default function SignUpPage() {
-	return (
-		<div className="p-8 space-y-8">
-			<div className="space-y-2 text-center">
-				<h1 className="text-3xl font-bold text-gray-900">Create an account</h1>
-				<p className="text-gray-600">Get started with our platform</p>
-			</div>
-			<SignUpForm />
-		</div>
-	);
+  return (
+    <div className="space-y-8 p-8">
+      <div className="space-y-2 text-center">
+        <h1 className="text-3xl font-bold text-gray-900">Create an account</h1>
+        <p className="text-gray-600">Get started with our platform</p>
+      </div>
+      <SignUpForm />
+    </div>
+  );
 }

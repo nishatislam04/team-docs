@@ -4,6 +4,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 /**
+ * THIS IS FOR PROEJCT-EDITOR ONLY
+ *
  * Project store that manages the state of a project and its components.
  * This store is used across project-related components to maintain consistent state.
  * Uses Zustand persistence to maintain selection state across browser refreshes.

@@ -13,7 +13,7 @@ import { Sparkles } from "lucide-react";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 
 export default function NoProjectUI() {
-  const { setIsDrawerOpen } = useProjectDrawerStore();
+  const { setIsCreateDrawerOpen } = useProjectDrawerStore();
   return (
     <div className="mt-10 flex items-center justify-center px-4">
       <Card className="bg-background w-full max-w-2xl rounded-2xl border shadow-xl">
@@ -31,7 +31,7 @@ export default function NoProjectUI() {
         </CardHeader>
 
         <CardContent className="flex justify-center pt-4">
-          <CreateButtonShared onClick={() => setIsDrawerOpen(true)}>
+          <CreateButtonShared onClick={() => setIsCreateDrawerOpen(true)}>
             Create Your First Project
           </CreateButtonShared>
         </CardContent>

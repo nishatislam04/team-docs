@@ -1,5 +1,7 @@
 import { canViewProjectsAuth } from "@/authorization/ProjectAuthGuard";
 import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
+import LazyPageLoading from "@/components/loading/LazyPageLoading";
+import { Suspense } from "react";
 import { getAllProjectsFn } from "./actions/getAllProjects";
 import { getHasProjects } from "./actions/getHasProjects";
 import ProjectShell from "./ProjectShell";
@@ -16,5 +18,9 @@ export default async function ProjectPage({ searchParams }) {
     sortOrder: params.sortOrder || "asc",
   });
 
-  return <ProjectShell hasProjectsPromise={hasProjectsPromise} projectPromise={projectPromise} />;
+  return (
+    <Suspense fallback={<LazyPageLoading>Loading Projects...</LazyPageLoading>}>
+      <ProjectShell hasProjectsPromise={hasProjectsPromise} projectPromise={projectPromise} />
+    </Suspense>
+  );
 }

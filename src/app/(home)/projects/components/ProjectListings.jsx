@@ -1,9 +1,7 @@
 "use client";
 
-import DrawerLoading from "@/components/loading/DrawerLoading";
 import PaginationLoading from "@/components/loading/PaginationLoading";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
-import SortIcon from "@/components/shared/SortIcon";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -16,37 +14,18 @@ import {
 import { Edit, LayoutTemplate, UsersRound } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useProjects } from "../hooks/useProjects";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
+import { useSelectedProjectStore } from "../store/useSelectedProjectStore";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
-
-const ProjectEditDrawerLazy = dynamic(() => import("./ProjectEditDrawer"), {
-  ssr: false,
-  loading: () => <DrawerLoading />,
-});
 
 const TablePaginationLazy = dynamic(() => import("@/components/shared/TablePagination"), {
   ssr: false,
   loading: () => <PaginationLoading />,
 });
 
-// ! so we can pass full projects from server component & consume the promise in this child component. its working just fine
-// ! the thing is the pagination does not works yet
-
-export default function ProjectListings({ hasProjects, setStartFetchProjects, projects }) {
+export default function ProjectListings({ hasProjects, projects }) {
   const router = useRouter();
-  const { setIsDrawerOpen } = useProjectDrawerStore();
-  const { sortBy, sortOrder, handleSort } = useProjects();
-
-  // State for editing project
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
-
-  const handleEditClick = (project) => {
-    setSelectedProject(project);
-    setIsEditDrawerOpen(true);
-  };
+  // const { sortBy, sortOrder, handleSort } = useProjects();
 
   return (
     <section className="space-y-8">
@@ -54,21 +33,15 @@ export default function ProjectListings({ hasProjects, setStartFetchProjects, pr
       <section className="flex max-h-14 w-full items-start justify-between border-b pb-4">
         <h1 className="text-3xl font-bold tracking-tight">Your Projects</h1>
         <div className="ml-auto">
-          <CreateButtonShared onClick={() => setIsDrawerOpen(true)}>
+          <CreateButtonShared
+            onClick={() => {
+              useProjectDrawerStore.getState().setIsCreateDrawerOpen(true);
+            }}
+          >
             Create project
           </CreateButtonShared>
         </div>
       </section>
-
-      {/* Project Edit Drawer */}
-      {selectedProject && (
-        <ProjectEditDrawerLazy
-          isDrawerOpen={isEditDrawerOpen}
-          setIsDrawerOpen={setIsEditDrawerOpen}
-          setStartFetchProjects={setStartFetchProjects}
-          project={selectedProject}
-        />
-      )}
 
       {/* Project Listings */}
       <section className="mt-8 space-y-4">
@@ -78,11 +51,11 @@ export default function ProjectListings({ hasProjects, setStartFetchProjects, pr
               <TableRow className="text-lg font-semibold tracking-wide">
                 <TableHead
                   className="hover:bg-muted/80 w-[160px] cursor-pointer px-6 py-4 transition-colors"
-                  onClick={() => handleSort("name")}
+                  // onClick={() => handleSort("name")}
                 >
                   <div className="flex items-center">
                     Name
-                    <SortIcon columnName="name" sortBy={sortBy} sortOrder={sortOrder} />
+                    {/* <SortIcon columnName="name" sortBy={sortBy} sortOrder={sortOrder} /> */}
                   </div>
                 </TableHead>
                 <TableHead className="w-[300px] px-6 py-4">Description</TableHead>
@@ -133,7 +106,10 @@ export default function ProjectListings({ hasProjects, setStartFetchProjects, pr
                         size="sm"
                         variant="outline"
                         className="flex cursor-pointer items-center gap-1 bg-yellow-100"
-                        onClick={() => handleEditClick(project)}
+                        onClick={() => {
+                          useProjectDrawerStore.getState().setIsEditDrawerOpen(true);
+                          useSelectedProjectStore.getState().setSelectedProject(project);
+                        }}
                       >
                         <Edit className="h-4 w-4" /> Edit
                       </Button>
@@ -147,10 +123,7 @@ export default function ProjectListings({ hasProjects, setStartFetchProjects, pr
                       >
                         <UsersRound className="h-4 w-4" /> Assign Dev
                       </Button>
-                      <DeleteConfirmationDialog
-                        project={project}
-                        setStartFetchProjects={setStartFetchProjects}
-                      />
+                      <DeleteConfirmationDialog project={project} />
                     </TableCell>
                   </TableRow>
                 ))

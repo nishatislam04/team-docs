@@ -30,14 +30,11 @@ import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { createProjectAction } from "@/system/Actions/ProjectActions";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 
-// export default function ProjectCreateDrawer({
-//   isDrawerOpen,
-//   setIsDrawerOpen,
-//   setStartFetchProjects,
-// }) {
-export default function ProjectCreateDrawer({ setStartFetchProjects }) {
+export default function ProjectCreateDrawer() {
+  const { isCreateDrawerOpen, setIsCreateDrawerOpen, setIsCreateDrawerClose } =
+    useProjectDrawerStore();
+
   const hasShownToastRef = useRef(false);
-  const { isDrawerOpen, setIsDrawerOpen, setIsDrawerClose } = useProjectDrawerStore();
 
   const defaultValues = useMemo(
     () => ({
@@ -57,15 +54,12 @@ export default function ProjectCreateDrawer({ setStartFetchProjects }) {
       hasShownToastRef.current = true;
 
       form.reset();
-      setIsDrawerClose();
-      // setIsDrawerOpen(false);
-      setStartFetchProjects(true);
+      setIsCreateDrawerClose();
 
       setTimeout(() => {
         hasShownToastRef.current = false;
       }, 500);
     },
-    // isDrawerOpen,
     successToast: {
       title: "Project created successfully",
       description: "Your new project is ready to use!",
@@ -86,8 +80,10 @@ export default function ProjectCreateDrawer({ setStartFetchProjects }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nameValue, form.setValue]);
 
+  if (!isCreateDrawerOpen) return null;
+
   return (
-    <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+    <Drawer open={isCreateDrawerOpen} onOpenChange={setIsCreateDrawerOpen}>
       <DrawerContent
         side="right"
         className="ml-auto h-screen min-h-screen w-full max-w-md border-l shadow-xl"

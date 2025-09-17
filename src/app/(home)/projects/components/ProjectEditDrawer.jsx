@@ -28,41 +28,39 @@ import { Textarea } from "@/components/ui/textarea";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { updateProjectAction } from "@/system/Actions/ProjectActions";
+import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
+import { useSelectedProjectStore } from "../store/useSelectedProjectStore";
 
-export default function ProjectEditDrawer({
-  isDrawerOpen,
-  setIsDrawerOpen,
-  setStartFetchProjects,
-  project,
-}) {
+export default function ProjectEditDrawer() {
+  const { selectedProject, reset } = useSelectedProjectStore();
+  const { setIsEditDrawerOpen, isEditDrawerOpen } = useProjectDrawerStore();
   const hasShownToastRef = useRef(false);
 
   const defaultValues = useMemo(
     () => ({
-      name: project?.name || "",
-      slug: project?.slug || "",
-      description: project?.description || "",
+      name: selectedProject?.name || "",
+      slug: selectedProject?.slug || "",
+      description: selectedProject?.description || "",
     }),
-    [project]
+    [selectedProject]
   );
 
   const form = useServerFormAction({
     schema: ProjectSchema,
     defaultValues,
-    actionFn: (formData) => updateProjectAction(project.id, formData),
+    actionFn: (formData) => updateProjectAction(selectedProject.id, formData),
     onSuccess: () => {
       if (hasShownToastRef.current) return;
       hasShownToastRef.current = true;
 
       form.reset();
-      setIsDrawerOpen(false);
-      setStartFetchProjects(true);
+      reset();
+      setIsEditDrawerOpen(false);
 
       setTimeout(() => {
         hasShownToastRef.current = false;
       }, 500);
     },
-    isDrawerOpen,
     successToast: {
       title: "Project updated successfully",
       description: "Your project has been updated successfully.",
@@ -73,7 +71,7 @@ export default function ProjectEditDrawer({
   const slugValue = form.watch("slug");
 
   useEffect(() => {
-    if (!isDrawerOpen || !nameValue) return;
+    if (!nameValue) return;
 
     form.setValue(
       "slug",
@@ -84,21 +82,23 @@ export default function ProjectEditDrawer({
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nameValue, form.setValue, isDrawerOpen]);
+  }, [nameValue, form.setValue]);
 
   useEffect(() => {
-    if (isDrawerOpen && project) {
+    if (selectedProject) {
       form.reset({
-        name: project.name,
-        slug: project.slug,
-        description: project.description,
+        name: selectedProject.name,
+        slug: selectedProject.slug,
+        description: selectedProject.description,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDrawerOpen, form.reset, project]);
+  }, [selectedProject, form.reset]);
+
+  if (!isEditDrawerOpen) return null;
 
   return (
-    <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+    <Drawer open={isEditDrawerOpen} onOpenChange={setIsEditDrawerOpen}>
       <DrawerContent
         side="right"
         className="ml-auto h-screen min-h-screen w-full max-w-md border-l shadow-xl"
