@@ -1,5 +1,3 @@
-"use client";
-
 import LazyPageLoading from "@/components/loading/LazyPageLoading";
 import { Suspense, use } from "react";
 import NoProjectUI from "./NoProjectUI";

@@ -2,9 +2,12 @@
 trigger: always_on
 ---
 
+# MUST DO
+
+- after implementing a new feature, never spin up nextjs app to test it. spinnig up cause more error
+
 # General Code Style & Formatting
 
-- Use arrow functions for component definitions and callbacks
 - Use Bun for package management
 - Deploy on Vercel
 - Follow Laravel-like class system (e.g., `BaseService.js`, `UserService.js`)
@@ -12,25 +15,27 @@ trigger: always_on
 
 # Project Structure & Architecture
 
-- Follow Next.js V15+ patterns and using App Router.
-- Use server components by default, client components only when necessary
+- Follow Next.js version 15 best practises, patterns and using App Router.
+- Use server components by default, client components only when necessary.
+- always define component in same line with export default.
+- dont just append "use client" directive. intelligently decide for when to add this directive as child of client component does not this directive
 
 - Directory structure:
-- extract client component complex render logic to a custom hook with naming ex `useUser()` near the directory
+- extract client component complex render logic to a custom hook with naming ex- `useUser()` near the directory
 - extract the jsx logic into sub component by putting it near it's directory otherwise src/components/
-- if client component need to fetch something, we export server action near it's directory and use react `useTransition` hook to fetch data & show loading state
-- create required zustand store near it's directory
-- always create server function (server action) instead of route handler to fetch data from client component.
+- if client component need to fetch something, we create a server actions in same directory and pass down the promise from server component to client component. and wrap client component with react suspense. and use react use hook to resolve this promise.
+- create required zustand store near it's directory. make sure, interacting with zustand store wont cause un-necessary rerender. use funtion like `getState()`
+- never create route handler unless i told to.
 - using authjs jwt with prisma-postgres database with prisma orm with credentials login only.
-- use nextjs dynamic to load the client component lazily with loading spinner and add `ssr: no` option.
-- each route should contains nextjs most common file conventions (like not-found.jsx, error.jsx, unauthorized.jsx, loading.jsx etc)
+- use next/dynamic to load less priority client component with loading spinner and add `ssr: false`
+- each route should contains nextjs most common files convention (like not-found.jsx, error.jsx, unauthorized.jsx, loading.jsx etc)
 
 # Styling & UI
 
 - Use Tailwind CSS V4 for styling.
 - Use Shadcn UI for components.
 - Use Lucid React Icon.
-- use Framer Motion for animation.
+- use Framer Motion for animation. use it less much as possible
 - Follow mobile-first responsive design
 - Use CSS variables for theming
 
@@ -38,23 +43,8 @@ trigger: always_on
 
 - Use React Hook Form for form handling.
 - Use Zod for validation.
-- use useTransition for fetch & loading state.
-- Implement proper error boundaries
+- Implement proper error handling for both ui & development
 - Use server actions for form submissions
-- Implement optimistic updates for better UX
-
-# State Management & Logic
-
-- Use React Context for:
-  - do not try to use react context, unless it is really necessary
-  - Theme
-  - Authentication state
-  - App-wide UI state (modals, toasts)
-  - Read-only global state
-- Use Zustand for:
-  - Complex client-side state
-  - Global state that needs persistence
-  - State shared across many components
 
 # Backend & Database
 
@@ -62,36 +52,20 @@ trigger: always_on
 
 # Performance
 
-- Use `next/dynamic` for lazy loading components
-- Implement proper loading states with `Suspense`
-- Use React `cache()` for data caching
-- Optimize images with `next/image`
-- Use `React.memo` for expensive components
-- Implement proper code splitting
+- Use React `cache()` for request memoization
+- Implement proper code splitting to make it more clear & concise
 
 # Error Handling
 
 - Use error boundaries for client-side errors
-- Implement proper error pages:
-  - `error.jsx` - Client-side errors
-  - `not-found.jsx` - 404 errors
-  - `global-error.jsx` - Root error boundary
-- use custom Logger class to print out errors.
-- Provide user-friendly error messages with current context
+- Implement proper nextjs error pages
+- use my custom Logger class to print out errors.
 
 # Documentation
 
 - Document component props using JSDoc
 - Add comments for complex logic
-- Keep README.md updated
-
-# Security
-
-- Implement proper input validation
-- Sanitize all user inputs
-- Protect against XSS, CSRF, and other common vulnerabilities
-- Use environment variables for sensitive data
 
 # coding style
 
-- this is my logging utility. Logger.debug(value, "message"). when auto suggest via tab completion, follow this design. first argument is value & second value is message.
+- my custom logger params are value, message. not the other way around

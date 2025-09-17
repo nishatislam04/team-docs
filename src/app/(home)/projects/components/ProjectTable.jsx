@@ -1,5 +1,3 @@
-"use client";
-
 import SortIcon from "@/components/shared/SortIcon";
 import TablePagination from "@/components/shared/TablePagination";
 import { Button } from "@/components/ui/button";
@@ -19,13 +17,9 @@ import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 import { useSelectedProjectStore } from "../store/useSelectedProjectStore";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 
-/**
- * ProjectTable
- * Suspends on projectsPromise, renders the projects table + pagination when resolved.
- */
 const ProjectTable = ({ projectsPromise }) => {
-  const projects = use(projectsPromise);
   const router = useRouter();
+  const projects = use(projectsPromise);
   const { sortBy, sortOrder, handleSort } = useProjects();
 
   return (
