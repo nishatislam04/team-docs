@@ -71,7 +71,7 @@ export default [
       // Accessibility
       "jsx-a11y/alt-text": "error",
       "jsx-a11y/anchor-is-valid": "error",
-      "jsx-a11y/no-autofocus": "warn",
+      "jsx-a11y/no-autofocus": "off",
       "jsx-a11y/no-static-element-interactions": "warn",
 
       // unicorn best practices

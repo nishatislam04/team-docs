@@ -2,6 +2,7 @@
 
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 import ProjectsArea from "./ProjectsArea";
 
@@ -16,11 +17,9 @@ const ProjectEditDrawerLazy = dynamic(() => import("./ProjectEditDrawer"), {
 export default function ProjectListings({ hasProjectsPromise, projectsPromise }) {
   return (
     <section className="space-y-8">
-      {/* Lazy drawers are mounted at the listings level so NoProjectUI can trigger them */}
       <ProjectCreateDrawerLazy />
       <ProjectEditDrawerLazy />
 
-      {/* Header + Create Button */}
       <section className="flex max-h-14 w-full items-start justify-between border-b pb-4">
         <h1 className="text-3xl font-bold tracking-tight">Your Projects</h1>
         <div className="ml-auto">
@@ -34,8 +33,9 @@ export default function ProjectListings({ hasProjectsPromise, projectsPromise })
         </div>
       </section>
 
-      {/* Body: only the table area suspends via ProjectsArea */}
-      <ProjectsArea hasProjectsPromise={hasProjectsPromise} projectsPromise={projectsPromise} />
+      <Suspense fallback={null}>
+        <ProjectsArea hasProjectsPromise={hasProjectsPromise} projectsPromise={projectsPromise} />
+      </Suspense>
     </section>
   );
 }

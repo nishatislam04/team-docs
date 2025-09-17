@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 
 import {
   AlertDialog,
@@ -16,11 +16,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
+import Logger from "@/lib/Logger";
 import { deleteProjectAction } from "@/system/Actions/ProjectActions";
 import { toast } from "sonner";
-import Logger from "@/lib/Logger";
 
-export default function DeleteConfirmationDialog({ project, setStartFetchProjects }) {
+export default function DeleteConfirmationDialog({ project }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const hasToastedRef = useRef(false);
@@ -41,7 +41,6 @@ export default function DeleteConfirmationDialog({ project, setStartFetchProject
           hasToastedRef.current = true;
         }
         setIsOpen(false);
-        setStartFetchProjects(true);
         router.refresh();
       } else {
         toast.error("Failed to delete project", {
@@ -66,10 +65,10 @@ export default function DeleteConfirmationDialog({ project, setStartFetchProject
       <Button
         variant="destructive"
         size="sm"
-        className="flex gap-1 items-center cursor-pointer"
+        className="flex cursor-pointer items-center gap-1"
         onClick={() => setIsOpen(true)}
       >
-        <Trash className="w-4 h-4" /> Delete
+        <Trash className="h-4 w-4" /> Delete
       </Button>
 
       <AlertDialog open={isOpen} onOpenChange={setIsOpen}>

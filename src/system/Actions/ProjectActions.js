@@ -90,6 +90,8 @@ class ProjectAction extends BaseAction {
     try {
       await ProjectServices.updateResource(projectId, result.data);
 
+      revalidatePath("/projects");
+
       return {
         data: result.data,
         success: true,
@@ -118,6 +120,8 @@ class ProjectAction extends BaseAction {
 
     try {
       await ProjectServices.deleteResource(projectId);
+
+      revalidatePath("/projects");
 
       return {
         success: true,

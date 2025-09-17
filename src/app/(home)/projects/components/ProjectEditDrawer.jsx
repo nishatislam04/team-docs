@@ -120,7 +120,12 @@ export default function ProjectEditDrawer() {
                   <FormItem>
                     <FormLabel>Project Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. Internal CRM" className="h-11" {...field} />
+                      <Input
+                        placeholder="e.g. Internal CRM"
+                        className="h-11"
+                        {...field}
+                        autoFocus
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

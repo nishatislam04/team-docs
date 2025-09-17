@@ -8,19 +8,19 @@ const globalForPrisma = global;
 // eslint-disable-next-line import-x/no-mutable-exports
 let prisma;
 
-// Explicit toggle so local production runs (bun run start) can bypass Accelerate
 const useAccelerate = process.env.PRISMA_USE_ACCELERATE === "true";
 
-// Decide which URL to use for PrismaClient
-// If not using Accelerate, prefer DIRECT_DATABASE_URL, else attempt to coerce prisma+ scheme into postgresql
-const resolvedUrl = useAccelerate ? process.env.DATABASE_URL : process.env.PREVIEW_DATABASE_URL;
+const resolvedUrl = useAccelerate
+  ? process.env.DATABASE_URL
+  : process.env.NODE_ENV === "development"
+    ? process.env.DATABASE_URL
+    : process.env.PREVIEW_DATABASE_URL;
 
 const basePrisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     datasources: {
       db: {
-        // Fall back to env-driven resolution if resolvedUrl is undefined
         url: resolvedUrl || process.env.PREVIEW_DATABASE_URL || process.env.DATABASE_URL,
       },
     },

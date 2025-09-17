@@ -80,8 +80,6 @@ export default function ProjectCreateDrawer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nameValue, form.setValue]);
 
-  // if (!isCreateDrawerOpen) return null;
-
   return (
     <Drawer open={isCreateDrawerOpen} onOpenChange={setIsCreateDrawerOpen}>
       <DrawerContent
@@ -106,7 +104,12 @@ export default function ProjectCreateDrawer() {
                   <FormItem>
                     <FormLabel>Project Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. Internal CRM" className="h-11" {...field} />
+                      <Input
+                        placeholder="e.g. Internal CRM"
+                        className="h-11"
+                        {...field}
+                        autoFocus
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

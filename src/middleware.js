@@ -1,6 +1,6 @@
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 import authConfig from "./lib/auth.config";
-import NextAuth from "next-auth";
 
 const { auth } = NextAuth(authConfig);
 
@@ -40,10 +40,6 @@ export default auth(async function middleware(request) {
         headers: requestHeaders,
       },
     });
-  }
-
-  if (!session && !pathname.startsWith("/auth")) {
-    return NextResponse.redirect(new URL("/auth/signin", request.url));
   }
 
   return NextResponse.next({

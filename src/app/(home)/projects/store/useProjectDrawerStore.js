@@ -27,7 +27,7 @@ export const useProjectDrawerStore = create((set) => ({
   /**
    * Closes the create project drawer.
    */
-  setIsCreateDrawerClose: () => set({ isCreateDrawerOpen: false }),
+  setIsCreateDrawerClose: (open = false) => set({ isCreateDrawerOpen: Boolean(open) }),
 
   /**
    * Sets the edit project drawer's open state.
@@ -38,5 +38,5 @@ export const useProjectDrawerStore = create((set) => ({
   /**
    * Closes the edit project drawer.
    */
-  setIsEditDrawerClose: () => set({ isEditDrawerOpen: false }),
+  setIsEditDrawerClose: (open = false) => set({ isEditDrawerOpen: Boolean(open) }),
 }));
