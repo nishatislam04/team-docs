@@ -9,19 +9,28 @@ const globalForPrisma = global;
 let prisma;
 
 const useAccelerate = process.env.PRISMA_USE_ACCELERATE === "true";
+const isPreview = process.env.IS_PREVIEW === "true";
 
-const resolvedUrl = useAccelerate
-  ? process.env.DATABASE_URL
-  : process.env.NODE_ENV === "development"
+const resolvedUrl = isPreview
+  ? process.env.PREVIEW_DATABASE_URL
+  : useAccelerate
     ? process.env.DATABASE_URL
-    : process.env.PREVIEW_DATABASE_URL;
+    : process.env.DATABASE_URL;
+
+// const resolvedUrl = useAccelerate
+//   ? process.env.DATABASE_URL
+//   : process.env.NODE_ENV === "development"
+//     ? process.env.DATABASE_URL
+//     : isPreview
+//       ? process.env.PREVIEW_DATABASE_URL
+//       : process.env.DATABASE_URL;
 
 const basePrisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     datasources: {
       db: {
-        url: resolvedUrl || process.env.PREVIEW_DATABASE_URL || process.env.DATABASE_URL,
+        url: resolvedUrl,
       },
     },
   });
