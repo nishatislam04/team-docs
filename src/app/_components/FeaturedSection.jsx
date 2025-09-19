@@ -1,22 +1,22 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
   CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Zap, Users, Moon, Shield, Globe, Palette, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import ActionButton from "./ActionButton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentSession } from "@/hooks/useCurrentSession";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { ChevronRight, Globe, Moon, Palette, Shield, Users, Zap } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import ActionButton from "./ActionButton";
 
 const featureCategories = [
   { value: "core", label: "Core Features" },
@@ -45,31 +45,31 @@ export default function FeaturedSection({ workspace }) {
     <section
       id="features"
       ref={sectionRef}
-      className="relative py-24 overflow-hidden bg-gradient-to-b from-secondary/30 via-secondary/20 to-background"
+      className="from-secondary/30 via-secondary/20 to-background relative overflow-hidden bg-gradient-to-b py-24"
     >
       {/* Background decorative elements */}
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute -top-20 -left-20 w-60 h-60 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute top-40 -right-20 w-80 h-80 bg-secondary/20 rounded-full blur-3xl" />
+        <div className="bg-primary/10 absolute -top-20 -left-20 h-60 w-60 rounded-full blur-3xl" />
+        <div className="bg-secondary/20 absolute top-40 -right-20 h-80 w-80 rounded-full blur-3xl" />
       </div>
 
-      <div className="container relative px-4 mx-auto">
+      <div className="relative container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
-          className="max-w-3xl mx-auto mb-16 text-center"
+          className="mx-auto mb-16 max-w-3xl text-center"
         >
           <Badge
             variant="outline"
-            className="px-4 py-1 mb-4 text-sm font-medium border-primary/30 text-primary"
+            className="border-primary/30 text-primary mb-4 px-4 py-1 text-sm font-medium"
           >
             Why Team Docs
           </Badge>
           <h2 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">
             Streamline your team&apos;s documentation
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-muted-foreground text-lg">
             Discover why thousands of teams choose Team Docs to organize, collaborate and share
             knowledge.
           </p>
@@ -81,19 +81,19 @@ export default function FeaturedSection({ workspace }) {
             defaultValue="core"
             value={activeCategory}
             onValueChange={setActiveCategory}
-            className="max-w-5xl mx-auto"
+            className="mx-auto max-w-5xl"
           >
-            <TabsList className="w-full max-w-md mx-auto mb-8 grid grid-cols-3">
+            <TabsList className="mx-auto mb-8 grid w-full max-w-md grid-cols-3">
               {featureCategories.map((category) => (
                 <TabsTrigger
                   key={category.value}
                   value={category.value}
-                  className="relative data-[state=active]:text-primary"
+                  className="data-[state=active]:text-primary relative"
                 >
                   {category.label}
                   {activeCategory === category.value && (
                     <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                      className="bg-primary absolute right-0 bottom-0 left-0 h-0.5"
                       layoutId="activeTab"
                       transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
                     />
@@ -133,7 +133,7 @@ export default function FeaturedSection({ workspace }) {
             onValueChange={setActiveCategory}
             className="mb-8"
           >
-            <TabsList className="w-full grid grid-cols-3">
+            <TabsList className="grid w-full grid-cols-3">
               {featureCategories.map((category) => (
                 <TabsTrigger key={category.value} value={category.value}>
                   {category.label}
@@ -171,7 +171,7 @@ export default function FeaturedSection({ workspace }) {
                         </CarouselItem>
                       ))}
                     </CarouselContent>
-                    <div className="flex justify-center gap-2 mt-4">
+                    <div className="mt-4 flex justify-center gap-2">
                       <CarouselPrevious className="mx-1" />
                       <CarouselNext className="mx-1" />
                     </div>
@@ -187,7 +187,7 @@ export default function FeaturedSection({ workspace }) {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: 0.3 }}
-          className="flex flex-col items-center justify-center max-w-xl mx-auto mt-16 text-center"
+          className="mx-auto mt-16 flex max-w-xl flex-col items-center justify-center text-center"
         >
           <p className="mb-6 text-lg font-medium">
             Ready to transform your team&apos;s documentation experience?
@@ -221,13 +221,13 @@ function FeatureCard({ feature, index, shouldReduceMotion, isCarousel = false })
       whileHover={shouldReduceMotion ? {} : { y: -5, transition: { duration: 0.2 } }}
       className="h-full"
     >
-      <Card className="relative h-full overflow-hidden transition-all duration-300 bg-card hover:shadow-md border-muted/60 hover:border-primary/20">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/60 to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <Card className="bg-card border-muted/60 hover:border-primary/20 relative h-full overflow-hidden transition-all duration-300 hover:shadow-md">
+        <div className="from-primary/60 to-primary/10 absolute top-0 left-0 h-1 w-full bg-gradient-to-r opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         <CardHeader className="pb-2">
-          <div className="flex items-center mb-2">
+          <div className="mb-2 flex items-center">
             <div
               className={cn(
-                "flex items-center justify-center w-10 h-10 rounded-lg mr-3",
+                "mr-3 flex h-10 w-10 items-center justify-center rounded-lg",
                 `bg-${feature.colorClass}/10 text-${feature.colorClass}`
               )}
             >
@@ -237,14 +237,14 @@ function FeatureCard({ feature, index, shouldReduceMotion, isCarousel = false })
           <CardTitle className="text-xl font-semibold">{feature.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <CardDescription className="text-base text-muted-foreground">
+          <CardDescription className="text-muted-foreground text-base">
             {feature.description}
           </CardDescription>
 
           {feature.highlight && (
-            <div className="flex items-center mt-4 text-sm font-medium text-primary">
+            <div className="text-primary mt-4 flex items-center text-sm font-medium">
               <span>Learn more</span>
-              <ChevronRight className="w-4 h-4 ml-1" />
+              <ChevronRight className="ml-1 h-4 w-4" />
             </div>
           )}
         </CardContent>
@@ -264,7 +264,7 @@ const features = [
     title: "Blazing fast",
     description:
       "Experience millisecond response times with instant document loading, speedy search, and a snappy UI that keeps your team productive.",
-    icon: <Zap className="w-5 h-5" />,
+    icon: <Zap className="h-5 w-5" />,
     colorClass: "yellow-500",
     category: "core",
     highlight: true,
@@ -273,7 +273,7 @@ const features = [
     title: "Real-time collaboration",
     description:
       "Work together seamlessly with real-time editing, comments, and presence indicators that show who's viewing or editing documents.",
-    icon: <Users className="w-5 h-5" />,
+    icon: <Users className="h-5 w-5" />,
     colorClass: "blue-500",
     category: "collab",
   },
@@ -281,7 +281,7 @@ const features = [
     title: "Beautiful dark mode",
     description:
       "For the night owls, we've got you covered with a beautiful dark mode that reduces eye strain during those late-night documentation sessions.",
-    icon: <Moon className="w-5 h-5" />,
+    icon: <Moon className="h-5 w-5" />,
     colorClass: "indigo-500",
     category: "custom",
   },
@@ -289,7 +289,7 @@ const features = [
     title: "Advanced permissions",
     description:
       "Granular control with role-based permissions, user groups, guest access, and public sharing options to protect sensitive information.",
-    icon: <Shield className="w-5 h-5" />,
+    icon: <Shield className="h-5 w-5" />,
     colorClass: "green-500",
     category: "core",
   },
@@ -297,7 +297,7 @@ const features = [
     title: "Transparent development",
     description:
       "Follow our journey with our public roadmap and regular feature updates. Your feedback directly shapes the future of Team Docs.",
-    icon: <Globe className="w-5 h-5" />,
+    icon: <Globe className="h-5 w-5" />,
     colorClass: "purple-500",
     category: "collab",
     highlight: true,
@@ -306,7 +306,7 @@ const features = [
     title: "White labeling & branding",
     description:
       "Custom domains for docs.yourteam.com and complete customization of colors, logos, and styling to match your brand identity.",
-    icon: <Palette className="w-5 h-5" />,
+    icon: <Palette className="h-5 w-5" />,
     colorClass: "pink-500",
     category: "custom",
   },
@@ -314,7 +314,7 @@ const features = [
     title: "Automatic backups",
     description:
       "Peace of mind with automatic versioning and backups, making it easy to restore previous versions or track document history.",
-    icon: <Shield className="w-5 h-5" />,
+    icon: <Shield className="h-5 w-5" />,
     colorClass: "red-500",
     category: "core",
   },
@@ -322,7 +322,7 @@ const features = [
     title: "Smart notifications",
     description:
       "Stay in the loop with customizable notifications for document changes, @mentions, and important updates across your workspace.",
-    icon: <Users className="w-5 h-5" />,
+    icon: <Users className="h-5 w-5" />,
     colorClass: "teal-500",
     category: "collab",
   },
@@ -330,7 +330,7 @@ const features = [
     title: "Markdown & rich text",
     description:
       "Write your way with support for both markdown and rich text editing, giving your team flexibility in how they create content.",
-    icon: <Palette className="w-5 h-5" />,
+    icon: <Palette className="h-5 w-5" />,
     colorClass: "orange-500",
     category: "custom",
     highlight: true,

@@ -1,9 +1,8 @@
-"use client";
 import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Facebook, Github, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import FooterSocialsWrapper from "./sub/FooterSocialsWrapper";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -15,7 +14,6 @@ export default function Footer() {
       </h2>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* Logo and Company Description */}
           <div className="lg:col-span-4">
             <div className="mb-4 flex items-center">
               <Image
@@ -32,28 +30,10 @@ export default function Footer() {
               Create, share, and manage documents with ease in a single, integrated workspace.
             </p>
 
-            {/* Social Media Links */}
-            <div className="mt-6 flex items-center space-x-4">
-              {socialLinks.map((social) => (
-                <Tooltip key={social.name}>
-                  <TooltipTrigger asChild>
-                    <Link
-                      href={social.href}
-                      aria-label={social.name}
-                      className="bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground rounded-full p-2 transition-colors"
-                    >
-                      <social.icon className="h-5 w-5" />
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent>{social.name}</TooltipContent>
-                </Tooltip>
-              ))}
-            </div>
+            <FooterSocialsWrapper />
           </div>
 
-          {/* Navigation Links */}
           <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:col-span-8">
-            {/* Products Section */}
             <div>
               <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
                 Products
@@ -73,7 +53,6 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Company Section */}
             <div>
               <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
                 Company
@@ -85,7 +64,6 @@ export default function Footer() {
                       href={link.href}
                       className="group text-muted-foreground hover:text-foreground flex items-center transition-colors duration-200"
                     >
-                      {/* <ChevronRight className="w-3 h-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity" /> */}
                       <span>{link.text}</span>
                     </Link>
                   </li>
@@ -93,7 +71,6 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Contact Section */}
             <div>
               <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
                 Contact Us
@@ -117,7 +94,6 @@ export default function Footer() {
 
         <Separator className="my-8 opacity-70" />
 
-        {/* Copyright and Legal Links */}
         <div className="flex flex-col items-center justify-between pt-4 md:flex-row">
           <p className="text-muted-foreground mb-4 text-sm md:mb-0">
             &copy; {currentYear} Team Docs, Inc. All rights reserved.
@@ -159,14 +135,6 @@ const contactLinks = [
   { text: "Contact", href: "#", icon: MapPin },
   { text: "support@teamdocs.com", href: "#", icon: Mail },
   { text: "+1 (555) 123-4567", href: "#", icon: Phone },
-];
-
-const socialLinks = [
-  { name: "GitHub", href: "#", icon: Github },
-  { name: "Twitter", href: "#", icon: Twitter },
-  { name: "LinkedIn", href: "#", icon: Linkedin },
-  { name: "Facebook", href: "#", icon: Facebook },
-  { name: "Instagram", href: "#", icon: Instagram },
 ];
 
 const legalLinks = [
