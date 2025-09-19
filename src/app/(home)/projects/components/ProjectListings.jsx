@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import ProjectsArea from "./ProjectsArea";
-import ProjectCreateButton from "./sub/ProjectCreateButton";
-import ProjectDrawerLoader from "./sub/ProjectDrawerLoader";
+import ProjectCreateButton from "./sub/ProjectCreateButton.client";
+import ProjectDrawerLoader from "./sub/ProjectDrawerLoader.client";
 
 export default function ProjectListings({ hasProjectsPromise, projectsPromise }) {
   return (

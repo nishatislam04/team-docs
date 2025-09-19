@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/table";
 import { use } from "react";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
-import ProjectAssignButton from "./sub/ProjectAssignButton";
-import ProjectEditButton from "./sub/ProjectEditButton";
-import ProjectTableSort from "./sub/ProjectTableSort";
-import ProjectViewButton from "./sub/ProjectViewButton";
+import ProjectAssignButton from "./sub/ProjectAssignButton.client";
+import ProjectEditButton from "./sub/ProjectEditButton.client";
+import ProjectTableSort from "./sub/ProjectTableSort.client";
+import ProjectViewButton from "./sub/ProjectViewButton.client";
 
 const ProjectTable = ({ projectsPromise }) => {
   const projects = use(projectsPromise);
