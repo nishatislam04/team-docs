@@ -1,3 +1,5 @@
+"use client";
+
 import TablePagination from "@/components/shared/TablePagination";
 import {
   Table,
@@ -7,7 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { use } from "react";
+import { use, useEffect } from "react";
+import { ProjectListingsStore } from "../store/useProjectListingsStore";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import ProjectAssignButton from "./sub/ProjectAssignButton.client";
 import ProjectEditButton from "./sub/ProjectEditButton.client";
@@ -16,6 +19,10 @@ import ProjectViewButton from "./sub/ProjectViewButton.client";
 
 const ProjectTable = ({ projectsPromise }) => {
   const projects = use(projectsPromise);
+
+  const { setProjects } = ProjectListingsStore();
+
+  useEffect(() => setProjects(projects), [projects, setProjects]);
 
   return (
     <>
