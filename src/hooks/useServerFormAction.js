@@ -1,8 +1,8 @@
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
-import { useEffect } from "react";
 import { useToast } from "@/hooks/useToast";
+import Logger from "@/lib/Logger";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
 export function useServerFormAction({
   schema,
@@ -10,6 +10,8 @@ export function useServerFormAction({
   defaultValues,
   onSuccess,
   onError,
+  onStart,
+  optimistic,
   isDialogOpen = null,
   successToast = {
     title: "Action successful",
@@ -52,28 +54,80 @@ export function useServerFormAction({
     !form.formState.isDirty || // nothing changed from default
     formState.isSubmitting;
 
+  // ---- internal helpers (kept inside hook for closure access) ----
+  const fireOnStart = (formData) => {
+    try {
+      onStart?.(formData);
+    } catch (e) {
+      Logger.error(e, "onStart threw an error");
+    }
+  };
+
+  const runOptimisticStart = async (formData) => {
+    if (!optimistic?.start) return null;
+    try {
+      return await optimistic.start(formData);
+    } catch (e) {
+      Logger.error(e, "optimistic.start failed");
+      return null;
+    }
+  };
+
+  const applyServerErrors = (result) => {
+    // Set field-level errors
+    Object.entries(result.errors || {}).forEach(([key, msg]) => {
+      setError(key, {
+        type: "server",
+        message: Array.isArray(msg) ? msg[0] : msg,
+      });
+    });
+    setErrors(result.errors);
+    onError?.(result.errors);
+  };
+
+  const runOptimisticRevert = async (optimisticContext, errorResult) => {
+    if (!optimistic?.revert) return;
+    try {
+      await optimistic.revert(optimisticContext, errorResult);
+    } catch (e) {
+      Logger.error(e, "optimistic.revert failed");
+    }
+  };
+
+  const runOptimisticCommit = async (optimisticContext, data) => {
+    if (!optimistic?.commit) return;
+    try {
+      await optimistic.commit(optimisticContext, data);
+    } catch (e) {
+      Logger.error(e, "optimistic.commit failed");
+    }
+  };
+
+  const handleSuccess = (result) => {
+    if (successToast !== null) toast.success(successToast?.title, successToast?.description);
+    reset();
+    onSuccess?.(result.redirectTo, result.data);
+  };
+
   const onSubmit = handleSubmit(async (formData) => {
+    // Non-optimistic pre-submit hook
+    fireOnStart(formData);
+
+    // Optimistic start -> returns context for commit/revert
+    const optimisticContext = await runOptimisticStart(formData);
+
     const result = await actionFn(formData);
 
     if (result?.success === false) {
-      console.log("result in server form action", result);
-
-      // Set field-level errors
-      Object.entries(result.errors || {}).forEach(([key, msg]) => {
-        setError(key, {
-          type: "server",
-          message: Array.isArray(msg) ? msg[0] : msg,
-        });
-      });
-
-      setErrors(result.errors);
-      onError?.(result.errors);
+      Logger.error(result, "result in server form action");
+      applyServerErrors(result);
+      await runOptimisticRevert(optimisticContext, result);
+      return;
     }
 
     if (result?.type === "success") {
-      if (successToast !== null) toast.success(successToast?.title, successToast?.description);
-      reset();
-      onSuccess?.(result.redirectTo, result.data);
+      await runOptimisticCommit(optimisticContext, result.data);
+      handleSuccess(result);
     }
   });
 

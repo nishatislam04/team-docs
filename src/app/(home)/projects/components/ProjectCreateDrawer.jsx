@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect } from "react";
 import slugify from "slugify";
 
 import { Button } from "@/components/ui/button";
@@ -29,36 +29,50 @@ import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { createProjectAction } from "@/system/Actions/ProjectActions";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
+import { useProjectsStore } from "../store/useProjectsStore";
 
 export default function ProjectCreateDrawer() {
   const { isCreateDrawerOpen, setIsCreateDrawerOpen, setIsCreateDrawerClose } =
     useProjectDrawerStore();
 
-  const hasShownToastRef = useRef(false);
-
-  const defaultValues = useMemo(
-    () => ({
-      name: "",
-      slug: "",
-      description: "",
-    }),
-    []
-  );
+  const defaultValues = {
+    name: "",
+    slug: "",
+    description: "",
+  };
 
   const form = useServerFormAction({
     schema: ProjectSchema,
-    defaultValues,
     actionFn: createProjectAction,
-    onSuccess: () => {
-      if (hasShownToastRef.current) return;
-      hasShownToastRef.current = true;
-
-      form.reset();
+    defaultValues,
+    onStart: () => {
+      // Close drawer immediately for optimistic UX
       setIsCreateDrawerClose();
-
-      setTimeout(() => {
-        hasShownToastRef.current = false;
-      }, 500);
+    },
+    onSuccess: () => {
+      form.reset();
+      // Drawer already closed in onStart
+    },
+    optimistic: {
+      start: (formData) => {
+        const { addOptimistic } = useProjectsStore.getState();
+        const temp = addOptimistic({
+          name: formData.name,
+          slug: formData.slug,
+          description: formData.description,
+        });
+        return { tempId: temp.id };
+      },
+      commit: (ctx, serverData) => {
+        const { commitOptimistic } = useProjectsStore.getState();
+        commitOptimistic(ctx.tempId, serverData);
+      },
+      revert: (ctx) => {
+        const { revertOptimistic } = useProjectsStore.getState();
+        revertOptimistic(ctx.tempId);
+        // Reopen the drawer to let user fix inputs
+        setIsCreateDrawerOpen(true);
+      },
     },
     successToast: {
       title: "Project created successfully",
