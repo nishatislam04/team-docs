@@ -1,4 +1,3 @@
-import LazyPageLoading from "@/components/loading/LazyPageLoading";
 import { Suspense, use } from "react";
 import NoProjectUI from "./NoProjectUI";
 import ProjectTable from "./ProjectTable";
@@ -14,7 +13,7 @@ const ProjectsArea = ({ hasProjectsPromise, projectsPromise }) => {
   if (!hasProjects) return <NoProjectUI />;
 
   return (
-    <Suspense fallback={<LazyPageLoading>Loading project table...</LazyPageLoading>}>
+    <Suspense fallback={null}>
       <ProjectTable projectsPromise={projectsPromise} />
     </Suspense>
   );

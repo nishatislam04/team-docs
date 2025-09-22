@@ -9,7 +9,7 @@ const ProjectEditDrawerLazy = dynamic(() => import("../ProjectEditDrawer"), {
   ssr: false,
 });
 
-export default function ProjectDrawerLoader() {
+export default function ProjectDrawersLoader() {
   return (
     <>
       <ProjectCreateDrawerLazy />
