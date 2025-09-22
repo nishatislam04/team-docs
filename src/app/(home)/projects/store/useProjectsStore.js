@@ -47,14 +47,4 @@ export const useProjectsStore = create((set, get) => ({
     const next = get().projects.filter((p) => p.id !== tempId);
     set({ projects: next });
   },
-
-  /** Upsert (non-optimistic) helper */
-  upsert: (project) => {
-    const exists = get().projects.some((p) => p.id === project.id);
-    if (exists) {
-      set({ projects: get().projects.map((p) => (p.id === project.id ? project : p)) });
-    } else {
-      set({ projects: [project, ...get().projects] });
-    }
-  },
 }));

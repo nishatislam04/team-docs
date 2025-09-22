@@ -1,8 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import slugify from "slugify";
-
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -28,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { createProjectAction } from "@/system/Actions/ProjectActions";
+import { useProjectCreateNameWatch } from "../hooks/useProjectCreateNameWatch";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 import { useProjectsStore } from "../store/useProjectsStore";
 
@@ -46,12 +44,10 @@ export default function ProjectCreateDrawer() {
     actionFn: createProjectAction,
     defaultValues,
     onStart: () => {
-      // Close drawer immediately for optimistic UX
       setIsCreateDrawerClose();
     },
     onSuccess: () => {
       form.reset();
-      // Drawer already closed in onStart
     },
     optimistic: {
       start: (formData) => {
@@ -70,7 +66,6 @@ export default function ProjectCreateDrawer() {
       revert: (ctx) => {
         const { revertOptimistic } = useProjectsStore.getState();
         revertOptimistic(ctx.tempId);
-        // Reopen the drawer to let user fix inputs
         setIsCreateDrawerOpen(true);
       },
     },
@@ -80,19 +75,8 @@ export default function ProjectCreateDrawer() {
     },
   });
 
-  const nameValue = form.watch("name");
-
-  useEffect(() => {
-    form.setValue(
-      "slug",
-      slugify(nameValue, {
-        lower: true,
-        strict: true,
-        remove: /[*+~.()'"!:@]/g,
-      })
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nameValue, form.setValue]);
+  // Watch name field to update slug
+  useProjectCreateNameWatch(form);
 
   return (
     <Drawer open={isCreateDrawerOpen} onOpenChange={setIsCreateDrawerOpen}>
