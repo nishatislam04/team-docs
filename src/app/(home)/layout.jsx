@@ -3,7 +3,6 @@ import RouteChangeHandler from "@/components/layout/RouteChangeHandler";
 import { Session } from "@/lib/Session";
 import { ThemeProvider } from "@/provider/ThemeProvider";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
-import { SessionProvider } from "next-auth/react";
 
 export const dynamic = "force-dynamic";
 
@@ -15,11 +14,9 @@ export default async function HomeLayout({ children }) {
     : null;
 
   return (
-    <SessionProvider>
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-        <RouteChangeHandler />
-        <ConditionalHomeLayout workspace={workspace}>{children}</ConditionalHomeLayout>
-      </ThemeProvider>
-    </SessionProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <RouteChangeHandler />
+      <ConditionalHomeLayout workspace={workspace}>{children}</ConditionalHomeLayout>
+    </ThemeProvider>
   );
 }
