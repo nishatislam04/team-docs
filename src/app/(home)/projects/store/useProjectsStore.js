@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 /**
- * Project entity shape used in UI
+ * Project Listings
  * @typedef {Object} Project
  * @property {string} id - Stable id from DB or temporary id starting with "temp-"
  * @property {string} name
@@ -45,6 +45,45 @@ export const useProjectsStore = create((set, get) => ({
   /** Remove optimistic project (on failure) */
   revertOptimistic: (tempId) => {
     const next = get().projects.filter((p) => p.id !== tempId);
+    set({ projects: next });
+  },
+
+  // ---- Optimistic Deletion Helpers ----
+  /**
+   * Start an optimistic deletion by removing the project immediately.
+   * Returns context for potential revert/commit with the removed project and its original index.
+   * @param {string} projectId
+   * @returns {{ removed: Project, index: number } | null}
+   */
+  startDeleteOptimistic: (projectId) => {
+    const list = get().projects;
+    const index = list.findIndex((p) => p.id === projectId);
+    if (index === -1) return null;
+    const removed = list[index];
+    const next = list.filter((p) => p.id !== projectId);
+    set({ projects: next });
+    return { removed, index };
+  },
+
+  /**
+   * Commit optimistic deletion. No-op by default, but ensures the item stays removed.
+   * @param {{ removed: Project, index: number } | null} ctx
+   */
+  commitDeleteOptimistic: (ctx) => {
+    if (!ctx) return;
+    const next = get().projects.filter((p) => p.id !== ctx.removed.id);
+    set({ projects: next });
+  },
+
+  /**
+   * Revert optimistic deletion by restoring the project at its original index.
+   * @param {{ removed: Project, index: number } | null} ctx
+   */
+  revertDeleteOptimistic: (ctx) => {
+    if (!ctx) return;
+    const next = [...get().projects];
+    const safeIndex = Math.max(0, Math.min(ctx.index, next.length));
+    next.splice(safeIndex, 0, ctx.removed);
     set({ projects: next });
   },
 }));
