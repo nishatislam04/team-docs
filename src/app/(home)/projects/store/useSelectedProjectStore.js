@@ -21,5 +21,5 @@ export const useSelectedProjectStore = create((set) => ({
   /**
    * Resets the selected project to null.
    */
-  reset: () => set({ selectedProject: null }),
+  resetSelectedProject: () => set({ selectedProject: null }),
 }));

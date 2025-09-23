@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import slugify from "slugify";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,12 +27,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { updateProjectAction } from "@/system/Actions/ProjectActions";
+import useProjectEditFormWatch from "../hooks/useProjectEditFormWatch";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 import { useProjectsStore } from "../store/useProjectsStore";
 import { useSelectedProjectStore } from "../store/useSelectedProjectStore";
 
 export default function ProjectEditDrawer() {
-  const { selectedProject, reset } = useSelectedProjectStore();
+  const { selectedProject, resetSelectedProject } = useSelectedProjectStore();
   const { setIsEditDrawerOpen, isEditDrawerOpen, setIsEditDrawerClose } = useProjectDrawerStore();
 
   const defaultValues = {
@@ -51,7 +51,7 @@ export default function ProjectEditDrawer() {
     },
     onSuccess: () => {
       form.reset();
-      reset();
+      resetSelectedProject();
     },
     optimistic: {
       start: (formData) => {
@@ -79,22 +79,7 @@ export default function ProjectEditDrawer() {
     },
   });
 
-  const nameValue = form.watch("name");
-  const slugValue = form.watch("slug");
-
-  useEffect(() => {
-    if (!nameValue) return;
-
-    form.setValue(
-      "slug",
-      slugify(nameValue, {
-        lower: true,
-        strict: true,
-        remove: /[*+~.()'"!:@]/g,
-      })
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nameValue, form.setValue]);
+  const { slugValue } = useProjectEditFormWatch(form);
 
   useEffect(() => {
     if (selectedProject) {
@@ -106,8 +91,6 @@ export default function ProjectEditDrawer() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProject, form.reset]);
-
-  if (!isEditDrawerOpen) return null;
 
   return (
     <Drawer open={isEditDrawerOpen} onOpenChange={setIsEditDrawerOpen}>
