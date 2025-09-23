@@ -20,19 +20,22 @@ import { deleteProjectAction } from "@/system/Actions/ProjectActions";
 import { z as zod } from "zod";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 import { useProjectsStore } from "../store/useProjectsStore";
+import { useSelectedProjectStore } from "../store/useSelectedProjectStore";
 
 export default function DeleteConfirmationDialog({ project }) {
   const { isDeleteDialogOpen, setIsDeleteDialogOpen, setIsDeleteDialogClose } =
     useProjectDrawerStore();
+  const { selectedProject, setSelectedProject, resetSelectedProject } = useSelectedProjectStore();
 
   const schema = zod.object({});
 
   const form = useServerFormAction({
     schema,
-    actionFn: () => deleteProjectAction(null, project.id),
+    actionFn: () => deleteProjectAction(null, selectedProject?.id ?? project.id),
     defaultValues: {},
     onStart: () => {
       setIsDeleteDialogClose();
+      resetSelectedProject();
     },
     onError: (errors) => {
       Logger.error(errors, "project delete failed");
@@ -40,7 +43,8 @@ export default function DeleteConfirmationDialog({ project }) {
     optimistic: {
       start: () => {
         const { startDeleteOptimistic } = useProjectsStore.getState();
-        const ctx = startDeleteOptimistic(project.id);
+        const id = selectedProject?.id ?? project.id;
+        const ctx = startDeleteOptimistic(id);
         return ctx;
       },
       commit: (ctx) => {
@@ -50,6 +54,8 @@ export default function DeleteConfirmationDialog({ project }) {
       revert: (ctx, result) => {
         const { revertDeleteOptimistic } = useProjectsStore.getState();
         revertDeleteOptimistic(ctx);
+        // Restore selection and reopen for retry
+        setSelectedProject(project);
         setIsDeleteDialogOpen(true);
         Logger.error(result, "optimistic delete reverted");
       },
@@ -66,12 +72,21 @@ export default function DeleteConfirmationDialog({ project }) {
         variant="destructive"
         size="sm"
         className="flex cursor-pointer items-center gap-1"
-        onClick={() => setIsDeleteDialogOpen(true)}
+        onClick={() => {
+          setSelectedProject(project);
+          setIsDeleteDialogOpen(true);
+        }}
       >
         <Trash className="h-4 w-4" /> Delete
       </Button>
 
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog
+        open={isDeleteDialogOpen && selectedProject?.id === project.id}
+        onOpenChange={(open) => {
+          setIsDeleteDialogOpen(open);
+          if (!open) resetSelectedProject();
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure you want to delete this project?</AlertDialogTitle>
