@@ -27,7 +27,7 @@ Referenced files:
 
 The hook handles the flow and error mapping for you:
 
-```
+```text
 submit
   → onStart(formData)
   → optimistic.start(formData) -> context
@@ -300,3 +300,131 @@ useServerFormAction({
 ```
 
 That’s it. This pattern is repeatable for create, edit, and delete across resources while keeping components thin and interactions predictable.
+
+---
+
+## How `useServerFormAction` integrates optimistic lifecycles (beginner-friendly)
+
+The hook wires the full flow for you. Think of it as a 5-step pipeline on submit:
+
+1) `onStart(formData)`
+   - Non-optimistic UI work. Example: close drawer/dialog immediately for snappy UX.
+
+2) `optimistic.start(formData) -> context`
+   - Apply the optimistic change to the colocated store (insert temp item, patch fields, or remove item).
+   - Return a small `context` object that you’ll need later (`{ tempId }`, or `{ id, prev }`, or `{ removed, index }`).
+
+3) `actionFn(formData)`
+   - Run the server action. Keep server code outside components.
+
+4) If failure: map field errors and `optimistic.revert(context, result)`
+   - The hook sets field-level errors via React Hook Form (using your Zod schema keys).
+   - Then you undo the optimistic change (remove temp, restore snapshot, reinsert removed item) and typically reopen the UI for retry.
+
+5) If success: `optimistic.commit(context, serverData)` → success toast → reset → `onSuccess`
+   - Reconcile temp → real data (replace tempId with DB id, finalize patched state, or keep deletion as-is).
+
+This keeps components declarative: you only declare what to do at each lifecycle, the hook does the wiring.
+
+---
+
+## Real-world example: Tickets (Create, Edit, Delete)
+
+You can copy this structure to add optimistic flows to a Tickets resource.
+
+- **Store**: `src/app/(home)/tickets/store/useTicketsStore.js`
+  - `setTickets(list)`
+  - `addOptimistic(partial) -> tempTicket`
+  - `commitOptimistic(tempId, realTicket)`
+  - `revertOptimistic(tempId)`
+  - `startDeleteOptimistic(id) -> { removed, index }`
+  - `commitDeleteOptimistic(ctx)`
+  - `revertDeleteOptimistic(ctx)`
+  - Optional (for in-place edit): `patchOptimistic(id, partial)`, `restoreFromSnapshot(id, prev)`
+
+- **List UI**: `src/app/(home)/tickets/components/TicketTable.jsx`
+  - Resolve server promise in a parent/server component and pass it down.
+  - `use()` the promise result to seed the store via `setTickets`.
+  - Render rows from the store so optimistic rows appear immediately (show a small badge on `__optimistic`).
+
+- **Create Dialog**: `CreateTicketDialog.jsx`
+  - `useServerFormAction({ schema, actionFn, onStart, optimistic: { start, commit, revert }, successToast })`
+  - `onStart`: close the dialog.
+  - `optimistic.start`: `addOptimistic` and return `{ tempId }`.
+  - `commit`: `commitOptimistic(tempId, serverTicket)`.
+  - `revert`: `revertOptimistic(tempId)` and reopen the dialog.
+
+- **Edit Dialog (recommended in-place patch)**: `EditTicketDialog.jsx`
+  - `optimistic.start(formData)`: find ticket, snapshot it, patch fields in-place via `patchOptimistic(id, partial)`, return `{ id, prev }`.
+  - `commit({ id }, serverTicket)`: replace with serverTicket.
+  - `revert({ id, prev })`: `restoreFromSnapshot(id, prev)` and reopen dialog.
+
+- **Delete Dialog**: `DeleteTicketDialog.jsx`
+  - `optimistic.start({ id })`: `startDeleteOptimistic(id)` → remove immediately and return `{ removed, index }`.
+  - `commit(ctx)`: keep it removed.
+  - `revert(ctx)`: `revertDeleteOptimistic(ctx)` → restore at original index and reopen dialog.
+
+This mirrors the Projects pattern, so your UI feels consistent.
+
+---
+
+## Recommended Edit pattern: in-place optimistic patch
+
+While the Projects Edit currently uses a temp item approach, updates often feel cleaner as in-place patches:
+
+- Store helpers you can add:
+  - `patchOptimistic(id, partial)` – shallow-merge fields on the item with a transient `__optimistic` flag.
+  - `restoreFromSnapshot(id, prev)` – replace the item with a saved snapshot.
+
+- Hook wiring in your Edit dialog:
+  - `start(formData)`: lookup current item, `const prev = {...item}`, then `patchOptimistic(id, formData)`; return `{ id, prev }`.
+  - `commit({ id }, serverItem)`: set the item to `serverItem` and clear `__optimistic`.
+  - `revert({ id, prev })`: `restoreFromSnapshot(id, prev)` and reopen the UI.
+
+Pros:
+
+- No extra row appears; the existing row updates instantly with a subtle “Updating…” indicator.
+- Less cognitive load for users and simpler reconciliation.
+
+---
+
+## Deletion lifecycle breakdown (what each callback should do)
+
+- `optimistic.start({ id })`
+  - Remove the item immediately from the store; return `{ removed, index }`.
+  - Disable UI actions while submitting.
+
+- `optimistic.commit(ctx)`
+  - Usually a no-op because the item is already gone. You may still enforce “keep removed”.
+
+- `optimistic.revert(ctx, result)`
+  - Reinsert `ctx.removed` at `ctx.index`.
+  - Restore selection and reopen the confirmation dialog so the user can try again.
+
+---
+
+## Copy-paste checklist for any new optimistic resource
+
+- [ ] Create a colocated Zustand store with:
+  - `set<ResourcePlural>(list)`
+  - `addOptimistic(partial) -> tempItem`
+  - `commitOptimistic(tempId, realItem)`
+  - `revertOptimistic(tempId)`
+  - `startDeleteOptimistic(id) -> { removed, index }`
+  - `commitDeleteOptimistic(ctx)`
+  - `revertDeleteOptimistic(ctx)`
+  - Optional (Edit): `patchOptimistic(id, partial)`, `restoreFromSnapshot(id, prev)`
+
+- [ ] Seed the store from the server promise in your list/table component and render rows from the store. Show a badge for `__optimistic` and disable actions.
+
+- [ ] Use `useServerFormAction` in your dialogs with:
+  - `schema`, `actionFn`, `defaultValues`
+  - `onStart`: close the surface (drawer/dialog)
+  - `optimistic: { start, commit, revert }`
+  - `successToast`
+
+- [ ] On failure, rely on the hook to map field errors and call `revert`. In `revert`, reopen the UI so the user can fix and retry.
+
+- [ ] Use `useStore.getState()` inside optimistic callbacks to avoid unnecessary re-renders. In UI, select only needed slices.
+
+- [ ] Keep server actions out of components and adhere to team rules (Next.js App Router, Tailwind v4, Shadcn, AuthJS, etc.).
