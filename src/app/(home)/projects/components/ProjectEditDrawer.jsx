@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect } from "react";
 import slugify from "slugify";
 
 import { Button } from "@/components/ui/button";
@@ -29,37 +29,49 @@ import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { updateProjectAction } from "@/system/Actions/ProjectActions";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
+import { useProjectsStore } from "../store/useProjectsStore";
 import { useSelectedProjectStore } from "../store/useSelectedProjectStore";
 
 export default function ProjectEditDrawer() {
   const { selectedProject, reset } = useSelectedProjectStore();
-  const { setIsEditDrawerOpen, isEditDrawerOpen } = useProjectDrawerStore();
-  const hasShownToastRef = useRef(false);
+  const { setIsEditDrawerOpen, isEditDrawerOpen, setIsEditDrawerClose } = useProjectDrawerStore();
 
-  const defaultValues = useMemo(
-    () => ({
-      name: selectedProject?.name || "",
-      slug: selectedProject?.slug || "",
-      description: selectedProject?.description || "",
-    }),
-    [selectedProject]
-  );
+  const defaultValues = {
+    name: selectedProject?.name || "",
+    slug: selectedProject?.slug || "",
+    description: selectedProject?.description || "",
+  };
 
   const form = useServerFormAction({
     schema: ProjectSchema,
-    defaultValues,
     actionFn: (formData) => updateProjectAction(selectedProject.id, formData),
+    defaultValues,
+    onStart: () => {
+      setIsEditDrawerClose();
+    },
     onSuccess: () => {
-      if (hasShownToastRef.current) return;
-      hasShownToastRef.current = true;
-
       form.reset();
       reset();
-      setIsEditDrawerOpen(false);
-
-      setTimeout(() => {
-        hasShownToastRef.current = false;
-      }, 500);
+    },
+    optimistic: {
+      start: (formData) => {
+        const { addOptimistic } = useProjectsStore.getState();
+        const temp = addOptimistic({
+          name: formData.name,
+          slug: formData.slug,
+          description: formData.description,
+        });
+        return { tempId: temp.id };
+      },
+      commit: (ctx, serverData) => {
+        const { commitOptimistic } = useProjectsStore.getState();
+        commitOptimistic(ctx.tempId, serverData);
+      },
+      revert: (ctx) => {
+        const { revertOptimistic } = useProjectsStore.getState();
+        revertOptimistic(ctx.tempId);
+        setIsEditDrawerOpen(true);
+      },
     },
     successToast: {
       title: "Project updated successfully",
