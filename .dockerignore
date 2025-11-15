@@ -1,9 +1,0 @@
-.next
-Dockerfile
-docker-compose.yml
-.git
-.gitignore
-.vscode
-*.log
-.env
-node_modules
