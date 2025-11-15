@@ -3,7 +3,7 @@
     "target": "ES6",
     "module": "commonjs",
     "moduleResolution": "node",
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "strict": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -39,6 +39,10 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next",
+    ".windsurf",
+    "public",
+    "docs"
   ]
 }

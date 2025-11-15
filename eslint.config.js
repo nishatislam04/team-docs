@@ -92,15 +92,7 @@ export default [
     },
   },
   { ignores: [".next/*", "node_modules/*", "src/generated/*"] },
-  { files: ["**/*.jsx", "**/*.js"] },
-  {
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.browser,
-        Bun: "readonly",
-      },
-    },
-  },
+  { files: ["**/*.jsx", "**/*.js", "**/*.ts", "**/*.tsx"] },
+  { languageOptions: { globals: { ...globals.node, ...globals.browser, Bun: "readonly" } } },
   prettier,
 ];
