@@ -6,13 +6,13 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "NODE_ENV=production next build --turbopack --no-lint",
-    "vercel-build": "bunx prisma generate --no-engine && bunx prisma migrate deploy && bun run build",
+    "vercel-build": "npx prisma generate --no-engine && npx prisma migrate deploy && npm run build",
     "start": "next start",
     "analyze": "ANALYZE=true next build --no-lint",
-    "local-dev": "concurrently -k -n \"POSTGRES,STUDIO,NEXT\" -c \"yellow,cyan,green\" \"bunx prisma dev \"  \"BROWSER=none bunx prisma studio\" \"bun run dev\"",
-    "deploy:preview": "bunx vercel",
-    "deploy:prod": "bunx vercel --prod",
-    "vercel:env:pull": "bunx vercel env pull .env.local"
+    "local-dev": "concurrently -k -n \"POSTGRES,STUDIO,NEXT\" -c \"yellow,cyan,green\" \"npx prisma dev\" \"BROWSER=none npx prisma studio\" \"npm run dev\"",
+    "deploy:preview": "npx vercel",
+    "deploy:prod": "npx vercel --prod",
+    "vercel:env:pull": "npx vercel env pull .env.local"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.8.0",
@@ -82,11 +82,11 @@
     "framer-motion": "^12.7.4",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.511.0",
-    "next": "^15.6.0-canary.6",
+    "next": "^16.0.3",
     "next-auth": "^5.0.0-beta.25",
     "next-themes": "^0.4.6",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "react-hook-form": "^7.62.0",
     "react-intersection-observer": "^9.16.0",
     "slugify": "^1.6.6",
