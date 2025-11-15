@@ -19,7 +19,7 @@ const nextConfig = {
       },
     ];
   },
-  // cacheComponents: true, // Temporarily disabled - will re-enable with proper Suspense boundaries
+  cacheComponents: true,
   experimental: {
     authInterrupts: true,
     useCache: true,

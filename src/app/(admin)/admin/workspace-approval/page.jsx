@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 import { Calendar, CheckCircle, Clock, Eye, Mail, User, XCircle } from "lucide-react";
+import { Suspense } from "react";
 import WorkspaceApprovalDialog from "./components/WorkspaceApprovalDialog";
 import WorkspaceDetailsDialog from "./components/WorkspaceDetailsDialog";
 import WorkspaceRejectionDialog from "./components/WorkspaceRejectionDialog";
@@ -11,6 +12,14 @@ import WorkspaceRejectionDialog from "./components/WorkspaceRejectionDialog";
 export default async function WorkspaceApprovalPage() {
   await protectAdmin();
 
+  return (
+    <Suspense fallback={<div className="space-y-8 p-8">Loading workspace approvals...</div>}>
+      <WorkspaceApprovalContent />
+    </Suspense>
+  );
+}
+
+async function WorkspaceApprovalContent() {
   const pendingWorkspaces = await WorkspaceServices.getPendingWorkspaces();
 
   return (

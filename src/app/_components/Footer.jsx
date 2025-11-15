@@ -2,9 +2,11 @@ import { Separator } from "@/components/ui/separator";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { connection } from "next/server";
 import FooterSocialsWrapper from "./sub/FooterSocialsWrapper";
 
-export default function Footer() {
+export default async function Footer() {
+  await connection(); // Mark as dynamic for Cache Components
   const currentYear = new Date().getFullYear();
 
   return (
