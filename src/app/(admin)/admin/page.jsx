@@ -3,8 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Session } from "@/lib/Session";
 import { Activity, Building, Settings, Users } from "lucide-react";
 
-export const dynamic = "force-dynamic";
-
 export default async function AdminDashboard() {
   await protectAdmin();
 

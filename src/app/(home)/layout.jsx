@@ -4,8 +4,6 @@ import { Session } from "@/lib/Session";
 import { ThemeProvider } from "@/provider/ThemeProvider";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 
-export const dynamic = "force-dynamic";
-
 export default async function HomeLayout({ children }) {
   // Fetch workspace data for the header
   const workspaceId = await Session.getWorkspaceIdForUser();

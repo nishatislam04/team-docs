@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "NODE_ENV=production next build --turbopack --no-lint",
+    "build": "NODE_ENV=production next build --turbopack",
     "vercel-build": "npx prisma generate --no-engine && npx prisma migrate deploy && npm run build",
     "start": "next start",
-    "analyze": "ANALYZE=true next build --no-lint",
+    "analyze": "ANALYZE=true next build",
     "local-dev": "concurrently -k -n \"POSTGRES,STUDIO,NEXT\" -c \"yellow,cyan,green\" \"npx prisma dev\" \"BROWSER=none npx prisma studio\" \"npm run dev\"",
     "deploy:preview": "npx vercel",
     "deploy:prod": "npx vercel --prod",

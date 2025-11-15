@@ -2,8 +2,6 @@ import ConditionalAdminLayout from "@/components/layout/admin/ConditionalAdminLa
 import { Session } from "@/lib/Session";
 import { ThemeProvider } from "@/provider/ThemeProvider";
 
-export const dynamic = "force-dynamic";
-
 export default async function AdminLayout({ children }) {
   const user = await Session.getCurrentUser();
 

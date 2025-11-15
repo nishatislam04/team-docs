@@ -5,8 +5,6 @@ import Header from "./_components/header";
 import HeroSection from "./_components/HeroSection";
 import FeaturedSectionWrapper from "./_components/sub/FeaturedSectionWrapper";
 
-export const experimental_ppr = true;
-
 export default async function LandingPage() {
   const workspace = getWorkspaceFn();
   const sessionPromise = getSession();

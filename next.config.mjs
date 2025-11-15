@@ -19,13 +19,10 @@ const nextConfig = {
       },
     ];
   },
+  // cacheComponents: true, // Temporarily disabled - will re-enable with proper Suspense boundaries
   experimental: {
-    ppr: "incremental",
     authInterrupts: true,
-    // cacheComponents: true,
-    reactCompiler: true,
     useCache: true,
-    viewTransition: true, // react
     webVitalsAttribution: ["CLS", "LCP", "INP", "FCP", "TTFB"],
     // Forward browser logs to the terminal for easier debugging
     browserDebugInfoInTerminal: {
