@@ -4,27 +4,27 @@ BUN = bun
 
 # Run dev migration with timestamp
 migrate:
-	bunx prisma migrate dev
+	npx prisma migrate dev
 
 # Push schema directly to DB
 push:
-	bunx prisma db push
+	npx prisma db push
 
 # Generate Prisma client
 generate:
-	bunx prisma generate
+	npx prisma generate
 
 # Reset DB (DANGEROUS)
 reset:
-	bunx prisma migrate reset --force --skip-seed
+	npx prisma migrate reset --force --skip-seed
 
 # Seed DB
 seed:
-	bunx prisma db seed
+	npx prisma db seed
 
 # Apply migration in production (safe)
 deploy:
-	bunx prisma migrate deploy
+	npx prisma migrate deploy
 
 # -----------------------
 # Development commands
@@ -40,20 +40,20 @@ size:
 
 # Run development environment
 dev:
-	bunx prisma generate
-	bun run local-dev
+	npx prisma generate
+	npm run local-dev
 
 build: 
-	bun run build
+	npx build
 
 start:
-	bun run start
+	npx start
 
 preview: 
-	bun run deploy:preview
+	npx deploy:preview
 
 production: 
-	bun run deploy:prod
+	npx deploy:prod
 
 ## ----------------------------
 ## BUN
@@ -61,18 +61,18 @@ production:
 
 # Install dependencies (respect package.json + bun.lockb)
 bun-install:
-	$(BUN) install
+	npx install
 
 # Install fresh (clear lockfile + reinstall)
 bun-reinstall:
 	rm -f bun.lockb
 	rm -rf node_modules
-	$(BUN) install
+	npx install
 
 # Upgrade all dependencies
 bun-upgrade:
-	$(BUN) update
+	npx update
 
 # Show outdated packages
 bun-outdated:
-	$(BUN) outdated
+	npx outdated
