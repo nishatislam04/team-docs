@@ -111,8 +111,8 @@ model Permission {
 }
 
 enum PermissionScope {
-  SYSTEM
-  WORKSPACE
+  SYSTEM // System-level permissions (e.g., manage high level workspace permissions)
+  WORKSPACE // Workspace-level permissions (e.g., manage projects, users)
 }
 
 enum PermissionAction {

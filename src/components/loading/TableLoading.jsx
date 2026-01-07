@@ -1,8 +1,8 @@
 import { Skeleton } from "../ui/skeleton";
-import { TableCell, TableRow } from "../ui/table";
+import { TableCell, TableRow, Table, TableBody } from "../ui/table";
 
-export default function TableLoading({ columns = 4 }) {
-  return [...Array(7)].map((_, i) => (
+export default function TableLoading({ columns = 4, withTable = false }) {
+  const rows = [...Array(7)].map((_, i) => (
     <TableRow key={`skeleton-${i}`} className="animate-pulse">
       {[...Array(columns)].map((_, colIndex) => (
         <TableCell key={colIndex} className="px-6 py-5 text-center">
@@ -13,4 +13,16 @@ export default function TableLoading({ columns = 4 }) {
       ))}
     </TableRow>
   ));
+
+  if (withTable) {
+    return (
+      <Table>
+        <TableBody>
+          {rows}
+        </TableBody>
+      </Table>
+    );
+  }
+
+  return rows;
 }

@@ -14,7 +14,7 @@ const PermissionCreateDrawerLazy = dynamic(() => import("./components/Permission
 });
 
 const PermissionListingsLazy = dynamic(() => import("./components/PermissionListings"), {
-  loading: () => <TableLoading />,
+  loading: () => <TableLoading withTable={true} />,
 });
 
 export default function PermissionShell({
