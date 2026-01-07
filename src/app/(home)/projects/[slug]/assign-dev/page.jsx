@@ -4,7 +4,7 @@ import ProjectInitializer from "./components/ProjectInitializer";
 
 export default async function AssignDevPage({ params }) {
   const { slug } = await params;
-  const project = await ProjectServices.getResource({ slug });
+  const project = await ProjectServices.getResource({ where: { slug } });
 
   return (
     <div className="container mx-auto">

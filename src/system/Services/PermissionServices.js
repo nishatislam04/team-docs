@@ -67,7 +67,7 @@ export class PermissionServices extends BaseService {
     try {
       const permissions = await PermissionModel.findMany({
         where: {
-          scope: projectName,
+          scope: "WORKSPACE",
         },
         select: {
           id: true,
