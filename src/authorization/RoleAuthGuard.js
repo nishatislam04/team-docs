@@ -17,6 +17,8 @@ class RoleAuthGuard extends BaseAuthGuard {
 
     if (session.success === false) return session;
 
+    if (this.isSuperAdmin(session)) return { success: true };
+
     const workspaceId = session.workspaceId || Session.getWorkspaceId();
 
     const permission = await PermissionServices.findFirst({

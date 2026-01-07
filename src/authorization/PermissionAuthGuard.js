@@ -17,6 +17,8 @@ class PermissionAuthGuard extends BaseAuthGuard {
 
     if (session.success === false) return session;
 
+    if (this.isSuperAdmin(session)) return { success: true };
+
     const permission = await PermissionServices.findFirst({
       where: {
         AND: [

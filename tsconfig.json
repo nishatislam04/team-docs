@@ -3,7 +3,7 @@
     "target": "ES6",
     "module": "commonjs",
     "moduleResolution": "node",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "strict": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

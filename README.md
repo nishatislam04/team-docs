@@ -73,14 +73,6 @@ http://localhost:3000
 
 ---
 
-# ✅ You're all set!
-
-# 🖼️ Screenshots
-
-### homepage
+## ✅ You're all set
 
 ![Homepage Screenshot](assets/homepage.png)
-
-### project page editor
-
-![page editor](assets/project-editor.png)

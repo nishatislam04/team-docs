@@ -99,6 +99,11 @@ export class PermissionServices extends BaseService {
         },
       });
 
+      Logger.info(
+        { permissions },
+        `Get all workspace permissions success`
+      );
+
       return permissions;
     } catch (error) {
       Logger.error(error.message, `Get all workspace permissions failed`);

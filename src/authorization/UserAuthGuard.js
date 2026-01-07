@@ -22,8 +22,10 @@ class UserAuthGuard extends BaseAuthGuard {
 
   static async canReadUser() {
     const session = await this.basicAuthCheck();
-
+    
     if (session.success === false) return session;
+    
+    if (this.isSuperAdmin(session)) return { success: true };
 
     const permission = await PermissionServices.findFirst({
       where: {
@@ -57,7 +59,7 @@ class UserAuthGuard extends BaseAuthGuard {
     const session = await this.basicAuthCheck();
 
     if (session.success === false) return session;
-
+    
     const permission = await PermissionServices.findFirst({
       where: {
         AND: [
@@ -90,7 +92,7 @@ class UserAuthGuard extends BaseAuthGuard {
     const session = await this.basicAuthCheck();
 
     if (session.success === false) return session;
-
+    
     // check if user exist before udpate
 
     const permission = await PermissionServices.findFirst({
@@ -127,7 +129,7 @@ class UserAuthGuard extends BaseAuthGuard {
     if (session.success === false) return session;
 
     // check if user exist before delete
-
+    
     const permission = await PermissionServices.findFirst({
       where: {
         AND: [

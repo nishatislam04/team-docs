@@ -18,6 +18,8 @@ class ProjectAuthGuard extends BaseAuthGuard {
 
     if (session.success === false) return session;
 
+    if (this.isSuperAdmin(session)) return { success: true };
+
     // now we check permission model
     const permission = await PermissionServices.findFirst({
       where: {
