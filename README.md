@@ -1,77 +1,67 @@
 # 🧩 team-docs
 
-> A collaborative documentation platform — powered by Next.js 15 (App Router) and rich modern stack.
->
-> 📌 _Note: Project description and features will be added soon._
+A collaborative documentation platform built with Next.js, Prisma, and Tiptap.
 
----
+## 🛠️ Tech Stack
 
-## 📦 Tech Stack
+| Layer       | Tool                          |
+| ----------- | ----------------------------- |
+| Framework   | Next.js (App Router)          |
+| Database    | PostgreSQL 18 (docker compose)|
+| ORM         | Prisma 7                      |
+| Cache       | Redis 8 (docker compose)      |
+| Package Mgr | Bun                           |
+| Styling     | Tailwind CSS v4 + Shadcn UI   |
+| Editor      | Tiptap (RTE)                  |
+| Linting     | Biome + rumdl (markdown)      |
 
-- **Framework**: Next.js 15 Canary(App Router)
-- **Database**: Prisma PostgreSQL
-- **ORM**: Prisma
-- **Package Manager**: Bun
-- **Styling**: Tailwind CSS v4
-- **UI Library**: ShadCN UI
-- **Editor**: Tiptap (RTE)
-- **State Management**: Zustand
-- **Forms & Validation**: React Hook Form + Zod
-- **Icons**: Lucide React Icons
-
----
-
-## 🛠️ Setup Instructions
-
-Follow these steps to get the app running on your local machine.
-
----
-
-### 1. 🥖 Install Bun
-
-Install **Bun** globally. You can use **npm** or the **official script**:
-
-#### For Windows / WSL:
+## 🚀 Quick Start
 
 ```bash
-npm install -g bun
-```
-
-or:
-
-```bash
+# 1. Install bun (if you don't have it)
 curl -fsSL https://bun.sh/install | bash
-```
 
-💡 After install, restart your terminal and run `bun --version` to verify installation.
-
-### 2. 📄 Create .env File
-
-```bash
-cp .env.example .env
-```
-
-### 3. 📦 Install Dependencies (with Bun)
-
-```bash
+# 2. Install dependencies
 bun install
-```
 
-### 4. Start The App
+# 3. Copy env file
+cp .env.example .env
 
-> this will start `prisma studio` and `next.js local server`.
+# 4. Start Postgres + Redis (podman or docker)
+docker compose up -d     # or: podman compose up -d
 
-```bash
+# 5. Apply migrations + seed
+npx prisma migrate deploy
+npx prisma db seed
+
+# 6. Run the app (starts DB + prisma studio + next dev)
 make dev
 ```
 
-### 🌐 Visit the App
+Then open **http://localhost:3000**.
 
-```bash
-http://localhost:3000
-```
+## 🗄️ Database
 
----
+- **Postgres**: `localhost:5432` (db: `teamdocs`, user/pass: `teamdocs/teamdocs`)
+- **Redis**: `localhost:6379`
+- Manage containers: `make db-up` / `make db-down`
+- Reset database: `make reset` (⚠️ deletes all data)
+
+> For production (Vercel), set `DATABASE_URL` and `REDIS_URL` to your hosted
+> Postgres/Redis (e.g. Neon, Upstash). No code changes needed.
+
+## 🧰 Useful Commands
+
+| Command          | What it does                         |
+| ---------------- | ------------------------------------ |
+| `make dev`       | Start everything for development     |
+| `make migrate`   | Create + apply a new migration       |
+| `make generate`  | Regenerate Prisma client             |
+| `make seed`      | Seed the database                    |
+| `make build`     | Production build                     |
+| `bun run lint`   | Lint code (Biome)                    |
+| `bun run check`  | Lint + format (Biome, auto-fix)      |
+| `bun run lint:md`| Lint markdown (rumdl)                |
 
 ## ✅ You're all set
 
