@@ -12,12 +12,13 @@ const nextConfig = {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
   cacheComponents: true,
+  logging: {
+    // Forward browser logs to the terminal for easier debugging
+    browserToTerminal: true,
+  },
   experimental: {
     authInterrupts: true,
-    useCache: true,
     webVitalsAttribution: ["CLS", "LCP", "INP", "FCP", "TTFB"],
-    // Forward browser logs to the terminal for easier debugging
-    browserDebugInfoInTerminal: { depthLimit: 20, edgeLimit: 150 },
   },
 };
 
