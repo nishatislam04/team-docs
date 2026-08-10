@@ -48,21 +48,20 @@ size:
 
 # Run development environment (starts DB, prisma studio + next dev)
 dev:
-	docker compose up -d
 	npx prisma generate
-	npm run local-dev
+	bun run local-dev
 
-build: 
-	npx build
+build:
+	bun run build
 
 start:
-	npx start
+	bun run start
 
-preview: 
-	npx deploy:preview
+preview:
+	bun run deploy:preview
 
-production: 
-	npx deploy:prod
+production:
+	bun run deploy:prod
 
 ## ----------------------------
 ## BUN
