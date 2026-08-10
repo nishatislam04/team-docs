@@ -1,15 +1,15 @@
 "use client";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Facebook, Github, Instagram, Linkedin, Twitter } from "lucide-react";
+import { Bird, BriefcaseBusiness, Camera, GitFork, ThumbsUp } from "lucide-react";
 import Link from "next/link";
 
 const socialLinks = [
-  { name: "GitHub", href: "#", icon: Github },
-  { name: "Twitter", href: "#", icon: Twitter },
-  { name: "LinkedIn", href: "#", icon: Linkedin },
-  { name: "Facebook", href: "#", icon: Facebook },
-  { name: "Instagram", href: "#", icon: Instagram },
+  { name: "GitHub", href: "#", icon: GitFork },
+  { name: "Twitter", href: "#", icon: Bird },
+  { name: "LinkedIn", href: "#", icon: BriefcaseBusiness },
+  { name: "Facebook", href: "#", icon: ThumbsUp },
+  { name: "Instagram", href: "#", icon: Camera },
 ];
 
 export default function FooterSocials() {
@@ -21,8 +21,7 @@ export default function FooterSocials() {
             <Link
               href={social.href}
               aria-label={social.name}
-              className="bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground rounded-full p-2 transition-colors"
-            >
+              className="bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground rounded-full p-2 transition-colors">
               <social.icon className="h-5 w-5" />
             </Link>
           </TooltipTrigger>

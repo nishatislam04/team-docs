@@ -3,7 +3,7 @@ import { BaseService } from "./BaseService";
 import Logger from "@/lib/Logger";
 import { UserModel } from "../Models/UserModel";
 import { WorkspaceModel } from "../Models/WorkspaceModel";
-import { WorkspaceStatus } from "@prisma/client";
+import { WorkspaceStatus } from "@/generated/client/client";
 
 export class WorkspaceServices extends BaseService {
   static modelName = "workspace";
@@ -13,22 +13,13 @@ export class WorkspaceServices extends BaseService {
     try {
       const workspaces = await WorkspaceModel.findMany({
         where: { status: WorkspaceStatus.ACTIVE },
-        include: {
-          owner: {
-            select: {
-              id: true,
-              username: true,
-            },
-          },
-        },
+        include: { owner: { select: { id: true, username: true } } },
         orderBy: { [sortBy]: sortOrder },
         skip: (page - 1) * pageSize,
         take: pageSize,
       });
 
-      const totalItems = await WorkspaceModel.count({
-        where: { status: WorkspaceStatus.ACTIVE },
-      });
+      const totalItems = await WorkspaceModel.count({ where: { status: WorkspaceStatus.ACTIVE } });
 
       const totalPages = Math.ceil(totalItems / pageSize);
 
@@ -42,23 +33,14 @@ export class WorkspaceServices extends BaseService {
       };
     } catch (error) {
       Logger.error(error.message, "Get all workspaces failed");
-      return {
-        data: [],
-        totalItems: 0,
-        pageSize: 0,
-        sortBy: "",
-        sortOrder: "",
-        totalPages: 0,
-      };
+      return { data: [], totalItems: 0, pageSize: 0, sortBy: "", sortOrder: "", totalPages: 0 };
     }
   }
 
   static async deleteResource(id) {
     try {
       Logger.debug(`Deleting workspace with id: ${id}`);
-      await WorkspaceModel.delete({
-        where: { id },
-      });
+      await WorkspaceModel.delete({ where: { id } });
       return true;
     } catch (error) {
       Logger.error(error.message, `Workspace delete fail`);
@@ -68,10 +50,7 @@ export class WorkspaceServices extends BaseService {
 
   static async assignWorkspaceToUser(workspaceId, userId) {
     try {
-      await UserModel.update({
-        where: { id: userId },
-        data: { workspaceId },
-      });
+      await UserModel.update({ where: { id: userId }, data: { workspaceId } });
     } catch (error) {
       Logger.error(error.message, `Assign workspace to user failed`);
     }
@@ -100,16 +79,7 @@ export class WorkspaceServices extends BaseService {
     try {
       const pendingWorkspaces = await WorkspaceModel.findMany({
         where: { status: WorkspaceStatus.PENDING },
-        include: {
-          owner: {
-            select: {
-              id: true,
-              username: true,
-              email: true,
-              createdAt: true,
-            },
-          },
-        },
+        include: { owner: { select: { id: true, username: true, email: true, createdAt: true } } },
         orderBy: { createdAt: "desc" },
       });
 
@@ -126,9 +96,7 @@ export class WorkspaceServices extends BaseService {
    */
   static async getPendingWorkspacesCount() {
     try {
-      const count = await WorkspaceModel.count({
-        where: { status: WorkspaceStatus.PENDING },
-      });
+      const count = await WorkspaceModel.count({ where: { status: WorkspaceStatus.PENDING } });
       return count;
     } catch (error) {
       Logger.error(error.message, "Get pending workspaces count failed");

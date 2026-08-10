@@ -1,6 +1,9 @@
-import { PrismaClient } from "../src/generated/client/index.js";
+import { PrismaClient } from "../src/generated/client/client";
+import "dotenv/config";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.DATABASE_URL,
+});
 
 // ! add nishat project permissions
 

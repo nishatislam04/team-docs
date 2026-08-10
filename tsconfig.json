@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "target": "ES2023",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "strict": false,
     "skipLibCheck": true,
@@ -24,7 +24,6 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".", // This sets the base directory for resolving paths
     "paths": {
       "@/*": [
         "./src/*"

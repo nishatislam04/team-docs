@@ -19,11 +19,7 @@ export const DEFAULT_EDITOR_CONFIG = {
   characterLimit: 10000,
 
   // Editor attributes
-  editorProps: {
-    attributes: {
-      class: "focus:outline-none max-w-none prose prose-lg",
-    },
-  },
+  editorProps: { attributes: { class: "focus:outline-none max-w-none prose prose-lg" } },
 
   // Placeholder settings
   placeholder: {
@@ -39,10 +35,7 @@ export const DEFAULT_EDITOR_CONFIG = {
   },
 
   // Preview mode settings
-  preview: {
-    enabled: true,
-    className: "preview-mode",
-  },
+  preview: { enabled: true, className: "preview-mode" },
 };
 
 /**
@@ -105,10 +98,7 @@ export const SLASH_COMMAND_CONFIG = {
   offset: 8,
 
   // Animation settings
-  animation: {
-    duration: 150,
-    easing: "easeOut",
-  },
+  animation: { duration: 150, easing: "easeOut" },
 
   // Search settings
   search: {
@@ -122,16 +112,9 @@ export const SLASH_COMMAND_CONFIG = {
  * @type {Object}
  */
 export const BUBBLE_MENU_CONFIG = {
-  // Menu positioning
+  // Menu positioning (Floating UI options)
   placement: "top",
   offset: 8,
-
-  // Tippy.js options
-  tippyOptions: {
-    duration: 150,
-    animation: "shift-away",
-    theme: "light-border",
-  },
 
   // Menu appearance
   className: "bubble-menu",
@@ -213,19 +196,9 @@ export const FONT_FAMILIES = [
  * @type {Object}
  */
 export const EDITOR_THEME = {
-  light: {
-    background: "#ffffff",
-    text: "#1f2937",
-    border: "#e5e7eb",
-    selection: "#3b82f6",
-  },
+  light: { background: "#ffffff", text: "#1f2937", border: "#e5e7eb", selection: "#3b82f6" },
 
-  dark: {
-    background: "#1f2937",
-    text: "#f9fafb",
-    border: "#374151",
-    selection: "#60a5fa",
-  },
+  dark: { background: "#1f2937", text: "#f9fafb", border: "#374151", selection: "#60a5fa" },
 };
 
 /**
@@ -246,25 +219,13 @@ export const VALIDATION_RULES = {
  */
 export const PERFORMANCE_CONFIG = {
   // Debounce settings
-  debounce: {
-    save: 2000,
-    search: 300,
-    resize: 100,
-  },
+  debounce: { save: 2000, search: 300, resize: 100 },
 
   // Lazy loading
-  lazyLoad: {
-    extensions: true,
-    menus: true,
-    dialogs: true,
-  },
+  lazyLoad: { extensions: true, menus: true, dialogs: true },
 
   // Virtual scrolling (for large documents)
-  virtualScrolling: {
-    enabled: false,
-    itemHeight: 24,
-    overscan: 5,
-  },
+  virtualScrolling: { enabled: false, itemHeight: 24, overscan: 5 },
 };
 
 /**
@@ -281,16 +242,10 @@ export const ACCESSIBILITY_CONFIG = {
   },
 
   // Keyboard navigation
-  keyboardNavigation: {
-    enabled: true,
-    trapFocus: true,
-  },
+  keyboardNavigation: { enabled: true, trapFocus: true },
 
   // Screen reader support
-  screenReader: {
-    announceChanges: true,
-    announceSelection: false,
-  },
+  screenReader: { announceChanges: true, announceSelection: false },
 };
 
 /**
@@ -327,10 +282,7 @@ export const getInstanceConfig = (instanceId, overrides = {}) => {
     instanceId,
     editorProps: {
       ...baseConfig.editorProps,
-      attributes: {
-        ...baseConfig.editorProps.attributes,
-        "data-editor-id": instanceId,
-      },
+      attributes: { ...baseConfig.editorProps.attributes, "data-editor-id": instanceId },
     },
   };
 };
