@@ -86,7 +86,6 @@
     "dotenv": "^17.4.2",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^13.1.0",
-    "i": "^0.3.7",
     "lowlight": "^3.3.0",
     "lucide-react": "^1.31.0",
     "next": "^16.3.0",

@@ -5,17 +5,9 @@
     "target": "es6",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "**/*.js",
-    "**/*.jsx",
-    ".prisma/client"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["**/*.js", "**/*.jsx", ".prisma/client"]
 }
