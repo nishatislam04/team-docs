@@ -10,6 +10,10 @@ db-up:
 db-down:
 	docker compose down
 
+# Restart local database (fixes stale podman container state)
+db-restart:
+	docker compose down && docker compose up -d
+
 # Run dev migration with timestamp
 migrate:
 	npx prisma migrate dev

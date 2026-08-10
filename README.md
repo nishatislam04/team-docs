@@ -40,11 +40,15 @@ make dev
 
 Then open **<http://localhost:3000**>.
 
+> ⚠️ Always use `up -d` (detached). Plain `podman-compose up` can fail with
+> `cannot start an already running container` when containers are left in a stale
+> state — fix with `make db-restart` (or `docker compose down && docker compose up -d`).
+
 ## 🗄️ Database
 
 - **Postgres**: `localhost:5432` (db: `teamdocs`, user/pass: `teamdocs/teamdocs`)
 - **Redis**: `localhost:6379`
-- Manage containers: `make db-up` / `make db-down`
+- Manage containers: `make db-up` / `make db-down` / `make db-restart`
 - Reset database: `make reset` (⚠️ deletes all data)
 
 > For production (Vercel), set `DATABASE_URL` and `REDIS_URL` to your hosted
