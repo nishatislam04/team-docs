@@ -1,10 +1,10 @@
 "use client";
 
-import ProjectEditorHeader from "@/components/layout/ProjectEditorHeader";
-import NoSectionUI from "./components/NoSectionUI";
-import NoPageSelectedUI from "./components/NoPageSelectedUI";
-import { EditorService, useEditorContent } from "@/components/editor";
 import dynamic from "next/dynamic";
+import { EditorService, useEditorContent } from "@/components/editor";
+import ProjectEditorHeader from "@/components/layout/ProjectEditorHeader";
+import NoPageSelectedUI from "./components/NoPageSelectedUI";
+import NoSectionUI from "./components/NoSectionUI";
 
 // Dynamically import the CompleteEditor to prevent SSR issues
 const CompleteEditor = dynamic(
@@ -19,13 +19,14 @@ const CompleteEditor = dynamic(
         </div>
       </div>
     ),
-  }
+  },
 );
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 import { useProjectStore } from "../../store/useProjectStore";
 import { usePreviewStore } from "./store/usePreviewStore";
-import { toast } from "sonner";
-import { useCallback, useEffect, useState, useMemo } from "react";
-import { Spinner } from "@/components/ui/spinner";
 
 /**
  * Enhanced Editor Component with Store Integration
@@ -59,7 +60,7 @@ function EnhancedEditor({ pageId, onSaveStateChange }) {
     (newContent) => {
       updateContent(newContent);
     },
-    [updateContent]
+    [updateContent],
   );
 
   // Handle manual save
@@ -104,7 +105,7 @@ function EnhancedEditor({ pageId, onSaveStateChange }) {
         enabled: false, // We handle saving manually
       },
     }),
-    [isPreviewMode]
+    [isPreviewMode],
   );
 
   if (isLoading) {

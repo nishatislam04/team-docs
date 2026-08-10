@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,10 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { deleteSectionAction } from "@/system/Actions/SectionActions";
 import Logger from "@/lib/Logger";
-import { useState } from "react";
-import { toast } from "sonner";
+import { deleteSectionAction } from "@/system/Actions/SectionActions";
 
 export default function DeleteSectionDialog({ section, isDialogOpen, setIsDialogOpen }) {
   const [isDeleting, setIsDeleting] = useState(false);

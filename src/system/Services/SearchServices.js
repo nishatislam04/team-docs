@@ -72,15 +72,15 @@ export class SearchService extends BaseService {
       const results = [];
 
       // Search in projects
-      const projectResults = await this.searchProjects(searchTerm, workspaceId);
+      const projectResults = await SearchService.searchProjects(searchTerm, workspaceId);
       results.push(...projectResults);
 
       // Search in sections
-      const sectionResults = await this.searchSections(searchTerm, workspaceId);
+      const sectionResults = await SearchService.searchSections(searchTerm, workspaceId);
       results.push(...sectionResults);
 
       // Search in pages
-      const pageResults = await this.searchPages(searchTerm, workspaceId);
+      const pageResults = await SearchService.searchPages(searchTerm, workspaceId);
       results.push(...pageResults);
 
       // Sort results by relevance (can be enhanced with ranking)
@@ -169,9 +169,9 @@ export class SearchService extends BaseService {
         title: project.name,
         description: project.description,
         slug: project.slug,
-        matchedText: this.extractMatchedText(
+        matchedText: SearchService.extractMatchedText(
           `${project.name} ${project.description || ""}`,
-          searchTerm
+          searchTerm,
         ),
         route: "/projects",
         metadata: {
@@ -224,9 +224,9 @@ export class SearchService extends BaseService {
         type: "section",
         title: section.name,
         description: section.description,
-        matchedText: this.extractMatchedText(
+        matchedText: SearchService.extractMatchedText(
           `${section.name} ${section.description || ""}`,
-          searchTerm
+          searchTerm,
         ),
         route: `/projects/${section.projectSlug}/editor`,
         metadata: {
@@ -290,7 +290,7 @@ export class SearchService extends BaseService {
 
       return pages.map((page) => {
         // Extract text content from TipTap JSON
-        const textContent = this.extractTextFromTipTapContent(page.content);
+        const textContent = SearchService.extractTextFromTipTapContent(page.content);
         const searchableText = `${page.title} ${page.description || ""} ${textContent}`;
 
         return {
@@ -298,7 +298,7 @@ export class SearchService extends BaseService {
           type: "page",
           title: page.title,
           description: page.description,
-          matchedText: this.extractMatchedText(searchableText, searchTerm),
+          matchedText: SearchService.extractMatchedText(searchableText, searchTerm),
           route: `/projects/${page.projectSlug}/editor`,
           metadata: {
             projectId: page.projectId,

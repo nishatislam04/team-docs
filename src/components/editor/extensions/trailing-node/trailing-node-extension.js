@@ -81,7 +81,7 @@ export const TrailingNode = Extension.create({
               // If mapping fails, try to set selection at the original position
               try {
                 const resolvedPos = newTr.doc.resolve(
-                  Math.min(selection.from, newTr.doc.content.size)
+                  Math.min(selection.from, newTr.doc.content.size),
                 );
                 if (resolvedPos) {
                   newTr.setSelection(new TextSelection(resolvedPos));

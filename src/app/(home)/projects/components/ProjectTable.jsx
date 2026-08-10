@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import TableLoading from "@/components/loading/TableLoading";
 import TablePagination from "@/components/shared/TablePagination";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Loader2 } from "lucide-react";
 import { useProjectListings } from "../hooks/useProjectListings";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import ProjectAssignButton from "./sub/ProjectAssignButton.client";

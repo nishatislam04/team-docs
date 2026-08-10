@@ -14,11 +14,11 @@ import { BaseAuthGuard } from "./BaseAuthGuard";
  */
 class ProjectAuthGuard extends BaseAuthGuard {
   static async canViewProjects() {
-    const session = await this.basicAuthCheck();
+    const session = await ProjectAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
-    if (this.isSuperAdmin(session)) return { success: true };
+    if (ProjectAuthGuard.isSuperAdmin(session)) return { success: true };
 
     // now we check permission model
     const permission = await PermissionServices.findFirst({
@@ -51,7 +51,7 @@ class ProjectAuthGuard extends BaseAuthGuard {
    * @returns
    */
   static async canCreateProject() {
-    const session = await this.basicAuthCheck();
+    const session = await ProjectAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -83,7 +83,7 @@ class ProjectAuthGuard extends BaseAuthGuard {
 
   // Super admins can create projects in any workspace
   static async canUpdateProject(projectId) {
-    const session = await this.basicAuthCheck();
+    const session = await ProjectAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -135,7 +135,7 @@ class ProjectAuthGuard extends BaseAuthGuard {
   }
 
   static async canDeleteProject(userId, projectId) {
-    const session = await this.basicAuthCheck();
+    const session = await ProjectAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 

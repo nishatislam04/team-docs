@@ -7,7 +7,7 @@ export function usePermissions(workspaceId, shouldStartFetch, setShouldStartFetc
   const test = usePaginatedFetch(
     getAllWorkspacePermissions(workspaceId),
     shouldStartFetch,
-    setShouldStartFetch
+    setShouldStartFetch,
   );
   return test;
 }

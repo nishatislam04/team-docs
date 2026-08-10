@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback, useMemo } from "react";
+import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,12 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { updateRoleAction } from "@/system/Actions/RoleActions";
-import { RoleSchema } from "@/lib/schemas/RoleSchema";
-import { useServerFormAction } from "@/hooks/useServerFormAction";
-import { useCallback, useMemo } from "react";
 import {
   Form,
   FormControl,
@@ -24,7 +20,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useServerFormAction } from "@/hooks/useServerFormAction";
+import { RoleSchema } from "@/lib/schemas/RoleSchema";
+import { updateRoleAction } from "@/system/Actions/RoleActions";
 
 export default function RoleEditDialog({
   isDialogOpen,
@@ -37,7 +37,7 @@ export default function RoleEditDialog({
       name: role?.name || "",
       description: role?.description || "",
     }),
-    [role]
+    [role],
   );
 
   const handleSuccess = useCallback(() => {

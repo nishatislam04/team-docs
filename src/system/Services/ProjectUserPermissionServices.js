@@ -1,8 +1,8 @@
 import Logger from "@/lib/Logger";
+import { ProjectUserPermissionDTO } from "../DTOs/ProjectUserPermissionDTO";
 import { ProjectModel } from "../Models/ProjectModel";
 import { ProjectUserPermissionModel } from "../Models/ProjectUserPermission";
 import { BaseService } from "./BaseService";
-import { ProjectUserPermissionDTO } from "../DTOs/ProjectUserPermissionDTO";
 
 export class ProjectUserPermissionService extends BaseService {
   static modelName = "projectUserPermission";
@@ -24,7 +24,7 @@ export class ProjectUserPermissionService extends BaseService {
           projectId,
           permissionId,
           userId,
-        }))
+        })),
       );
 
       // Create all permission assignments in a single transaction
@@ -85,7 +85,7 @@ export class ProjectUserPermissionService extends BaseService {
             userId: selectedUser,
             projectId,
             permissionId: { in: toRemove },
-          })
+          }),
         );
       }
 
@@ -98,7 +98,7 @@ export class ProjectUserPermissionService extends BaseService {
               permissionId,
             })),
             skipDuplicates: true,
-          })
+          }),
         );
       }
 
@@ -168,7 +168,7 @@ export class ProjectUserPermissionService extends BaseService {
         },
       });
 
-      return this.dto.toCollection(result);
+      return ProjectUserPermissionService.dto.toCollection(result);
     } catch (error) {
       Logger.error(error.message, `Get project users and permissions list failed`);
       throw error;

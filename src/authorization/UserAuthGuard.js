@@ -1,9 +1,9 @@
 "use server";
 
-import { BaseAuthGuard } from "./BaseAuthGuard";
-import prisma from "@/lib/prisma";
 import Logger from "@/lib/Logger";
+import prisma from "@/lib/prisma";
 import { PermissionServices } from "@/system/Services/PermissionServices";
+import { BaseAuthGuard } from "./BaseAuthGuard";
 
 /**
  * UserAuthGuard - Authorization guard for user-related operations
@@ -17,15 +17,15 @@ class UserAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} User session object
    */
   static async protect() {
-    return await this.requireAuth();
+    return await UserAuthGuard.requireAuth();
   }
 
   static async canReadUser() {
-    const session = await this.basicAuthCheck();
-    
+    const session = await UserAuthGuard.basicAuthCheck();
+
     if (session.success === false) return session;
-    
-    if (this.isSuperAdmin(session)) return { success: true };
+
+    if (UserAuthGuard.isSuperAdmin(session)) return { success: true };
 
     const permission = await PermissionServices.findFirst({
       where: {
@@ -56,10 +56,10 @@ class UserAuthGuard extends BaseAuthGuard {
   }
 
   static async canCreateUser() {
-    const session = await this.basicAuthCheck();
+    const session = await UserAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
-    
+
     const permission = await PermissionServices.findFirst({
       where: {
         AND: [
@@ -89,10 +89,10 @@ class UserAuthGuard extends BaseAuthGuard {
   }
 
   static async canUpdateUser() {
-    const session = await this.basicAuthCheck();
+    const session = await UserAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
-    
+
     // check if user exist before udpate
 
     const permission = await PermissionServices.findFirst({
@@ -124,12 +124,12 @@ class UserAuthGuard extends BaseAuthGuard {
   }
 
   static async canDeleteUser() {
-    const session = await this.basicAuthCheck();
+    const session = await UserAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
     // check if user exist before delete
-    
+
     const permission = await PermissionServices.findFirst({
       where: {
         AND: [

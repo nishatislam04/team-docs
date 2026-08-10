@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback, useTransition } from "react";
+import { motion } from "framer-motion";
+import { File, FileText, Folder, Loader2, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState, useTransition } from "react";
+import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
+import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Loader2, Search, FileText, Folder, File } from "lucide-react";
 import { searchAction } from "../actions/searchAction";
-import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 import { navigateToSearchResult } from "../utils/searchNavigation";
-import { motion } from "framer-motion";
 
 /**
  * SearchDialog Component - Global Search Interface
@@ -164,7 +164,7 @@ export default function SearchDialog({ open, onOpenChange }) {
       setQuery("");
       setResults([]);
     },
-    [router, setSelectedSection, setSelectedPage, onOpenChange]
+    [router, setSelectedSection, setSelectedPage, onOpenChange],
   );
 
   /**
@@ -199,7 +199,7 @@ export default function SearchDialog({ open, onOpenChange }) {
         </mark>
       ) : (
         part
-      )
+      ),
     );
   };
 

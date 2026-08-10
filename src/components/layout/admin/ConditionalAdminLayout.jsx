@@ -1,10 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import AdminSidebar from "@/components/layout/admin/AdminSidebar";
 import AdminHeader from "@/components/layout/admin/AdminHeader";
 import { AdminRefreshProvider } from "@/components/layout/admin/AdminRefreshContext";
+import AdminSidebar from "@/components/layout/admin/AdminSidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 /**
  * Conditional Admin Layout Component

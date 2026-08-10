@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { WorkspaceSchema } from "@/lib/schemas/workspaceSchema";
-import { createWorkspace } from "@/system/Actions/WorkspaceActions";
+import { useEffect, useMemo } from "react";
 import slugify from "slugify";
-
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -16,10 +14,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
+import { WorkspaceSchema } from "@/lib/schemas/workspaceSchema";
+import { createWorkspace } from "@/system/Actions/WorkspaceActions";
 
 export default function WorkspaceForm({ isDrawerOpen, setIsDrawerOpen }) {
   const router = useRouter();
@@ -30,7 +29,7 @@ export default function WorkspaceForm({ isDrawerOpen, setIsDrawerOpen }) {
       slug: "",
       description: "",
     }),
-    []
+    [],
   );
 
   const successToast = useMemo(
@@ -38,7 +37,7 @@ export default function WorkspaceForm({ isDrawerOpen, setIsDrawerOpen }) {
       title: "Workspace created successfully",
       description: "Your new workspace is ready to use!",
     }),
-    []
+    [],
   );
 
   // Use the custom server form action hook
@@ -70,7 +69,7 @@ export default function WorkspaceForm({ isDrawerOpen, setIsDrawerOpen }) {
           lower: true,
           strict: true,
           remove: /[*+~.()'"!:@]/g,
-        })
+        }),
       );
     } else {
       setValue("slug", "");

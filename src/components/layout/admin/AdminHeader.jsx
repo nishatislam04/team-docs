@@ -1,8 +1,14 @@
 "use client";
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
+import { LogOut, RefreshCw, Settings, Shield, User } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { useTransition } from "react";
+import { useAdminRefresh } from "@/components/layout/admin/AdminRefreshContext";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,13 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Settings, LogOut, User, Shield, RefreshCw } from "lucide-react";
-import { signOut } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { useAdminRefresh } from "@/components/layout/admin/AdminRefreshContext";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 /**
  * Admin Header Component

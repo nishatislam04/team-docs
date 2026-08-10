@@ -10,9 +10,5 @@ import { getAllPermissionsFn } from "../actions/getAllPermissions";
  * @returns {Object} An object containing paginated permissions data, state, and handlers.
  */
 export function usePermissions(shouldStartFetch, setShouldStartFetch) {
-  return usePaginatedFetch(
-    getAllPermissionsFn,
-    shouldStartFetch,
-    setShouldStartFetch
-  );
+  return usePaginatedFetch(getAllPermissionsFn, shouldStartFetch, setShouldStartFetch);
 }

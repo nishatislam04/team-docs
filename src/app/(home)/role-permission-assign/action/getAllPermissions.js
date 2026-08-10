@@ -22,7 +22,7 @@ export async function getAllPermissions(roleId) {
 
   const finalRolePermissionListings = RolePermissionAssignDTO.mapPermissionsWithSelection(
     allPermissions,
-    preSelectPermissions
+    preSelectPermissions,
   );
   return finalRolePermissionListings;
 }

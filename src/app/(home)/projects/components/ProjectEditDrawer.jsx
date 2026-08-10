@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
+import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -12,8 +12,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-
-import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import {
   Form,
   FormControl,
@@ -89,7 +87,6 @@ export default function ProjectEditDrawer() {
         description: selectedProject.description,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProject, form.reset]);
 
   return (

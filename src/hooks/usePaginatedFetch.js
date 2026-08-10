@@ -39,7 +39,7 @@ export function usePaginatedFetch(serverAction, shouldStartFetch, setShouldStart
 
       router.push(`${pathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams]
+    [pathname, router, searchParams],
   );
 
   // Handle column header click for sorting
@@ -54,7 +54,7 @@ export function usePaginatedFetch(serverAction, shouldStartFetch, setShouldStart
         updateSort(column, "asc");
       }
     },
-    [sortBy, sortOrder, updateSort]
+    [sortBy, sortOrder, updateSort],
   );
 
   // Use memoized callback to prevent recreation of function on every render

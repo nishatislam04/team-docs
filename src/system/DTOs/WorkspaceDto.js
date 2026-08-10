@@ -19,6 +19,6 @@ export class WorkspaceDTO {
   }
 
   static toCollection(workspaces) {
-    return workspaces.map((workspace) => this.toResponse(workspace));
+    return workspaces.map((workspace) => WorkspaceDTO.toResponse(workspace));
   }
 }

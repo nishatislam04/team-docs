@@ -1,22 +1,18 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
+import { useCallback, useMemo } from "react";
+import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
-import { useCallback, useMemo } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { assignPermissionsToRole } from "@/system/Actions/RolePermissionAssignActions";
-import { Loader2 } from "lucide-react";
-import { useServerFormAction } from "@/hooks/useServerFormAction";
-import { RolePermissionAssignSchema } from "@/lib/schemas/RolePermissionAssignSchema";
-import { useRolePermissions } from "./hooks/useRolePermissions";
-import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import {
   Form,
   FormControl,
@@ -26,6 +22,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useServerFormAction } from "@/hooks/useServerFormAction";
+import { RolePermissionAssignSchema } from "@/lib/schemas/RolePermissionAssignSchema";
+import { assignPermissionsToRole } from "@/system/Actions/RolePermissionAssignActions";
+import { useRolePermissions } from "./hooks/useRolePermissions";
 
 export default function RolePermissionDialog({ isOpen, onOpenChange, roleId }) {
   const defaultValues = useMemo(
@@ -33,7 +33,7 @@ export default function RolePermissionDialog({ isOpen, onOpenChange, roleId }) {
       roleId,
       permissions: [],
     }),
-    [roleId]
+    [roleId],
   );
 
   const handleSuccess = useCallback(() => {
@@ -104,7 +104,7 @@ export default function RolePermissionDialog({ isOpen, onOpenChange, roleId }) {
                                       return checked
                                         ? field.onChange([...field.value, permission.id])
                                         : field.onChange(
-                                            field.value?.filter((value) => value !== permission.id)
+                                            field.value?.filter((value) => value !== permission.id),
                                           );
                                     }}
                                   />

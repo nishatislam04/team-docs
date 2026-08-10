@@ -1,5 +1,6 @@
 "use client";
 
+import { Sparkles } from "lucide-react";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import {
   Card,
@@ -9,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
 import { useProjectDrawerStore } from "../store/useProjectDrawerStore";
 
 export default function NoProjectUI() {

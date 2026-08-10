@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import {
   dismissAllToasts,
   dismissToast,
@@ -11,7 +12,6 @@ import {
   toastSuccess,
   toastWarning,
 } from "@/lib/toast";
-import { useCallback } from "react";
 
 /**
  * Custom hook for toast notifications
@@ -105,49 +105,49 @@ export const useToast = () => {
     (message = "Changes saved successfully") => {
       return success("Success", message);
     },
-    [success]
+    [success],
   );
 
   const showFormError = useCallback(
     (message = "Please check your input and try again") => {
       return error("Error", message);
     },
-    [error]
+    [error],
   );
 
   const showNetworkError = useCallback(
     (message = "Please check your connection and try again") => {
       return error("Network Error", message);
     },
-    [error]
+    [error],
   );
 
   const showValidationError = useCallback(
     (message = "Please fix the errors and try again") => {
       return warning("Validation Error", message);
     },
-    [warning]
+    [warning],
   );
 
   const showDeleteSuccess = useCallback(
     (itemName = "Item") => {
       return success("Deleted", `${itemName} has been successfully deleted`);
     },
-    [success]
+    [success],
   );
 
   const showCreateSuccess = useCallback(
     (itemName = "Item") => {
       return success("Created", `${itemName} has been successfully created`);
     },
-    [success]
+    [success],
   );
 
   const showUpdateSuccess = useCallback(
     (itemName = "Item") => {
       return success("Updated", `${itemName} has been successfully updated`);
     },
-    [success]
+    [success],
   );
 
   // Handle async operations with loading states
@@ -159,7 +159,7 @@ export const useToast = () => {
         successMessage = "Operation completed successfully",
         errorMessage = "Something went wrong",
         showLoading = true,
-      } = {}
+      } = {},
     ) => {
       let loadingToastId;
 
@@ -180,7 +180,7 @@ export const useToast = () => {
         throw error;
       }
     },
-    [loading, success, error, dismiss]
+    [loading, success, error, dismiss],
   );
 
   return {

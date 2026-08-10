@@ -3,8 +3,8 @@ import prisma from "@/lib/prisma";
 
 export class BaseService {
   static get model() {
-    if (!this.modelName) throw new Error("modelName not defined in child class");
-    return prisma[this.modelName];
+    if (!BaseService.modelName) throw new Error("modelName not defined in child class");
+    return prisma[BaseService.modelName];
   }
 
   /**
@@ -14,7 +14,7 @@ export class BaseService {
    */
   static async hasResource({ where }) {
     try {
-      const hasResource = await this.model.findFirst({ where });
+      const hasResource = await BaseService.model.findFirst({ where });
       return !!hasResource;
     } catch (error) {
       Logger.error(error.message, "failed hasResource on BaseService");
@@ -38,10 +38,10 @@ export class BaseService {
       if (include && select)
         throw new Error("You cannot use both 'select' and 'include' in the same Prisma query.");
 
-      const resource = await this.model.findFirst(queryOptions);
+      const resource = await BaseService.model.findFirst(queryOptions);
 
-      if (this.dto && typeof this.dto.toResponse === "function")
-        return this.dto.toResponse(resource);
+      if (BaseService.dto && typeof BaseService.dto.toResponse === "function")
+        return BaseService.dto.toResponse(resource);
 
       return resource;
     } catch (error) {
@@ -66,10 +66,10 @@ export class BaseService {
       if (include) queryOptions.include = include;
       else if (select) queryOptions.select = select;
 
-      const resource = await this.model.findUnique(queryOptions);
+      const resource = await BaseService.model.findUnique(queryOptions);
 
-      if (this.dto && typeof this.dto.toResponse === "function")
-        return this.dto.toResponse(resource);
+      if (BaseService.dto && typeof BaseService.dto.toResponse === "function")
+        return BaseService.dto.toResponse(resource);
     } catch (error) {
       Logger.error(error.message, "failed getResource on BaseService");
     }
@@ -82,7 +82,7 @@ export class BaseService {
    */
   static async countResources({ where = {} }) {
     try {
-      const count = await this.model.count({ where });
+      const count = await BaseService.model.count({ where });
       return count;
     } catch (error) {
       Logger.error(error.message, "failed countResources on BaseService");
@@ -121,10 +121,10 @@ export class BaseService {
         queryOptions.take = take;
       }
 
-      const allResources = await this.model.findMany(queryOptions);
+      const allResources = await BaseService.model.findMany(queryOptions);
 
-      if (this.dto && typeof this.dto.toCollection === "function")
-        return this.dto.toCollection(allResources);
+      if (BaseService.dto && typeof BaseService.dto.toCollection === "function")
+        return BaseService.dto.toCollection(allResources);
 
       return allResources;
     } catch (error) {

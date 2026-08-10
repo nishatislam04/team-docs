@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,9 +14,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-
 import { deleteUser } from "@/system/Actions/UserActions";
-import { toast } from "sonner";
 
 export default function UserDeleteDialog({ user, setShouldRefetch }) {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { EditorService } from "../services/EditorService";
 
 /**
@@ -101,7 +101,7 @@ export const useEditorContent = ({
         setIsLoading(false);
       }
     },
-    [pageId]
+    [pageId],
   );
 
   /**
@@ -159,7 +159,7 @@ export const useEditorContent = ({
         setIsSaving(false);
       }
     },
-    [pageId, content, metadata]
+    [pageId, content, metadata],
   );
 
   /**
@@ -187,7 +187,7 @@ export const useEditorContent = ({
         }
       }
     },
-    [autoSave, autoSaveDelay, pageId, saveContent]
+    [autoSave, autoSaveDelay, pageId, saveContent],
   );
 
   /**

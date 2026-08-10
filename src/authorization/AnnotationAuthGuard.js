@@ -1,8 +1,8 @@
 "use server";
 
+import Logger from "@/lib/Logger";
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
-import Logger from "@/lib/Logger";
 
 /**
  * AnnotationAuthGuard - Authorization guard for annotation-related operations
@@ -17,9 +17,9 @@ class AnnotationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Annotation object with page access info
    */
   static async protect(annotationId) {
-    const session = await this.requireAuth();
+    const session = await AnnotationAuthGuard.requireAuth();
 
-    const annotation = await this.validateResourceExists(
+    const annotation = await AnnotationAuthGuard.validateResourceExists(
       (where) =>
         prisma.annotation.findUnique({
           ...where,
@@ -48,16 +48,16 @@ class AnnotationAuthGuard extends BaseAuthGuard {
           },
         }),
       { where: { id: annotationId } },
-      "Annotation"
+      "Annotation",
     );
 
     // Check if user has access to the page containing this annotation
     const membership = annotation.page.section.project.workspace.members[0];
     if (!membership) {
       Logger.warn(
-        `User ${session.id} attempted to access annotation ${annotationId} without page access`
+        `User ${session.id} attempted to access annotation ${annotationId} without page access`,
       );
-      this.redirectUnauthorized();
+      AnnotationAuthGuard.redirectUnauthorized();
     }
 
     return { annotation, membership };
@@ -69,9 +69,9 @@ class AnnotationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Page object if user can annotate
    */
   static async protectCreation(pageId) {
-    const session = await this.requireAuth();
+    const session = await AnnotationAuthGuard.requireAuth();
 
-    const page = await this.validateResourceExists(
+    const page = await AnnotationAuthGuard.validateResourceExists(
       (where) =>
         prisma.page.findUnique({
           ...where,
@@ -95,25 +95,25 @@ class AnnotationAuthGuard extends BaseAuthGuard {
           },
         }),
       { where: { id: pageId } },
-      "Page"
+      "Page",
     );
 
     // Check if user has access to the page
     const membership = page.section.project.workspace.members[0];
     if (!membership) {
       Logger.warn(
-        `User ${session.id} attempted to create annotation on page ${pageId} without access`
+        `User ${session.id} attempted to create annotation on page ${pageId} without access`,
       );
-      this.redirectUnauthorized();
+      AnnotationAuthGuard.redirectUnauthorized();
     }
 
     // Check if user can create annotations
-    const canAnnotate = await this.canCreateAnnotation(session.id, pageId);
+    const canAnnotate = await AnnotationAuthGuard.canCreateAnnotation(session.id, pageId);
     if (!canAnnotate) {
       Logger.warn(
-        `User ${session.id} attempted to create annotation on page ${pageId} without permission`
+        `User ${session.id} attempted to create annotation on page ${pageId} without permission`,
       );
-      this.redirectUnauthorized();
+      AnnotationAuthGuard.redirectUnauthorized();
     }
 
     return { page, membership };
@@ -125,21 +125,26 @@ class AnnotationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Annotation object if authorized
    */
   static async protectUpdate(annotationId) {
-    const session = await this.requireAuth();
+    const session = await AnnotationAuthGuard.requireAuth();
 
-    const { annotation, membership } = await this.protect(annotationId);
+    const { annotation, membership } = await AnnotationAuthGuard.protect(annotationId);
 
     // Users can only update their own annotations unless they have special permissions
     const canUpdate =
-      this.isSuperAdmin(session) ||
-      this.isOwner(annotation.userId) ||
-      (await this.hasPermission(session.id, "edit:annotation", "page", annotation.pageId));
+      AnnotationAuthGuard.isSuperAdmin(session) ||
+      AnnotationAuthGuard.isOwner(annotation.userId) ||
+      (await AnnotationAuthGuard.hasPermission(
+        session.id,
+        "edit:annotation",
+        "page",
+        annotation.pageId,
+      ));
 
     if (!canUpdate) {
       Logger.warn(
-        `User ${session.id} attempted to update annotation ${annotationId} without permission`
+        `User ${session.id} attempted to update annotation ${annotationId} without permission`,
       );
-      this.redirectUnauthorized();
+      AnnotationAuthGuard.redirectUnauthorized();
     }
 
     return { annotation, membership };
@@ -151,21 +156,26 @@ class AnnotationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Annotation object if authorized
    */
   static async protectDeletion(annotationId) {
-    const session = await this.requireAuth();
+    const session = await AnnotationAuthGuard.requireAuth();
 
-    const { annotation, membership } = await this.protect(annotationId);
+    const { annotation, membership } = await AnnotationAuthGuard.protect(annotationId);
 
     // Users can delete their own annotations, or moderators can delete any
     const canDelete =
-      this.isSuperAdmin(session) ||
-      this.isOwner(annotation.userId) ||
-      (await this.hasPermission(session.id, "delete:annotation", "page", annotation.pageId));
+      AnnotationAuthGuard.isSuperAdmin(session) ||
+      AnnotationAuthGuard.isOwner(annotation.userId) ||
+      (await AnnotationAuthGuard.hasPermission(
+        session.id,
+        "delete:annotation",
+        "page",
+        annotation.pageId,
+      ));
 
     if (!canDelete) {
       Logger.warn(
-        `User ${session.id} attempted to delete annotation ${annotationId} without permission`
+        `User ${session.id} attempted to delete annotation ${annotationId} without permission`,
       );
-      this.redirectUnauthorized();
+      AnnotationAuthGuard.redirectUnauthorized();
     }
 
     return { annotation, membership };
@@ -177,21 +187,26 @@ class AnnotationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Annotation object if authorized
    */
   static async protectResolution(annotationId) {
-    const session = await this.requireAuth();
+    const session = await AnnotationAuthGuard.requireAuth();
 
-    const { annotation, membership } = await this.protect(annotationId);
+    const { annotation, membership } = await AnnotationAuthGuard.protect(annotationId);
 
     // Users can resolve their own annotations, or moderators can resolve any
     const canResolve =
-      this.isSuperAdmin(session) ||
-      this.isOwner(annotation.userId) ||
-      (await this.hasPermission(session.id, "resolve:annotation", "page", annotation.pageId));
+      AnnotationAuthGuard.isSuperAdmin(session) ||
+      AnnotationAuthGuard.isOwner(annotation.userId) ||
+      (await AnnotationAuthGuard.hasPermission(
+        session.id,
+        "resolve:annotation",
+        "page",
+        annotation.pageId,
+      ));
 
     if (!canResolve) {
       Logger.warn(
-        `User ${session.id} attempted to resolve annotation ${annotationId} without permission`
+        `User ${session.id} attempted to resolve annotation ${annotationId} without permission`,
       );
-      this.redirectUnauthorized();
+      AnnotationAuthGuard.redirectUnauthorized();
     }
 
     return { annotation, membership };
@@ -204,21 +219,21 @@ class AnnotationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Page and authorized filters
    */
   static async protectList(pageId, filters = {}) {
-    const session = await this.requireAuth();
+    const session = await AnnotationAuthGuard.requireAuth();
 
-    const { page, membership } = await this.protectCreation(pageId);
+    const { page, membership } = await AnnotationAuthGuard.protectCreation(pageId);
 
     // Apply user-specific filters if not admin
     let authorizedFilters = { ...filters, pageId };
 
-    if (!this.isSuperAdmin(session)) {
+    if (!AnnotationAuthGuard.isSuperAdmin(session)) {
       // Regular users might only see their own annotations or public ones
       // This depends on your business logic
-      const canViewAll = await this.hasPermission(
+      const canViewAll = await AnnotationAuthGuard.hasPermission(
         session.id,
         "view:all_annotations",
         "page",
-        pageId
+        pageId,
       );
 
       if (!canViewAll) {
@@ -244,7 +259,7 @@ class AnnotationAuthGuard extends BaseAuthGuard {
   static async canCreateAnnotation(userId, pageId) {
     try {
       // Check if user has annotation permission for this page
-      return await this.hasPermission(userId, "create:annotation", "page", pageId);
+      return await AnnotationAuthGuard.hasPermission(userId, "create:annotation", "page", pageId);
     } catch (error) {
       Logger.error("Failed to check annotation creation permission", error);
       return false;
@@ -260,16 +275,21 @@ class AnnotationAuthGuard extends BaseAuthGuard {
    */
   static async getAuthorizedAnnotations(pageId, userId, options = {}) {
     try {
-      const session = await this.getSession();
+      const session = await AnnotationAuthGuard.getSession();
 
       // Verify page access first
-      await this.protectCreation(pageId);
+      await AnnotationAuthGuard.protectCreation(pageId);
 
       let whereClause = { pageId };
 
       // Apply authorization filters
-      if (!this.isSuperAdmin(session)) {
-        const canViewAll = await this.hasPermission(userId, "view:all_annotations", "page", pageId);
+      if (!AnnotationAuthGuard.isSuperAdmin(session)) {
+        const canViewAll = await AnnotationAuthGuard.hasPermission(
+          userId,
+          "view:all_annotations",
+          "page",
+          pageId,
+        );
 
         if (!canViewAll) {
           whereClause = {
@@ -307,12 +327,12 @@ class AnnotationAuthGuard extends BaseAuthGuard {
    */
   static async canModerateAnnotations(userId, pageId) {
     try {
-      const session = await this.getSession();
+      const session = await AnnotationAuthGuard.getSession();
 
-      if (this.isSuperAdmin(session)) return true;
+      if (AnnotationAuthGuard.isSuperAdmin(session)) return true;
 
       // Check for moderation permissions
-      return await this.hasPermission(userId, "moderate:annotation", "page", pageId);
+      return await AnnotationAuthGuard.hasPermission(userId, "moderate:annotation", "page", pageId);
     } catch (error) {
       Logger.error("Failed to check annotation moderation permission", error);
       return false;
@@ -325,14 +345,14 @@ class AnnotationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Session if authorized to moderate
    */
   static async protectModeration(pageId) {
-    const session = await this.requireAuth();
+    const session = await AnnotationAuthGuard.requireAuth();
 
-    const canModerate = await this.canModerateAnnotations(session.id, pageId);
+    const canModerate = await AnnotationAuthGuard.canModerateAnnotations(session.id, pageId);
     if (!canModerate) {
       Logger.warn(
-        `User ${session.id} attempted to moderate annotations on page ${pageId} without permission`
+        `User ${session.id} attempted to moderate annotations on page ${pageId} without permission`,
       );
-      this.redirectUnauthorized();
+      AnnotationAuthGuard.redirectUnauthorized();
     }
 
     return session;

@@ -1,20 +1,20 @@
 "use server";
 
-import { BaseAction } from "./BaseAction";
-import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import Logger from "@/lib/Logger";
-import { Session } from "@/lib/Session";
 import { revalidatePath } from "next/cache";
-import { SectionSchema } from "@/lib/schemas/SectionSchema";
-import { SectionModel } from "../Models/SectionModel";
-import { ProjectServices } from "../Services/ProjectServices";
-import { SectionServices } from "../Services/SectionServices";
-import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 import {
   canCreateSectionAuth,
   canDeleteSectionAuth,
   canUpdateSectionAuth,
 } from "@/authorization/SectionAuthGuard";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import Logger from "@/lib/Logger";
+import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
+import { Session } from "@/lib/Session";
+import { SectionSchema } from "@/lib/schemas/SectionSchema";
+import { SectionModel } from "../Models/SectionModel";
+import { ProjectServices } from "../Services/ProjectServices";
+import { SectionServices } from "../Services/SectionServices";
+import { BaseAction } from "./BaseAction";
 
 class SectionActions extends BaseAction {
   static get schema() {
@@ -27,7 +27,7 @@ class SectionActions extends BaseAction {
     const canCreateSection = await canCreateSectionAuth();
     if (canCreateSection.success === false) return canCreateSection;
 
-    const result = await this.execute(formData);
+    const result = await SectionActions.execute(formData);
 
     if (!result.success) return result;
 
@@ -73,7 +73,7 @@ class SectionActions extends BaseAction {
     Logger.debug(canUpdateSection, "canUpdateSection");
     if (canUpdateSection.success === false) return canUpdateSection;
 
-    const result = await this.execute(formData);
+    const result = await SectionActions.execute(formData);
 
     if (!result.success) return result;
 

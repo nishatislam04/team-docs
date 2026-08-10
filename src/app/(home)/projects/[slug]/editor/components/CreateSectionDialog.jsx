@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useMemo } from "react";
 import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +25,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { SectionSchema } from "@/lib/schemas/SectionSchema";
 import { createSection } from "@/system/Actions/SectionActions";
-import { useCallback, useMemo } from "react";
 
 export default function CreateSectionDialog({ project, isDialogOpen, setIsDialogOpen }) {
   const defaultValues = useMemo(
@@ -33,7 +33,7 @@ export default function CreateSectionDialog({ project, isDialogOpen, setIsDialog
       description: "",
       projectId: project.id,
     }),
-    [project.id]
+    [project.id],
   );
 
   const handleSuccess = useCallback(() => {

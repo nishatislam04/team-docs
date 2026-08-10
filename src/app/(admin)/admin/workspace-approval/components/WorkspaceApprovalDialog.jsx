@@ -1,5 +1,8 @@
 "use client";
 
+import { CheckCircle, Loader2 } from "lucide-react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { useAdminRefresh } from "@/components/layout/admin/AdminRefreshContext";
 import {
   AlertDialog,
@@ -13,9 +16,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import Logger from "@/lib/Logger";
 import { approveWorkspace } from "@/system/Actions/WorkspaceActions";
-import { CheckCircle, Loader2 } from "lucide-react";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
 
 /**
  * Workspace Approval Confirmation Dialog

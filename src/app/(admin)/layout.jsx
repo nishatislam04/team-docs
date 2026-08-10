@@ -1,7 +1,7 @@
+import { Suspense } from "react";
 import ConditionalAdminLayout from "@/components/layout/admin/ConditionalAdminLayout";
 import { Session } from "@/lib/Session";
 import { ThemeProvider } from "@/provider/ThemeProvider";
-import { Suspense } from "react";
 
 export default async function AdminLayout({ children }) {
   return (

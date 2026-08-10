@@ -1,14 +1,14 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { AlertCircle, RefreshCw, ArrowLeft } from "lucide-react";
+import { AlertCircle, ArrowLeft, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 /**
  * Admin Error Page
- * 
+ *
  * Error boundary for admin routes providing:
  * - Admin-specific error handling
  * - Recovery options for admin users
@@ -50,9 +50,7 @@ export default function AdminError({ error, reset }) {
               </Link>
             </Button>
             <Button variant="ghost" asChild>
-              <Link href="/home">
-                Switch to User Panel
-              </Link>
+              <Link href="/home">Switch to User Panel</Link>
             </Button>
           </div>
         </CardContent>

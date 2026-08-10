@@ -1,5 +1,9 @@
+import { Pencil } from "lucide-react";
+import { useState } from "react";
+import ClientErrorUI from "@/components/abstracts/clientErrorUI";
 import TableLoading from "@/components/loading/TableLoading";
 import SortIcon from "@/components/shared/SortIcon";
+import TablePagination from "@/components/shared/TablePagination";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -9,13 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Pencil } from "lucide-react";
 import { useWorkspaces } from "../hooks/useWorkspaces";
-import ClientErrorUI from "@/components/abstracts/clientErrorUI";
-import TablePagination from "@/components/shared/TablePagination";
 import DeleteWorkspace from "./DeleteWorkspace";
 import PermissionManage from "./PermissionManage";
-import { useState } from "react";
 
 export default function WorkspaceListings({
   hasWorkspaces,

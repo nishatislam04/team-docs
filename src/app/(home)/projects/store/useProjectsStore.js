@@ -37,7 +37,7 @@ export const useProjectsStore = create((set, get) => ({
   /** Replace optimistic temp project with real project */
   commitOptimistic: (tempId, realProject) => {
     const next = get().projects.map((p) =>
-      p.id === tempId ? { ...realProject, __optimistic: false } : p
+      p.id === tempId ? { ...realProject, __optimistic: false } : p,
     );
     set({ projects: next });
   },

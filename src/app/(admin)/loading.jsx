@@ -1,6 +1,6 @@
+import { Crown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Crown } from "lucide-react";
 
 export default function AdminLoading() {
   return (

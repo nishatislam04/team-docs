@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 import { SidebarMenu } from "@/components/ui/sidebar";
 import SectionItem from "./SectionItem";
-import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 
 export default function SectionList({ sections }) {
   const [openSections, setOpenSections] = useState({});
@@ -14,7 +14,7 @@ export default function SectionList({ sections }) {
     if (selectedPage && sections?.length > 0) {
       // Find the section containing the selected page
       const sectionWithSelectedPage = sections.find((section) =>
-        section.pages?.some((page) => page.id === selectedPage)
+        section.pages?.some((page) => page.id === selectedPage),
       );
 
       if (sectionWithSelectedPage) {

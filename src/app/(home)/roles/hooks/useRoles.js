@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { usePaginatedFetch } from "@/hooks/usePaginatedFetch";
 import { getAllRolesFn } from "../actions/getAllRoles";
 
@@ -13,11 +13,7 @@ export function useRoles(shouldStartFetch, setShouldStartFetch) {
   const [openPermissionAssignDialog, setOpenPermissionAssignDialog] = useState(false);
   const selectedRoleId = useRef(null);
 
-  const paginatedData = usePaginatedFetch(
-    getAllRolesFn,
-    shouldStartFetch,
-    setShouldStartFetch
-  );
+  const paginatedData = usePaginatedFetch(getAllRolesFn, shouldStartFetch, setShouldStartFetch);
 
   return {
     ...paginatedData,

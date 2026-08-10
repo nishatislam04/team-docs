@@ -1,7 +1,7 @@
-import { auth } from "@/app/auth";
-import { UserModel } from "@/system/Models/UserModel";
 import { forbidden } from "next/navigation";
 import { cache } from "react";
+import { auth } from "@/app/auth";
+import { UserModel } from "@/system/Models/UserModel";
 import Logger from "./Logger";
 
 export class Session {
@@ -23,7 +23,7 @@ export class Session {
    * @returns {Promise<boolean>}
    */
   static async isAuthenticated() {
-    const user = await this.getCurrentUser();
+    const user = await Session.getCurrentUser();
     return !!user;
   }
 
@@ -32,12 +32,12 @@ export class Session {
    * @returns {Promise<void>}
    */
   static async requireAuth() {
-    const isAuth = await this.isAuthenticated();
+    const isAuth = await Session.isAuthenticated();
     if (!isAuth) return forbidden();
   }
 
   static async requireSuperAdmin() {
-    const user = await this.getCurrentUser();
+    const user = await Session.getCurrentUser();
     if (!user || !user.isSuperAdmin) return forbidden();
   }
 
@@ -52,7 +52,7 @@ export class Session {
         await UserModel.findUnique({
           where: { id },
           select: { workspaceId: true },
-        })
+        }),
       );
 
       return user?.workspaceId;
@@ -68,13 +68,13 @@ export class Session {
    * @returns {Promise<string|null>} The workspaceId or null if not found
    */
   static async getWorkspaceIdForUser() {
-    const session = await this.getCurrentUser();
+    const session = await Session.getCurrentUser();
     if (!session) return null;
 
     // Try JWT first
     if (session.workspaceId) return session.workspaceId;
 
     // Fallback to database
-    return this.getWorkspaceId(session.id);
+    return Session.getWorkspaceId(session.id);
   }
 }

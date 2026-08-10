@@ -1,8 +1,8 @@
 "use server";
 
+import bcrypt from "bcryptjs";
 import { signIn } from "@/app/auth";
 import prisma from "@/lib/prisma";
-import bcrypt from "bcryptjs";
 import { signUpSchema } from "./signupSchema";
 
 export async function signup(data) {

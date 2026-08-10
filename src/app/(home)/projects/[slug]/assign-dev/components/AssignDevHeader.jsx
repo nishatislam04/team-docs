@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,11 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useState, useEffect } from "react";
+import { assignDevAction } from "@/system/Actions/ProjectPermissionAction";
 import { getMembers } from "../actions/getMembers";
 import { getProjectPermission } from "../actions/getProjectPermission";
-import { assignDevAction } from "@/system/Actions/ProjectPermissionAction";
-import { toast } from "sonner";
 
 export default function AssignDevHeader({
   projectName,
@@ -63,20 +63,20 @@ export default function AssignDevHeader({
   const filteredMembers =
     members?.length > 0
       ? members?.filter((member) =>
-          `${member.username} ${member.email}`.toLowerCase().includes(search.toLowerCase())
+          `${member.username} ${member.email}`.toLowerCase().includes(search.toLowerCase()),
         )
       : [];
 
   // Toggle selection
   const toggleUser = (userId) => {
     setSelectedUsers((prev) =>
-      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
+      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId],
     );
   };
 
   const handlePermissionChange = (permissionId, checked) => {
     setSelectedPermissions((prev) =>
-      checked ? [...prev, permissionId] : prev.filter((id) => id !== permissionId)
+      checked ? [...prev, permissionId] : prev.filter((id) => id !== permissionId),
     );
   };
 
@@ -131,7 +131,7 @@ export default function AssignDevHeader({
   const getSelectedPermissionNames = () => {
     if (selectedPermissions.length === 0) return "Project Permission";
     const selectedPermissionObjects = permissions.filter((permission) =>
-      selectedPermissions.includes(permission.id)
+      selectedPermissions.includes(permission.id),
     );
     return `${selectedPermissionObjects.length} Permission${
       selectedPermissionObjects.length > 1 ? "s" : ""

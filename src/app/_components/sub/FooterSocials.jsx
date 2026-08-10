@@ -1,8 +1,8 @@
 "use client";
 
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Bird, BriefcaseBusiness, Camera, GitFork, ThumbsUp } from "lucide-react";
 import Link from "next/link";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const socialLinks = [
   { name: "GitHub", href: "#", icon: GitFork },
@@ -21,7 +21,8 @@ export default function FooterSocials() {
             <Link
               href={social.href}
               aria-label={social.name}
-              className="bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground rounded-full p-2 transition-colors">
+              className="bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground rounded-full p-2 transition-colors"
+            >
               <social.icon className="h-5 w-5" />
             </Link>
           </TooltipTrigger>

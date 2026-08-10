@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import prisma from "@/lib/prisma";
 import { PermissionServices } from "@/system/Services/PermissionServices";
+import { BaseAuthGuard } from "./BaseAuthGuard";
 
 /**
  * PermissionAuthGuard - Authorization guard for permission-related operations
@@ -13,11 +13,11 @@ import { PermissionServices } from "@/system/Services/PermissionServices";
  */
 class PermissionAuthGuard extends BaseAuthGuard {
   static async canPermissionView() {
-    const session = await this.basicAuthCheck();
+    const session = await PermissionAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
-    if (this.isSuperAdmin(session)) return { success: true };
+    if (PermissionAuthGuard.isSuperAdmin(session)) return { success: true };
 
     const permission = await PermissionServices.findFirst({
       where: {
@@ -48,7 +48,7 @@ class PermissionAuthGuard extends BaseAuthGuard {
   }
 
   static async canPermissionCreate() {
-    const session = await this.basicAuthCheck();
+    const session = await PermissionAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -81,7 +81,7 @@ class PermissionAuthGuard extends BaseAuthGuard {
   }
 
   static async canPermissionUpdate() {
-    const session = await this.basicAuthCheck();
+    const session = await PermissionAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -114,7 +114,7 @@ class PermissionAuthGuard extends BaseAuthGuard {
   }
 
   static async canPermissionDelete() {
-    const session = await this.basicAuthCheck();
+    const session = await PermissionAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -152,25 +152,25 @@ class PermissionAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Permission object if authorized
    */
   static async protect(permissionId) {
-    const session = await this.requireAuth();
+    const session = await PermissionAuthGuard.requireAuth();
 
-    const permission = await this.validateResourceExists(
+    const permission = await PermissionAuthGuard.validateResourceExists(
       (where) => prisma.permission.findUnique(where),
       { where: { id: permissionId } },
-      "Permission"
+      "Permission",
     );
 
     // Super admins can access any permission
-    if (this.isSuperAdmin(session)) {
+    if (PermissionAuthGuard.isSuperAdmin(session)) {
       return permission;
     }
 
     // Users can only access their own created permissions
-    if (permission.ownerId && !this.isOwner(permission.ownerId)) {
+    if (permission.ownerId && !PermissionAuthGuard.isOwner(permission.ownerId)) {
       Logger.warn(
-        `User ${session.id} attempted to access permission ${permissionId} without ownership`
+        `User ${session.id} attempted to access permission ${permissionId} without ownership`,
       );
-      this.redirectUnauthorized();
+      PermissionAuthGuard.redirectUnauthorized();
     }
 
     return permission;
@@ -181,13 +181,13 @@ class PermissionAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} User session if authorized
    */
   static async protectCreation() {
-    const session = await this.requireAuth();
+    const session = await PermissionAuthGuard.requireAuth();
 
     // Check if user can create permissions
-    const canCreate = await this.canCreatePermission(session.id);
+    const canCreate = await PermissionAuthGuard.canCreatePermission(session.id);
     if (!canCreate) {
       Logger.warn(`User ${session.id} attempted to create permission without authorization`);
-      this.redirectUnauthorized();
+      PermissionAuthGuard.redirectUnauthorized();
     }
 
     return session;
@@ -200,23 +200,23 @@ class PermissionAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Permission object if authorized
    */
   static async protectUpdate(permissionId, updateData = {}) {
-    const session = await this.requireAuth();
+    const session = await PermissionAuthGuard.requireAuth();
 
-    const permission = await this.validateResourceExists(
+    const permission = await PermissionAuthGuard.validateResourceExists(
       (where) => prisma.permission.findUnique(where),
       { where: { id: permissionId } },
-      "Permission"
+      "Permission",
     );
 
     // System permissions (no owner) can only be updated by super admins
-    if (!permission.ownerId && !this.isSuperAdmin(session)) {
+    if (!permission.ownerId && !PermissionAuthGuard.isSuperAdmin(session)) {
       Logger.warn(`User ${session.id} attempted to update system permission ${permissionId}`);
-      this.redirectUnauthorized();
+      PermissionAuthGuard.redirectUnauthorized();
     }
 
     // Custom permissions can only be updated by their owners or super admins
-    if (permission.ownerId && !this.isSuperAdmin(session)) {
-      this.requireOwnership(permission.ownerId, "permission");
+    if (permission.ownerId && !PermissionAuthGuard.isSuperAdmin(session)) {
+      PermissionAuthGuard.requireOwnership(permission.ownerId, "permission");
     }
 
     return permission;
@@ -228,30 +228,30 @@ class PermissionAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Permission object if authorized
    */
   static async protectDeletion(permissionId) {
-    const session = await this.requireAuth();
+    const session = await PermissionAuthGuard.requireAuth();
 
-    const permission = await this.validateResourceExists(
+    const permission = await PermissionAuthGuard.validateResourceExists(
       (where) => prisma.permission.findUnique(where),
       { where: { id: permissionId } },
-      "Permission"
+      "Permission",
     );
 
     // System permissions cannot be deleted
     if (!permission.ownerId) {
       Logger.warn(`User ${session.id} attempted to delete system permission ${permissionId}`);
-      this.redirectUnauthorized();
+      PermissionAuthGuard.redirectUnauthorized();
     }
 
     // Custom permissions can only be deleted by their owners or super admins
-    if (!this.isSuperAdmin(session)) {
-      this.requireOwnership(permission.ownerId, "permission");
+    if (!PermissionAuthGuard.isSuperAdmin(session)) {
+      PermissionAuthGuard.requireOwnership(permission.ownerId, "permission");
     }
 
     // Check if permission is in use before deletion
-    const isInUse = await this.isPermissionInUse(permissionId);
+    const isInUse = await PermissionAuthGuard.isPermissionInUse(permissionId);
     if (isInUse) {
       Logger.warn(
-        `User ${session.id} attempted to delete permission ${permissionId} that is in use`
+        `User ${session.id} attempted to delete permission ${permissionId} that is in use`,
       );
       throw new Error("Cannot delete permission that is currently assigned to roles or users");
     }
@@ -266,23 +266,23 @@ class PermissionAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Permission and role info
    */
   static async protectRoleAssignment(permissionId, roleId) {
-    const session = await this.requireAuth();
+    const session = await PermissionAuthGuard.requireAuth();
 
-    const permission = await this.protect(permissionId);
+    const permission = await PermissionAuthGuard.protect(permissionId);
 
-    const role = await this.validateResourceExists(
+    const role = await PermissionAuthGuard.validateResourceExists(
       (where) => prisma.role.findUnique(where),
       { where: { id: roleId } },
-      "Role"
+      "Role",
     );
 
     // Check if user can assign permissions to this role
-    const canAssign = await this.canAssignPermissionToRole(session.id, roleId);
+    const canAssign = await PermissionAuthGuard.canAssignPermissionToRole(session.id, roleId);
     if (!canAssign) {
       Logger.warn(
-        `User ${session.id} attempted to assign permission ${permissionId} to role ${roleId} without authorization`
+        `User ${session.id} attempted to assign permission ${permissionId} to role ${roleId} without authorization`,
       );
-      this.redirectUnauthorized();
+      PermissionAuthGuard.redirectUnauthorized();
     }
 
     return { permission, role };
@@ -296,17 +296,17 @@ class PermissionAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Permission and assignment info
    */
   static async protectUserAssignment(permissionId, userId, projectId) {
-    const session = await this.requireAuth();
+    const session = await PermissionAuthGuard.requireAuth();
 
-    const permission = await this.protect(permissionId);
+    const permission = await PermissionAuthGuard.protect(permissionId);
 
     // Check if user can assign permissions in this project
-    const canAssign = await this.canAssignPermissionToUser(session.id, projectId);
+    const canAssign = await PermissionAuthGuard.canAssignPermissionToUser(session.id, projectId);
     if (!canAssign) {
       Logger.warn(
-        `User ${session.id} attempted to assign permission ${permissionId} to user ${userId} in project ${projectId} without authorization`
+        `User ${session.id} attempted to assign permission ${permissionId} to user ${userId} in project ${projectId} without authorization`,
       );
-      this.redirectUnauthorized();
+      PermissionAuthGuard.redirectUnauthorized();
     }
 
     return { permission, canAssign: true };
@@ -318,10 +318,10 @@ class PermissionAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Session and authorized filters
    */
   static async protectList(filters = {}) {
-    const session = await this.requireAuth();
+    const session = await PermissionAuthGuard.requireAuth();
 
     // Super admins can see all permissions
-    if (this.isSuperAdmin(session)) {
+    if (PermissionAuthGuard.isSuperAdmin(session)) {
       return { session, filters };
     }
 
@@ -341,15 +341,15 @@ class PermissionAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Session if authorized
    */
   static async protectScopeAccess(scope) {
-    const session = await this.requireAuth();
+    const session = await PermissionAuthGuard.requireAuth();
 
     // Check if user can access permissions for this scope
-    const canAccess = await this.canAccessPermissionScope(session.id, scope);
+    const canAccess = await PermissionAuthGuard.canAccessPermissionScope(session.id, scope);
     if (!canAccess) {
       Logger.warn(
-        `User ${session.id} attempted to access permissions for scope ${scope} without authorization`
+        `User ${session.id} attempted to access permissions for scope ${scope} without authorization`,
       );
-      this.redirectUnauthorized();
+      PermissionAuthGuard.redirectUnauthorized();
     }
 
     return session;
@@ -388,8 +388,8 @@ class PermissionAuthGuard extends BaseAuthGuard {
 
       // System roles can only be modified by super admins
       if (role.isSystem) {
-        const session = await this.getSession();
-        return this.isSuperAdmin(session);
+        const session = await PermissionAuthGuard.getSession();
+        return PermissionAuthGuard.isSuperAdmin(session);
       }
 
       // Custom roles can be modified by their owners
@@ -422,7 +422,12 @@ class PermissionAuthGuard extends BaseAuthGuard {
       if (project.workspace.ownerId === userId) return true;
 
       // Check for permission assignment capability
-      return await this.hasPermission(userId, "assign:permission", "project", projectId);
+      return await PermissionAuthGuard.hasPermission(
+        userId,
+        "assign:permission",
+        "project",
+        projectId,
+      );
     } catch (error) {
       Logger.error("Failed to check user permission assignment authorization", error);
       return false;
@@ -476,9 +481,9 @@ class PermissionAuthGuard extends BaseAuthGuard {
    */
   static async getAvailablePermissions(userId, scope = null) {
     try {
-      const session = await this.getSession();
+      const session = await PermissionAuthGuard.getSession();
 
-      if (this.isSuperAdmin(session)) {
+      if (PermissionAuthGuard.isSuperAdmin(session)) {
         // Super admins can see all permissions
         return await prisma.permission.findMany({
           where: scope ? { scope } : undefined,

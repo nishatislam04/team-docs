@@ -1,8 +1,8 @@
 "use client";
 
-import { useToast } from "@/hooks/useToast";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { useToast } from "@/hooks/useToast";
 
 export function AuthorizationToastProvider() {
   const params = useSearchParams();

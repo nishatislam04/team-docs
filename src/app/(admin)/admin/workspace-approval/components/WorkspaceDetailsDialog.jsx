@@ -1,6 +1,19 @@
 "use client";
 
+import {
+  Building,
+  Calendar,
+  Clock,
+  Eye,
+  FileText,
+  FolderOpen,
+  Mail,
+  User,
+  Users,
+} from "lucide-react";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,20 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  User,
-  Mail,
-  Calendar,
-  Building,
-  FileText,
-  Users,
-  FolderOpen,
-  Clock,
-  Eye,
-} from "lucide-react";
 
 /**
  * Workspace Details Dialog Component

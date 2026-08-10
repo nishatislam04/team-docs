@@ -1,18 +1,18 @@
 "use client";
 
+import { BarChart3, LayoutDashboard } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, BarChart3 } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useActiveSection } from "../ActiveSectionContext";
-import { useEffect } from "react";
-import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
 
 /**
  * Admin Dashboard Section Component

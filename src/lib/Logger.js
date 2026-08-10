@@ -72,7 +72,7 @@ class Logger {
           compact: false,
           breakLength: 80,
           indent: 2,
-        })
+        }),
       );
     }
 
@@ -89,46 +89,46 @@ class Logger {
 
   static colorLevel(level) {
     const colorMap = {
-      SUCCESS: { bg: this.colors.bgGreen, fg: this.colors.black },
-      ERROR: { bg: this.colors.bgRed, fg: this.colors.white },
-      DEBUG: { bg: this.colors.bgBlue, fg: this.colors.white },
-      WARN: { bg: this.colors.bgYellow, fg: this.colors.black },
-      INFO: { bg: this.colors.bgCyan, fg: this.colors.black },
-      TRACE: { bg: this.colors.bgMagenta, fg: this.colors.white },
-      IMPORTANT: { bg: this.colors.bgWhite, fg: this.colors.black },
-      CRITICAL: { bg: this.colors.bgBrightRed, fg: this.colors.white },
+      SUCCESS: { bg: Logger.colors.bgGreen, fg: Logger.colors.black },
+      ERROR: { bg: Logger.colors.bgRed, fg: Logger.colors.white },
+      DEBUG: { bg: Logger.colors.bgBlue, fg: Logger.colors.white },
+      WARN: { bg: Logger.colors.bgYellow, fg: Logger.colors.black },
+      INFO: { bg: Logger.colors.bgCyan, fg: Logger.colors.black },
+      TRACE: { bg: Logger.colors.bgMagenta, fg: Logger.colors.white },
+      IMPORTANT: { bg: Logger.colors.bgWhite, fg: Logger.colors.black },
+      CRITICAL: { bg: Logger.colors.bgBrightRed, fg: Logger.colors.white },
     };
 
     const { bg, fg } = colorMap[level] || {
-      bg: this.colors.bgWhite,
-      fg: this.colors.black,
+      bg: Logger.colors.bgWhite,
+      fg: Logger.colors.black,
     };
 
-    const styledLevel = `${bg}${fg}${level} ${this.colors.reset}`;
+    const styledLevel = `${bg}${fg}${level} ${Logger.colors.reset}`;
 
     return { styledLevel, bg, fg };
   }
 
   // STEP 2: color the LOGGER: label using the same color
   static colorLoggerLabel(bg, fg) {
-    return `${bg}${fg} LOGGER: ${this.colors.reset}`;
+    return `${bg}${fg} LOGGER: ${Logger.colors.reset}`;
   }
 
   static print(level, message, data) {
     // Early return if in production to avoid any logging
     if (Logger.isProduction) return;
 
-    const timeOnly = this.getFormattedTime();
-    const timestampGray = `${this.colors.gray}[${timeOnly}]${this.colors.reset}`;
+    const timeOnly = Logger.getFormattedTime();
+    const timestampGray = `${Logger.colors.gray}[${timeOnly}]${Logger.colors.reset}`;
 
     // Get styled level and raw color info
-    const { styledLevel, bg, fg } = this.colorLevel(level);
+    const { styledLevel, bg, fg } = Logger.colorLevel(level);
 
     // Color the LOGGER label with same background/foreground
-    const loggerLabel = this.colorLoggerLabel(bg, fg);
+    const loggerLabel = Logger.colorLoggerLabel(bg, fg);
 
-    const keyLabel = `${this.colors.cyan}→ Message   :${this.colors.reset}`;
-    const valueLabel = `${this.colors.cyan}→ Data      :${this.colors.reset}`;
+    const keyLabel = `${Logger.colors.cyan}→ Message   :${Logger.colors.reset}`;
+    const valueLabel = `${Logger.colors.cyan}→ Data      :${Logger.colors.reset}`;
 
     const hasData = data !== undefined && data !== null;
     const isPrimitive =
@@ -139,11 +139,11 @@ class Logger {
 
     const formattedData = hasData
       ? Logger.formatValue(data)
-      : `${this.colors.gray}null${this.colors.reset}`;
+      : `${Logger.colors.gray}null${Logger.colors.reset}`;
 
     console.log("\n");
     console.log(`${timestampGray} ${loggerLabel}${styledLevel}`);
-    console.log(`${keyLabel} ${this.colors.yellow}${message}${this.colors.reset}`);
+    console.log(`${keyLabel} ${Logger.colors.yellow}${message}${Logger.colors.reset}`);
 
     if (hasData && isPrimitive) {
       console.log(`${valueLabel} ${formattedData}`);
@@ -154,42 +154,42 @@ class Logger {
       console.log(formattedData);
       console.log("\n");
     } else {
-      console.log(`${valueLabel} ${this.colors.gray}null${this.colors.reset}`);
+      console.log(`${valueLabel} ${Logger.colors.gray}null${Logger.colors.reset}`);
       console.log("\n");
     }
   }
 
   // Shorthand log levels
   static success(data, msg = "Success") {
-    this.print("SUCCESS", msg, data);
+    Logger.print("SUCCESS", msg, data);
   }
 
   static error(data, msg = "Error") {
-    this.print("ERROR", msg, data);
+    Logger.print("ERROR", msg, data);
   }
 
   static warn(data, msg = "Warning") {
-    this.print("WARN", msg, data);
+    Logger.print("WARN", msg, data);
   }
 
   static info(data, msg = "Info") {
-    this.print("INFO", msg, data);
+    Logger.print("INFO", msg, data);
   }
 
   static debug(data, msg = "Debug") {
-    this.print("DEBUG", msg, data);
+    Logger.print("DEBUG", msg, data);
   }
 
   static trace(data, msg = "Trace") {
-    this.print("TRACE", msg, data);
+    Logger.print("TRACE", msg, data);
   }
 
   static important(data, msg = "Important") {
-    this.print("IMPORTANT", msg, data);
+    Logger.print("IMPORTANT", msg, data);
   }
 
   static critical(data, msg = "Critical") {
-    this.print("CRITICAL", msg, data);
+    Logger.print("CRITICAL", msg, data);
   }
 }
 

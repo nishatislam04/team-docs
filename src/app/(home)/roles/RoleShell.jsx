@@ -1,18 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import DialogLoading from "@/components/loading/DialogLoading";
 import LazyPageLoading from "@/components/loading/LazyPageLoading";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 const RoleCreateDialogLazy = dynamic(
   () => import("@/app/(home)/roles/components/RoleCreateDialog"),
   {
     ssr: false,
     loading: () => <DialogLoading />,
-  }
+  },
 );
 
 const RoleListingsLazy = dynamic(() => import("@/app/(home)/roles/components/RoleListings"), {

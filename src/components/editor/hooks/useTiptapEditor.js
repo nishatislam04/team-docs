@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
 import { useCurrentEditor } from "@tiptap/react";
+import * as React from "react";
 
 /**
  * 🪝 useTiptapEditor Hook - Your Gateway to Editor Power

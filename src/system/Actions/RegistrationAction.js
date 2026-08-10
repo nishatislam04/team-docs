@@ -1,16 +1,16 @@
 "use server";
 
+import bcrypt from "bcryptjs";
+import slugify from "slugify";
 import { z } from "zod";
+import Logger from "@/lib/Logger";
+import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
+import { Session } from "@/lib/Session";
 import { RegistrationUserSchema } from "@/lib/schemas/UserSchema";
 import { RegistrationWorkspaceSchema } from "@/lib/schemas/workspaceSchema";
 import { UserModel } from "../Models/UserModel";
-import { BaseAction } from "./BaseAction";
-import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import Logger from "@/lib/Logger";
-import slugify from "slugify";
 import { WorkspaceModel } from "../Models/WorkspaceModel";
-import bcrypt from "bcryptjs";
-import { Session } from "@/lib/Session";
+import { BaseAction } from "./BaseAction";
 
 /**
  * This is from landing page Registration.
@@ -34,7 +34,7 @@ class RegistrationAction extends BaseAction {
         {
           message: "User fields must be either all provided or all omitted",
           path: ["username"],
-        }
+        },
       );
   }
 
@@ -46,7 +46,7 @@ class RegistrationAction extends BaseAction {
    * @returns
    */
   static async register(formData, session = null) {
-    const result = await this.execute(formData);
+    const result = await RegistrationAction.execute(formData);
 
     if (!result.success) return result;
 

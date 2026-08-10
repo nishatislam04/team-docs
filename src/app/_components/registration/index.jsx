@@ -1,6 +1,6 @@
+import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
 
 // Dynamically import the dialog component for better performance
 const RegistrationDialogComponent = dynamic(() => import("./RegistrationDialog"), {

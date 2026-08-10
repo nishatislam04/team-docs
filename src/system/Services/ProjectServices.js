@@ -1,7 +1,7 @@
 import Logger from "@/lib/Logger";
+import { ProjectDTO } from "../DTOs/ProjectDTO";
 import { ProjectModel } from "../Models/ProjectModel";
 import { BaseService } from "./BaseService";
-import { ProjectDTO } from "../DTOs/ProjectDTO";
 
 export class ProjectServices extends BaseService {
   static modelName = "project";

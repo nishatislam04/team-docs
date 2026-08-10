@@ -1,19 +1,19 @@
 "use server";
 
-import { BaseAction } from "./BaseAction";
-import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import Logger from "@/lib/Logger";
-import { RoleSchema } from "@/lib/schemas/RoleSchema";
-import { RoleModel } from "../Models/RoleModel";
-import { Session } from "@/lib/Session";
 import { revalidatePath } from "next/cache";
-import { RoleService } from "../Services/RoleServices";
-import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 import {
   canCreateRoleAuth,
   canDeleteRoleAuth,
   canUpdateRoleAuth,
 } from "@/authorization/RoleAuthGuard";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import Logger from "@/lib/Logger";
+import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
+import { Session } from "@/lib/Session";
+import { RoleSchema } from "@/lib/schemas/RoleSchema";
+import { RoleModel } from "../Models/RoleModel";
+import { RoleService } from "../Services/RoleServices";
+import { BaseAction } from "./BaseAction";
 
 class RoleActions extends BaseAction {
   static get schema() {
@@ -27,7 +27,7 @@ class RoleActions extends BaseAction {
 
     if (canCreate.success === false) return canCreate;
 
-    const result = await this.execute(formData);
+    const result = await RoleActions.execute(formData);
 
     if (!result.success) return result;
 
@@ -68,7 +68,7 @@ class RoleActions extends BaseAction {
 
     if (canUpdate.success === false) return canUpdate;
 
-    const result = await this.execute(formData);
+    const result = await RoleActions.execute(formData);
 
     if (!result.success) return result;
 

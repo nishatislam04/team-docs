@@ -1,6 +1,6 @@
 "use client";
+import { RotateCcw, X } from "lucide-react";
 import { useEffect } from "react";
-import { X, RotateCcw } from "lucide-react";
 
 const textColors = [
   { name: "Red", color: "#ef4444" },

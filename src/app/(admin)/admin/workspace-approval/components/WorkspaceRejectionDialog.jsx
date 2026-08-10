@@ -1,6 +1,9 @@
 "use client";
 
+import { AlertTriangle, Loader2, XCircle } from "lucide-react";
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
+import { useAdminRefresh } from "@/components/layout/admin/AdminRefreshContext";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,11 +14,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { XCircle, Loader2, AlertTriangle } from "lucide-react";
-import { rejectWorkspace } from "@/system/Actions/WorkspaceActions";
-import { toast } from "sonner";
 import Logger from "@/lib/Logger";
-import { useAdminRefresh } from "@/components/layout/admin/AdminRefreshContext";
+import { rejectWorkspace } from "@/system/Actions/WorkspaceActions";
 
 /**
  * Workspace Rejection Confirmation Dialog

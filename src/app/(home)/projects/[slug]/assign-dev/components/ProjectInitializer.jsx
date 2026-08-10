@@ -1,7 +1,7 @@
 "use client";
 
-import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 import { useEffect } from "react";
+import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 
 export default function ProjectInitializer({ project }) {
   useEffect(() => {

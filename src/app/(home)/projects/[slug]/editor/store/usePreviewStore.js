@@ -12,7 +12,7 @@ export const usePreviewStore = create((set, get) => ({
    * @type {Object<string, boolean>}
    */
   previewModePages: {},
-  
+
   /**
    * Check if a specific page is in preview mode
    * @param {string} pageId - The ID of the page to check
@@ -30,12 +30,12 @@ export const usePreviewStore = create((set, get) => ({
    */
   togglePagePreviewMode: (pageId) => {
     if (!pageId) return;
-    
+
     set((state) => ({
       previewModePages: {
         ...state.previewModePages,
-        [pageId]: !state.previewModePages[pageId]
-      }
+        [pageId]: !state.previewModePages[pageId],
+      },
     }));
   },
 
@@ -47,12 +47,12 @@ export const usePreviewStore = create((set, get) => ({
    */
   setPagePreviewMode: (pageId, value) => {
     if (!pageId) return;
-    
+
     set((state) => ({
       previewModePages: {
         ...state.previewModePages,
-        [pageId]: value
-      }
+        [pageId]: value,
+      },
     }));
   },
 
@@ -80,12 +80,12 @@ export const usePreviewStore = create((set, get) => ({
    */
   setPagePublished: (pageId, value) => {
     if (!pageId) return;
-    
+
     set((state) => ({
       publishedPages: {
         ...state.publishedPages,
-        [pageId]: value
-      }
+        [pageId]: value,
+      },
     }));
   },
 }));

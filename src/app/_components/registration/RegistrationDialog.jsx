@@ -1,3 +1,7 @@
+import { motion } from "framer-motion";
+import { AlertCircle } from "lucide-react";
+import { useMemo } from "react";
+import { z } from "zod";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,10 +25,6 @@ import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { RegistrationUserSchema } from "@/lib/schemas/UserSchema";
 import { RegistrationWorkspaceSchema } from "@/lib/schemas/workspaceSchema";
 import { registerNewUser } from "@/system/Actions/RegistrationAction";
-import { motion } from "framer-motion";
-import { AlertCircle } from "lucide-react";
-import { useMemo } from "react";
-import { z } from "zod";
 import useRegistrationStore from "../store/useRegistrationStore";
 
 export default function RegistrationDialog({ isAuthenticated }) {

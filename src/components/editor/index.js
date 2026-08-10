@@ -38,39 +38,35 @@ import SlashMenu from "./ui/menus/SlashMenu";
 // 🏗️ CORE COMPONENTS - The foundation of your editor
 // These are the essential pieces that make the editor work
 export { Editor } from "./core/Editor"; // Main editor component
-export { EditorProvider, useEditorContext, useEditorInstance } from "./core/EditorProvider"; // Context system
 export * from "./core/EditorConfig"; // Configuration constants
+export { EditorProvider, useEditorContext, useEditorInstance } from "./core/EditorProvider"; // Context system
 
 // 🔧 EXTENSION SYSTEM - Add-on features for your editor
 // Extensions add functionality like links, colors, toggles, etc.
 export {
   ExtensionRegistry, // Registry to manage all extensions
-  registerExtension, // Add new extensions
-  loadExtension, // Load specific extensions
   getBaseExtensions, // Get default extensions
+  loadExtension, // Load specific extensions
+  registerExtension, // Add new extensions
 } from "./extensions";
 export * from "./extensions/custom"; // Custom extensions we built
-
-// 🎨 UI COMPONENTS - Visual elements users interact with
-// These are the menus, buttons, and dialogs that make the editor user-friendly
-export { default as BubbleMenu } from "./ui/BubbleMenu"; // Floating menu when text is selected
-export { SlashMenu } from "./ui/menus/SlashMenu"; // Command menu (type "/" to open)
-export { default as ColorPickerPanel } from "./ui/ColorPickerPanel"; // Color selection panel
-export { default as LinkEditDialog } from "./ui/LinkEditDialog"; // Dialog to edit existing links
-export { default as LinkCreateDialog } from "./ui/LinkCreateDialog"; // Dialog to create new links
-export { default as Toolbar } from "./ui/Toolbar"; // Top toolbar with formatting buttons
-
 // 🪝 HOOKS - React hooks for editor functionality
 // These provide easy access to editor features in your components
 export * from "./hooks";
-
 // 🛠️ SERVICES - Business logic and data operations
 // Services handle saving, loading, and other backend operations
 export { EditorService } from "./services/EditorService";
-
+// 🎨 UI COMPONENTS - Visual elements users interact with
+// These are the menus, buttons, and dialogs that make the editor user-friendly
+export { default as BubbleMenu } from "./ui/BubbleMenu"; // Floating menu when text is selected
+export { default as ColorPickerPanel } from "./ui/ColorPickerPanel"; // Color selection panel
 // ⚡ COMMANDS - Editor commands and actions
 // These are the actual functions that perform editor operations
 export * from "./ui/commands";
+export { default as LinkCreateDialog } from "./ui/LinkCreateDialog"; // Dialog to create new links
+export { default as LinkEditDialog } from "./ui/LinkEditDialog"; // Dialog to edit existing links
+export { SlashMenu } from "./ui/menus/SlashMenu"; // Command menu (type "/" to open)
+export { default as Toolbar } from "./ui/Toolbar"; // Top toolbar with formatting buttons
 
 // 🔧 UTILITIES - Helper functions (currently empty but ready for future use)
 // export * from "./utils";
@@ -110,7 +106,6 @@ export * from "./ui/commands";
  */
 export const CompleteEditor = ({
   instanceId = "default",
-  pageId, // eslint-disable-line no-unused-vars
   initialContent,
   onSave,
   onChange,

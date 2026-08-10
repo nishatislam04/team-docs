@@ -1,12 +1,12 @@
 "use client";
 
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
+import { ActiveSectionProvider } from "./ActiveSectionContext";
+import Footer from "./Footer";
 import HomeSection from "./sections/HomeSection";
 import ProjectManageSection from "./sections/ProjectManageSection";
-import UserManageSection from "./sections/UserManageSection";
 import SettingsSection from "./sections/SettingsSection";
-import Footer from "./Footer";
-import { ActiveSectionProvider } from "./ActiveSectionContext";
+import UserManageSection from "./sections/UserManageSection";
 
 export default function MainSidebar() {
   return (

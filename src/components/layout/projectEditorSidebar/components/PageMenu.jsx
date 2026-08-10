@@ -2,6 +2,11 @@
 "use client";
 
 import { Copy, Loader2, MoreHorizontal, Pencil, Settings, Trash } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
+import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
+import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,21 +14,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuAction } from "@/components/ui/sidebar";
-import { useState, useTransition } from "react";
-import dynamic from "next/dynamic";
-import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 import Logger from "@/lib/Logger";
-import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
 import { duplicatePageAction } from "@/system/Actions/PageSections";
-import { toast } from "sonner";
 
 // Dynamically import the page dialogs
-const PageEditDialog = dynamic(() =>
-  import("@/app/(home)/projects/[slug]/editor/components/PageEditDialog")
+const PageEditDialog = dynamic(
+  () => import("@/app/(home)/projects/[slug]/editor/components/PageEditDialog"),
 );
 
-const DeletePageDialog = dynamic(() =>
-  import("@/app/(home)/projects/[slug]/editor/components/DeletePageDialog")
+const DeletePageDialog = dynamic(
+  () => import("@/app/(home)/projects/[slug]/editor/components/DeletePageDialog"),
 );
 
 export default function PageMenu({ page }) {

@@ -6,19 +6,18 @@
  * custom TipTap extensions, including color, details, links, and behavior extensions.
  */
 
-// Import custom extensions
-export { ColorExtensions } from "../color";
-// export { Details, DetailsSummary } from "../details"; // Removed - replaced with Toggle
-// export { CustomLink } from "../link"; // Removed - conflicts with standard Link extension
-export { ClearMarksOnEnter } from "../clearMarkStyles";
-export { ResetMarksOnDelete } from "../ResetMarksOnDelete";
-
-// Re-export for convenience
-export * from "../color";
 // export * from "../details"; // Removed - replaced with Toggle
 // export * from "../link"; // Removed - conflicts with standard Link extension
 export * from "../clearMarkStyles";
+// export { Details, DetailsSummary } from "../details"; // Removed - replaced with Toggle
+// export { CustomLink } from "../link"; // Removed - conflicts with standard Link extension
+export { ClearMarksOnEnter } from "../clearMarkStyles";
+// Re-export for convenience
+export * from "../color";
+// Import custom extensions
+export { ColorExtensions } from "../color";
 export * from "../ResetMarksOnDelete";
+export { ResetMarksOnDelete } from "../ResetMarksOnDelete";
 
 /**
  * Get all custom extensions as an array

@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,10 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { deletePageAction } from "@/system/Actions/PageSections";
 import Logger from "@/lib/Logger";
-import { useState } from "react";
-import { toast } from "sonner";
+import { deletePageAction } from "@/system/Actions/PageSections";
 
 export default function DeletePageDialog({ page, isDialogOpen, setIsDialogOpen }) {
   const [isDeleting, setIsDeleting] = useState(false);

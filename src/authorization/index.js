@@ -7,12 +7,11 @@
  * @module Authorization
  */
 
+export { AuthorizationUtils } from "./AuthorizationUtils";
 // Base Authorization Class (utility - no "use server")
 export { BaseAuthGuard } from "./BaseAuthGuard";
-
 // Utility Classes (no "use server")
 export { PermissionChecker } from "./PermissionChecker";
-export { AuthorizationUtils } from "./AuthorizationUtils";
 
 // Note: Import authorization functions directly from their respective guard files
 // Example:

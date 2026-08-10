@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
@@ -9,8 +11,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { motion } from "framer-motion";
-import { usePathname, useSearchParams } from "next/navigation";
 
 // Helper function to generate page numbers with ellipsis
 const getPageNumbers = (totalPages, currentPage) => {

@@ -70,7 +70,7 @@ export const useProjectStore = create(
 
         // Check if the currently selected page exists in the new sections
         const pageExists = sections?.some((section) =>
-          section.pages?.some((page) => page.id === selectedPage)
+          section.pages?.some((page) => page.id === selectedPage),
         );
 
         // If selected page doesn't exist in new sections, clear it
@@ -131,7 +131,7 @@ export const useProjectStore = create(
 
         if (pageName && sectionMatch.pages && sectionMatch.pages.length > 0) {
           const pageMatch = sectionMatch.pages.find(
-            (page) => (page.title || "Untitled Page") === pageName
+            (page) => (page.title || "Untitled Page") === pageName,
           );
           if (pageMatch) {
             set({ selectedPage: pageMatch.id });
@@ -207,6 +207,6 @@ export const useProjectStore = create(
         selectedSection: state.selectedSection,
         selectedPage: state.selectedPage,
       }),
-    }
-  )
+    },
+  ),
 );

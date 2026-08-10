@@ -1,4 +1,5 @@
 "use server";
+import { revalidatePath } from "next/cache";
 import {
   canCreateProjectAuth,
   canDeleteProjectAuth,
@@ -7,9 +8,8 @@ import {
 import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 import Logger from "@/lib/Logger";
 import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { Session } from "@/lib/Session";
-import { revalidatePath } from "next/cache";
+import { ProjectSchema } from "@/lib/schemas/ProjectSchema";
 import { ProjectModel } from "../Models/ProjectModel";
 import { ProjectServices } from "../Services/ProjectServices";
 import { WorkspaceServices } from "../Services/WorkspaceServices";
@@ -26,7 +26,7 @@ class ProjectAction extends BaseAction {
 
     if (!projectAuthorization.success) return projectAuthorization;
 
-    const result = await this.execute(formData);
+    const result = await ProjectAction.execute(formData);
 
     if (!result.success) return result;
 
@@ -83,7 +83,7 @@ class ProjectAction extends BaseAction {
 
     if (!projectAuthorization.success) return projectAuthorization;
 
-    const result = await this.execute(formData);
+    const result = await ProjectAction.execute(formData);
 
     if (!result.success) return result;
 

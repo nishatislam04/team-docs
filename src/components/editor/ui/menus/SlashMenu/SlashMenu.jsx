@@ -1,9 +1,9 @@
 "use client";
 
+import { useDismiss, useInteractions } from "@floating-ui/react";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { useDismiss, useInteractions } from "@floating-ui/react";
 import { useSlashCommand } from "./hooks/useSlashCommand";
 
 /**
@@ -91,7 +91,7 @@ const SlashMenuComponent = ({
     setInitialText,
     setInitialUrl,
     setDialogMode,
-    config
+    config,
   );
 
   // Set up dismiss behavior

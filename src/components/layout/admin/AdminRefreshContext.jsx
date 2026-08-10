@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from "react";
 
 /**
  * Admin Refresh Context
- * 
+ *
  * Provides a way to trigger data refresh across all admin components
  * when the refresh button is clicked in the header.
  */
@@ -14,7 +14,7 @@ export function AdminRefreshProvider({ children }) {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const triggerRefresh = () => {
-    setRefreshTrigger(prev => prev + 1);
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   return (

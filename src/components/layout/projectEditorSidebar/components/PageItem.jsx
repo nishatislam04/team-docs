@@ -1,9 +1,9 @@
 "use client";
 
 import { FileText } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import PageMenu from "./PageMenu";
 // Removed useRouter, usePathname, useSearchParams - no longer needed for URL updates
 
@@ -23,7 +23,7 @@ export default function PageItem({ page, isSelected, sectionId, sectionName }) {
         onClick={handlePageClick}
         className={cn(
           "flex items-center w-full p-2 rounded-xs transition hover:bg-muted",
-          isSelected && "bg-gray-200/40 text-primary font-semibold"
+          isSelected && "bg-gray-200/40 text-primary font-semibold",
         )}
       >
         <FileText className="w-4 h-4 text-muted-foreground" />

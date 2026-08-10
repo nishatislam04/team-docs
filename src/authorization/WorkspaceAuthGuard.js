@@ -18,7 +18,7 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
    * @returns {Promise<boolean>} True if workspace is active
    */
   static async requireWorkspaceActive() {
-    const session = await this.requireAuth();
+    const session = await WorkspaceAuthGuard.requireAuth();
 
     const workspaceId = session.workspaceId || Session.getWorkspaceId();
 
@@ -45,7 +45,7 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
    * @returns {Promise<boolean>} True if user is workspace admin
    */
   static async requireWorkspaceAdmin() {
-    return await this.isWorkspaceAdmin();
+    return await WorkspaceAuthGuard.isWorkspaceAdmin();
   }
 }
 

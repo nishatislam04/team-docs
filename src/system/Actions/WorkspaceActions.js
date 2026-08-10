@@ -1,11 +1,11 @@
 "use server";
 
-import Logger from "@/lib/Logger";
-import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import { WorkspaceSchema } from "@/lib/schemas/workspaceSchema";
-import { Session } from "@/lib/Session";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import Logger from "@/lib/Logger";
+import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
+import { Session } from "@/lib/Session";
+import { WorkspaceSchema } from "@/lib/schemas/workspaceSchema";
 import { PermissionModel } from "../Models/PermissionModel";
 import { UserModel } from "../Models/UserModel";
 import { WorkspaceModel } from "../Models/WorkspaceModel";
@@ -18,7 +18,7 @@ class WorkspaceAction extends BaseAction {
   }
 
   static async create(formData) {
-    const result = await this.execute(formData);
+    const result = await WorkspaceAction.execute(formData);
 
     if (!result.success) return result;
 
@@ -123,7 +123,7 @@ class WorkspaceAction extends BaseAction {
       });
 
       // generate permissions for this workspace
-      await this.generatePermissions(validatedId, workspace.owner.id);
+      await WorkspaceAction.generatePermissions(validatedId, workspace.owner.id);
 
       // Revalidate all admin routes to refresh sidebar badge and other data
       revalidatePath("/admin", "layout");

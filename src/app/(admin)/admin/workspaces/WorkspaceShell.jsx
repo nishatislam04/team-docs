@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import WorkspaceListings from "./components/WorkspaceListings";
 import NoWorkspaceUI from "./components/NoWorkspaceUI";
+import WorkspaceListings from "./components/WorkspaceListings";
 
 export default function WorkspaceShell({ hasWorkspaces }) {
   const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);

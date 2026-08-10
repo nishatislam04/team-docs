@@ -1,8 +1,8 @@
-import { useToast } from "@/hooks/useToast";
-import Logger from "@/lib/Logger";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { useToast } from "@/hooks/useToast";
+import Logger from "@/lib/Logger";
 
 export function useServerFormAction({
   schema,
@@ -43,7 +43,7 @@ export function useServerFormAction({
   // Check if form is entirely empty
   const isFormEmpty = useMemo(() => {
     return Object.values(values || {}).every(
-      (value) => value === "" || value === null || value === undefined
+      (value) => value === "" || value === null || value === undefined,
     );
   }, [values]);
 

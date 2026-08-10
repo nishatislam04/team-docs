@@ -12,11 +12,7 @@
     "esModuleInterop": true,
     "noEmit": true, // Don't emit output; used for type checking only
     "resolveJsonModule": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "incremental": true,
     "isolatedModules": true,
     "plugins": [
@@ -25,9 +21,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ] // Maps "@/..." to the root directory
+      "@/*": ["./src/*"] // Maps "@/..." to the root directory
     }
   },
   "include": [
@@ -37,11 +31,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    ".windsurf",
-    "public",
-    "docs"
-  ]
+  "exclude": ["node_modules", ".next", ".windsurf", "public", "docs"]
 }

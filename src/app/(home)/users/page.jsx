@@ -1,7 +1,7 @@
+import { canReadUserAuth } from "@/authorization/UserAuthGuard";
+import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
 import { Session } from "@/lib/Session";
 import UserShell from "./UserShell";
-import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
-import { canReadUserAuth } from "@/authorization/UserAuthGuard";
 
 export default async function UsersPage() {
   const session = await Session.getCurrentUser();

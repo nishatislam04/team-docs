@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import UserLisitngs from "./components/UserListing";
 import dynamic from "next/dynamic";
-import DialogLoading from "@/components/loading/DialogLoading";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
+import DialogLoading from "@/components/loading/DialogLoading";
+import UserLisitngs from "./components/UserListing";
 
 const UserCreateDialogLazy = dynamic(() => import("./components/UserCreateDialog"), {
   ssr: false,

@@ -11,7 +11,7 @@ const CreateSectionDialogLazy = dynamic(
   {
     ssr: false,
     loading: () => <DialogLoading />,
-  }
+  },
 );
 
 const CreatePageDialogLazy = dynamic(
@@ -19,7 +19,7 @@ const CreatePageDialogLazy = dynamic(
   {
     ssr: false,
     loading: () => <DialogLoading />,
-  }
+  },
 );
 
 export default function ProjectEditorDialogs({ project, selectedSectionId }) {

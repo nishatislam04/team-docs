@@ -2,9 +2,9 @@
 
 import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
+import CreateSectionButton from "./components/CreateSectionButton";
 import GoBackButton from "./components/GoBackButton";
 import SectionList from "./components/SectionList";
-import CreateSectionButton from "./components/CreateSectionButton";
 
 export default function ProjectEditorSidebar() {
   const sections = useProjectStore((state) => state.sections);

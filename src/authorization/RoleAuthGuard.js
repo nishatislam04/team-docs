@@ -1,9 +1,9 @@
 "use server";
 
-import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
-import { PermissionServices } from "@/system/Services/PermissionServices";
 import { Session } from "@/lib/Session";
+import { PermissionServices } from "@/system/Services/PermissionServices";
+import { BaseAuthGuard } from "./BaseAuthGuard";
 
 /**
  * RoleAuthGuard - Authorization guard for role-related operations
@@ -13,11 +13,11 @@ import { Session } from "@/lib/Session";
  */
 class RoleAuthGuard extends BaseAuthGuard {
   static async canViewRoles() {
-    const session = await this.basicAuthCheck();
+    const session = await RoleAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
-    if (this.isSuperAdmin(session)) return { success: true };
+    if (RoleAuthGuard.isSuperAdmin(session)) return { success: true };
 
     const workspaceId = session.workspaceId || Session.getWorkspaceId();
 
@@ -50,7 +50,7 @@ class RoleAuthGuard extends BaseAuthGuard {
   }
 
   static async canCreateRole() {
-    const session = await this.basicAuthCheck();
+    const session = await RoleAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -85,7 +85,7 @@ class RoleAuthGuard extends BaseAuthGuard {
   }
 
   static async canUpdateRole(roleId) {
-    const session = await this.basicAuthCheck();
+    const session = await RoleAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -121,7 +121,7 @@ class RoleAuthGuard extends BaseAuthGuard {
   }
 
   static async canDeleteRole(roleId) {
-    const session = await this.basicAuthCheck();
+    const session = await RoleAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 

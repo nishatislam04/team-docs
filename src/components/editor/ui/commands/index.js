@@ -6,32 +6,32 @@
  * slash menu system, organized by categories with icons, shortcuts, and keywords.
  */
 
-import React from "react";
 import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  Bold as BoldIcon,
+  Braces,
+  CheckSquare,
+  Code,
   Heading1,
   Heading2,
   Heading3,
-  List,
-  ListOrdered,
-  CheckSquare,
-  Quote,
-  Code,
-  Braces,
-  Link,
-  Bold as BoldIcon,
-  Italic as ItalicIcon,
-  Underline as UnderlineIcon,
-  Strikethrough,
   Highlighter,
-  Type as TextIcon,
+  Italic as ItalicIcon,
+  Link,
+  List,
   ListCollapse,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  AlignJustify,
-  Undo,
+  ListOrdered,
+  Quote,
   Redo,
+  Strikethrough,
+  Type as TextIcon,
+  Underline as UnderlineIcon,
+  Undo,
 } from "lucide-react";
+import React from "react";
 
 /**
  * Get base commands for the slash menu
@@ -47,7 +47,7 @@ export const getBaseCommands = (
   onOpenChange,
   setInitialText,
   setInitialUrl,
-  setDialogMode
+  setDialogMode,
 ) => [
   {
     group: "Headings",
@@ -295,14 +295,14 @@ export const getCommandsByCategory = (
   onOpenChange,
   setInitialText,
   setInitialUrl,
-  setDialogMode
+  setDialogMode,
 ) => {
   const allCommands = getBaseCommands(
     editor,
     onOpenChange,
     setInitialText,
     setInitialUrl,
-    setDialogMode
+    setDialogMode,
   );
 
   const group = allCommands.find((g) => g.group.toLowerCase() === category.toLowerCase());
@@ -325,14 +325,14 @@ export const searchCommands = (
   onOpenChange,
   setInitialText,
   setInitialUrl,
-  setDialogMode
+  setDialogMode,
 ) => {
   const allCommands = getBaseCommands(
     editor,
     onOpenChange,
     setInitialText,
     setInitialUrl,
-    setDialogMode
+    setDialogMode,
   );
 
   const searchTerm = query.toLowerCase().trim();

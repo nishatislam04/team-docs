@@ -1,25 +1,23 @@
 "use client";
 import {
+  Bold as BoldIcon,
   Braces,
   CheckSquare,
   Code,
   Heading1,
   Heading2,
   Heading3,
+  Highlighter,
+  Italic as ItalicIcon,
   LinkIcon,
   List,
   ListOrdered,
   Quote,
-} from "lucide-react";
-import {
-  Bold as BoldIcon,
-  Italic as ItalicIcon,
   Strikethrough,
   Subscript as SubIcon,
   Superscript as SupIcon,
   Underline as UnderlineIcon,
 } from "lucide-react";
-import { Highlighter } from "lucide-react";
 
 export default function Toolbar({ editor }) {
   if (!editor) return null;

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 
 export default function RouteChangeHandler() {

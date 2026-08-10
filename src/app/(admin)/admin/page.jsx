@@ -1,8 +1,8 @@
+import { Activity, Building, Settings, Users } from "lucide-react";
+import { Suspense } from "react";
 import { protectAdmin } from "@/authorization/AdminAuthGuard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Session } from "@/lib/Session";
-import { Activity, Building, Settings, Users } from "lucide-react";
-import { Suspense } from "react";
 
 export default async function AdminDashboard() {
   await protectAdmin();

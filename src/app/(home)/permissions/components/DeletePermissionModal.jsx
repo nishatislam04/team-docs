@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,10 +14,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-
-import { deletePermissionAction } from "@/system/Actions/PermissionActions";
-import { toast } from "sonner";
 import Logger from "@/lib/Logger";
+import { deletePermissionAction } from "@/system/Actions/PermissionActions";
 
 export default function DeletePermissionDialog({ permission, setStartFetchPermissions }) {
   const [isOpen, setIsOpen] = useState(false);

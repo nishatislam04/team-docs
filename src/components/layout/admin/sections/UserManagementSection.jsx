@@ -1,18 +1,18 @@
 "use client";
 
+import { Shield, UserCheck, Users } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Users, UserCheck, Shield } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useActiveSection } from "../ActiveSectionContext";
-import { useEffect } from "react";
-import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
 
 /**
  * User Management Section Component

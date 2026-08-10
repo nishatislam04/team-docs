@@ -8,9 +8,5 @@ import { getAllUsersFn } from "../actions/getAllUsers";
  * @returns {Object} An object containing paginated users data, state, and handlers.
  */
 export function useUsers(shouldStartFetch, setShouldStartFetch) {
-	return usePaginatedFetch(
-		getAllUsersFn,
-		shouldStartFetch,
-		setShouldStartFetch
-	);
+  return usePaginatedFetch(getAllUsersFn, shouldStartFetch, setShouldStartFetch);
 }

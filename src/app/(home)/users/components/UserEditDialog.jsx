@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-
+import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,16 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { AdminUpdatingUser } from "@/system/Actions/UserActions";
-import { AdminUpdatingUserSchema } from "@/lib/schemas/UserSchema";
-import { useServerFormAction } from "@/hooks/useServerFormAction";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -30,7 +20,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useServerFormAction } from "@/hooks/useServerFormAction";
+import { AdminUpdatingUserSchema } from "@/lib/schemas/UserSchema";
+import { AdminUpdatingUser } from "@/system/Actions/UserActions";
 
 const userStatus = [
   { value: "ACTIVE", label: "Active" },
@@ -44,7 +43,7 @@ export default function UserEditDialog({ isDialogOpen, setIsDialogOpen, setShoul
       status: user?.status,
       id: user?.id,
     }),
-    [user]
+    [user],
   );
 
   const handleSuccess = useCallback(() => {

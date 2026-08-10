@@ -1,15 +1,15 @@
 "use client";
 
+import { Sparkles } from "lucide-react";
 import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
 
 export default function NoWorkspaceUI({ setIsDialogOpen }) {
   return (

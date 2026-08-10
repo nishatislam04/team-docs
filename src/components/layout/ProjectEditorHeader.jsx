@@ -1,16 +1,16 @@
-import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
-import { SidebarTrigger } from "../ui/sidebar";
+import { Check, Eye, Loader2, MoreVertical, Save, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Eye, Upload, MoreVertical, Check, Save, Loader2 } from "lucide-react";
 import { usePreviewStore } from "@/app/(home)/projects/[slug]/editor/store/usePreviewStore";
+import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { SidebarTrigger } from "../ui/sidebar";
 
 export default function ProjectEditorHeader({
   selectedPage,

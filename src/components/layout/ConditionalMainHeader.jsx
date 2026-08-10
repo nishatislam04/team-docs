@@ -1,10 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import SearchButton from "@/app/(home)/search/components/SearchButton";
 import { SidebarTrigger } from "../ui/sidebar";
 import ProjectNameDisplay from "./ProjectNameDisplay";
-import SearchButton from "@/app/(home)/search/components/SearchButton";
-import { useEffect, useState } from "react";
 
 /**
  * Client-side header wrapper that handles conditional rendering

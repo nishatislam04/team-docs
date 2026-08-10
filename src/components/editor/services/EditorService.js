@@ -39,8 +39,8 @@
  * - Chainable operations where appropriate
  */
 
-import Logger from "@/lib/Logger";
 import { toast } from "sonner";
+import Logger from "@/lib/Logger";
 
 /**
  * Base Service Class
@@ -56,7 +56,7 @@ class BaseService {
   static handleError(error, operation = "operation") {
     // Log error for debugging purposes in development
     if (process.env.NODE_ENV === "development") {
-      console.error(`${this.name} - ${operation} failed:`, error);
+      console.error(`${BaseService.name} - ${operation} failed:`, error);
     }
 
     return {
@@ -88,7 +88,7 @@ class BaseService {
    * @throws {Error} If required parameters are missing
    */
   static validateRequired(params, required) {
-    const missing = required.filter((key) => !params.hasOwnProperty(key) || params[key] == null);
+    const missing = required.filter((key) => !Object.hasOwn(params, key) || params[key] == null);
 
     if (missing.length > 0) {
       throw new Error(`Missing required parameters: ${missing.join(", ")}`);
@@ -112,16 +112,16 @@ export class EditorService extends BaseService {
    */
   static async saveContent({ pageId, content, metadata = {}, showToast = false }) {
     try {
-      this.validateRequired({ pageId, content }, ["pageId", "content"]);
+      EditorService.validateRequired({ pageId, content }, ["pageId", "content"]);
 
       // Validate content structure
-      const validationResult = this.validateContent(content);
+      const validationResult = EditorService.validateContent(content);
       if (!validationResult.isValid) {
         throw new Error(`Invalid content: ${validationResult.errors.join(", ")}`);
       }
 
       // Transform content for storage
-      const transformedContent = this.transformContentForStorage(content);
+      const transformedContent = EditorService.transformContentForStorage(content);
 
       // Prepare save data
       const saveData = {
@@ -130,8 +130,8 @@ export class EditorService extends BaseService {
         metadata: {
           ...metadata,
           lastModified: new Date().toISOString(),
-          wordCount: this.getWordCount(content),
-          characterCount: this.getCharacterCount(content),
+          wordCount: EditorService.getWordCount(content),
+          characterCount: EditorService.getCharacterCount(content),
         },
       };
 
@@ -147,7 +147,7 @@ export class EditorService extends BaseService {
         if (showToast) {
           toast.success(result.message || "Content saved successfully");
         }
-        return this.createSuccessResponse(result.page, result.message);
+        return EditorService.createSuccessResponse(result.page, result.message);
       } else {
         throw new Error(result.message || "Save operation failed");
       }
@@ -156,7 +156,7 @@ export class EditorService extends BaseService {
       if (showToast) {
         toast.error(error.message || "Failed to save content");
       }
-      return this.handleError(error, "save content");
+      return EditorService.handleError(error, "save content");
     }
   }
 
@@ -167,7 +167,7 @@ export class EditorService extends BaseService {
    */
   static async loadContent(pageId) {
     try {
-      this.validateRequired({ pageId }, ["pageId"]);
+      EditorService.validateRequired({ pageId }, ["pageId"]);
 
       // Import fetch action dynamically
       const { fetchPageContent } = await import(
@@ -178,25 +178,25 @@ export class EditorService extends BaseService {
 
       if (result) {
         // Transform content for editor
-        const transformedContent = this.transformContentForEditor(result.content);
+        const transformedContent = EditorService.transformContentForEditor(result.content);
 
-        return this.createSuccessResponse(
+        return EditorService.createSuccessResponse(
           {
             content: transformedContent,
             metadata: {
               lastModified: result.updatedAt,
-              wordCount: this.getWordCount(transformedContent),
-              characterCount: this.getCharacterCount(transformedContent),
+              wordCount: EditorService.getWordCount(transformedContent),
+              characterCount: EditorService.getCharacterCount(transformedContent),
             },
           },
-          "Content loaded successfully"
+          "Content loaded successfully",
         );
       } else {
         throw new Error("Page not found");
       }
     } catch (error) {
       toast.error(error.message || "Failed to load content");
-      return this.handleError(error, "load content");
+      return EditorService.handleError(error, "load content");
     }
   }
 
@@ -227,7 +227,7 @@ export class EditorService extends BaseService {
     }
 
     // Check for potentially dangerous content
-    if (this.containsDangerousContent(content)) {
+    if (EditorService.containsDangerousContent(content)) {
       errors.push("Content contains potentially dangerous elements");
     }
 
@@ -268,7 +268,7 @@ export class EditorService extends BaseService {
     const transformed = JSON.parse(JSON.stringify(content));
 
     // Remove any functions or undefined values
-    return this.sanitizeObject(transformed);
+    return EditorService.sanitizeObject(transformed);
   }
 
   /**
@@ -321,7 +321,7 @@ export class EditorService extends BaseService {
     }
 
     if (Array.isArray(obj)) {
-      return obj.map((item) => this.sanitizeObject(item));
+      return obj.map((item) => EditorService.sanitizeObject(item));
     }
 
     const sanitized = {};
@@ -329,7 +329,7 @@ export class EditorService extends BaseService {
       if (typeof value === "function" || value === undefined) {
         continue; // Skip functions and undefined values
       }
-      sanitized[key] = this.sanitizeObject(value);
+      sanitized[key] = EditorService.sanitizeObject(value);
     }
 
     return sanitized;
@@ -341,7 +341,7 @@ export class EditorService extends BaseService {
    * @returns {number} Word count
    */
   static getWordCount(content) {
-    const text = this.extractTextFromContent(content);
+    const text = EditorService.extractTextFromContent(content);
     if (!text.trim()) return 0;
 
     return text.trim().split(/\s+/).length;
@@ -353,7 +353,7 @@ export class EditorService extends BaseService {
    * @returns {number} Character count
    */
   static getCharacterCount(content) {
-    const text = this.extractTextFromContent(content);
+    const text = EditorService.extractTextFromContent(content);
     return text.length;
   }
 
@@ -374,7 +374,7 @@ export class EditorService extends BaseService {
     }
 
     if (content.content && Array.isArray(content.content)) {
-      return content.content.map((node) => this.extractTextFromContent(node)).join(" ");
+      return content.content.map((node) => EditorService.extractTextFromContent(node)).join(" ");
     }
 
     return "";
@@ -390,22 +390,23 @@ export class EditorService extends BaseService {
     try {
       switch (format.toLowerCase()) {
         case "text":
-          return this.extractTextFromContent(content);
+          return EditorService.extractTextFromContent(content);
 
         case "markdown":
           // This would require a TipTap to Markdown converter
           // For now, return text format
-          return this.extractTextFromContent(content);
+          return EditorService.extractTextFromContent(content);
 
         case "html":
-        default:
+        default: {
           // This would require a TipTap to HTML converter
           // For now, return a basic HTML structure
-          const text = this.extractTextFromContent(content);
+          const text = EditorService.extractTextFromContent(content);
           return `<div class="editor-content">${text}</div>`;
+        }
       }
     } catch (error) {
-      return this.handleError(error, "export content");
+      return EditorService.handleError(error, "export content");
     }
   }
 
@@ -416,13 +417,13 @@ export class EditorService extends BaseService {
    */
   static getContentStats(content) {
     return {
-      wordCount: this.getWordCount(content),
-      characterCount: this.getCharacterCount(content),
-      paragraphCount: this.countNodesByType(content, "paragraph"),
-      headingCount: this.countNodesByType(content, "heading"),
-      listCount: this.countNodesByType(content, ["bulletList", "orderedList"]),
-      taskCount: this.countNodesByType(content, "taskItem"),
-      codeBlockCount: this.countNodesByType(content, "codeBlock"),
+      wordCount: EditorService.getWordCount(content),
+      characterCount: EditorService.getCharacterCount(content),
+      paragraphCount: EditorService.countNodesByType(content, "paragraph"),
+      headingCount: EditorService.countNodesByType(content, "heading"),
+      listCount: EditorService.countNodesByType(content, ["bulletList", "orderedList"]),
+      taskCount: EditorService.countNodesByType(content, "taskItem"),
+      codeBlockCount: EditorService.countNodesByType(content, "codeBlock"),
     };
   }
 
@@ -443,7 +444,10 @@ export class EditorService extends BaseService {
     }
 
     if (content.content && Array.isArray(content.content)) {
-      count += content.content.reduce((sum, node) => sum + this.countNodesByType(node, types), 0);
+      count += content.content.reduce(
+        (sum, node) => sum + EditorService.countNodesByType(node, types),
+        0,
+      );
     }
 
     return count;

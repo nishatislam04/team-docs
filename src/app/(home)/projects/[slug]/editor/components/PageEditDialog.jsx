@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useMemo } from "react";
 import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +25,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useServerFormAction } from "@/hooks/useServerFormAction";
 import { PageSchema } from "@/lib/schemas/PageSchema";
 import { updatePageAction } from "@/system/Actions/PageSections";
-import { useCallback, useMemo } from "react";
 
 export default function PageEditDialog({ page, isDialogOpen, setIsDialogOpen }) {
   const defaultValues = useMemo(
@@ -32,7 +32,7 @@ export default function PageEditDialog({ page, isDialogOpen, setIsDialogOpen }) 
       title: page?.title || "",
       description: page?.description || "",
     }),
-    [page]
+    [page],
   );
 
   const handleSuccess = useCallback(() => {

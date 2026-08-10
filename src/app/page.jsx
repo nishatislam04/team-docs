@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { getSession } from "./_components/actions/getSession";
 import { getWorkspaceFn } from "./_components/actions/getWorkspace";
 import Footer from "./_components/Footer";
-import Header from "./_components/header";
 import HeroSection from "./_components/HeroSection";
+import Header from "./_components/header";
 import FeaturedSectionWrapper from "./_components/sub/FeaturedSectionWrapper";
 
 export default async function LandingPage() {

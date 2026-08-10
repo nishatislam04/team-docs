@@ -1,8 +1,7 @@
-import { Session } from "@/lib/Session";
-import { SidebarTrigger } from "../ui/sidebar";
-import { WorkspaceService } from "@/system/Services/WorkspaceServices";
-
 import { headers } from "next/headers";
+import { Session } from "@/lib/Session";
+import { WorkspaceService } from "@/system/Services/WorkspaceServices";
+import { SidebarTrigger } from "../ui/sidebar";
 import ProjectNameDisplay from "./ProjectNameDisplay";
 
 export default async function Header() {

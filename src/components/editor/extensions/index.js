@@ -38,24 +38,24 @@
  * - Extensible: Easy to add custom extensions
  */
 
-import StarterKit from "@tiptap/starter-kit";
-import TaskList from "@tiptap/extension-task-list";
-import TaskItem from "@tiptap/extension-task-item";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { all, createLowlight } from "lowlight";
-import OrderedList from "@tiptap/extension-ordered-list";
-import TextAlign from "@tiptap/extension-text-align";
-import Typography from "@tiptap/extension-typography";
-import FontFamily from "@tiptap/extension-font-family";
-import CharacterCount from "@tiptap/extension-character-count";
 import Bold from "@tiptap/extension-bold";
+import CharacterCount from "@tiptap/extension-character-count";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import FontFamily from "@tiptap/extension-font-family";
+import Highlight from "@tiptap/extension-highlight";
 import Italic from "@tiptap/extension-italic";
+import OrderedList from "@tiptap/extension-ordered-list";
+import { Placeholder } from "@tiptap/extension-placeholder";
 import Strike from "@tiptap/extension-strike";
-import Underline from "@tiptap/extension-underline";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
-import Highlight from "@tiptap/extension-highlight";
-import { Placeholder } from "@tiptap/extension-placeholder";
+import TaskItem from "@tiptap/extension-task-item";
+import TaskList from "@tiptap/extension-task-list";
+import TextAlign from "@tiptap/extension-text-align";
+import Typography from "@tiptap/extension-typography";
+import Underline from "@tiptap/extension-underline";
+import StarterKit from "@tiptap/starter-kit";
+import { all, createLowlight } from "lowlight";
 
 // Initialize lowlight for code highlighting
 const lowlight = createLowlight(all);
@@ -136,7 +136,7 @@ class ExtensionRegistryClass {
     this.register(
       "code-block",
       CodeBlockLowlight.configure({ lowlight }),
-      EXTENSION_CATEGORIES.BLOCKS
+      EXTENSION_CATEGORIES.BLOCKS,
     );
 
     // Utility extensions
@@ -351,7 +351,7 @@ class ExtensionRegistryClass {
       loaded: this.loadedExtensions.size,
       categories: this.categories.size,
       byCategory: Object.fromEntries(
-        Array.from(this.categories.entries()).map(([cat, exts]) => [cat, exts.size])
+        Array.from(this.categories.entries()).map(([cat, exts]) => [cat, exts.size]),
       ),
     };
   }

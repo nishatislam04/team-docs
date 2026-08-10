@@ -1,3 +1,7 @@
+import { LogOut, Settings } from "lucide-react";
+import Link from "next/link";
+import { signOut } from "next-auth/react";
+import { use } from "react";
 import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -10,10 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings } from "lucide-react";
-import { signOut } from "next-auth/react";
-import Link from "next/link";
-import { use } from "react";
 
 export default function ProfileMenu({ sessionPromise }) {
   const userSession = use(sessionPromise);

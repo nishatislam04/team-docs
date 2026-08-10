@@ -1,5 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { ChevronRight, Globe, Moon, Palette, Shield, Users, Zap } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,10 +16,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentSession } from "@/hooks/useCurrentSession";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { ChevronRight, Globe, Moon, Palette, Shield, Users, Zap } from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
 import ActionButton from "./ActionButton";
 
 const featureCategories = [
@@ -228,7 +228,7 @@ function FeatureCard({ feature, index, shouldReduceMotion, isCarousel = false })
             <div
               className={cn(
                 "mr-3 flex h-10 w-10 items-center justify-center rounded-lg",
-                `bg-${feature.colorClass}/10 text-${feature.colorClass}`
+                `bg-${feature.colorClass}/10 text-${feature.colorClass}`,
               )}
             >
               {feature.icon}

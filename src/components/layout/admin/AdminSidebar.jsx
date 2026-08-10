@@ -1,13 +1,13 @@
 "use client";
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
-import AdminDashboardSection from "./sections/AdminDashboardSection";
-import WorkspaceManagementSection from "./sections/WorkspaceManagementSection";
-import UserManagementSection from "./sections/UserManagementSection";
-import SystemSettingsSection from "./sections/SystemSettingsSection";
+import { ActiveSectionProvider } from "./ActiveSectionContext";
 import AdminFooter from "./AdminFooter";
 import AdminSidebarHeader from "./AdminSidebarHeader";
-import { ActiveSectionProvider } from "./ActiveSectionContext";
+import AdminDashboardSection from "./sections/AdminDashboardSection";
+import SystemSettingsSection from "./sections/SystemSettingsSection";
+import UserManagementSection from "./sections/UserManagementSection";
+import WorkspaceManagementSection from "./sections/WorkspaceManagementSection";
 
 /**
  * Admin Sidebar Component

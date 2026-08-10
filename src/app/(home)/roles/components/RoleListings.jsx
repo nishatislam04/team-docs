@@ -1,6 +1,15 @@
 "use client";
 
+import { Pencil, ShieldCheck } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useState } from "react";
+import DialogLoading from "@/components/loading/DialogLoading";
+import PaginationLoading from "@/components/loading/PaginationLoading";
+import TableLoading from "@/components/loading/TableLoading";
+import CreateButtonShared from "@/components/shared/CreateButtonShared";
+import SortIcon from "@/components/shared/SortIcon";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Table,
   TableBody,
@@ -9,24 +18,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { ShieldCheck, Pencil } from "lucide-react";
-import dynamic from "next/dynamic";
-import CreateButtonShared from "@/components/shared/CreateButtonShared";
 import { useRoles } from "../hooks/useRoles";
-import TableLoading from "@/components/loading/TableLoading";
-import DialogLoading from "@/components/loading/DialogLoading";
 import DeleteRoleDialog from "./DeleteRoleDialog";
-import SortIcon from "@/components/shared/SortIcon";
-import { Spinner } from "@/components/ui/spinner";
-import PaginationLoading from "@/components/loading/PaginationLoading";
 
 const LoadRolePermissionDialogLazy = dynamic(
   () => import("@/app/(home)/role-permission-assign/RolePermissionDialog"),
   {
     ssr: false,
     loading: () => <DialogLoading />,
-  }
+  },
 );
 
 // lazy load pagination

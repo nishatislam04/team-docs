@@ -3,14 +3,14 @@ import { persist } from "zustand/middleware";
 
 /**
  * Admin Store using Zustand
- * 
+ *
  * Centralized state management for admin panel functionality including:
  * - Workspace approval management
  * - User management state
  * - System settings state
  * - UI state (sidebar, modals, etc.)
  * - Admin notifications and alerts
- * 
+ *
  * This store follows the existing Zustand patterns in the application
  * and provides admin-specific state management separate from user state.
  */
@@ -76,13 +76,13 @@ const useAdminStore = create(
 
       approveWorkspace: (workspaceId) =>
         set((state) => {
-          const workspace = state.workspaces.pending.find(w => w.id === workspaceId);
+          const workspace = state.workspaces.pending.find((w) => w.id === workspaceId);
           if (!workspace) return state;
 
           return {
             workspaces: {
               ...state.workspaces,
-              pending: state.workspaces.pending.filter(w => w.id !== workspaceId),
+              pending: state.workspaces.pending.filter((w) => w.id !== workspaceId),
               approved: [...state.workspaces.approved, { ...workspace, status: "approved" }],
             },
           };
@@ -90,13 +90,13 @@ const useAdminStore = create(
 
       rejectWorkspace: (workspaceId) =>
         set((state) => {
-          const workspace = state.workspaces.pending.find(w => w.id === workspaceId);
+          const workspace = state.workspaces.pending.find((w) => w.id === workspaceId);
           if (!workspace) return state;
 
           return {
             workspaces: {
               ...state.workspaces,
-              pending: state.workspaces.pending.filter(w => w.id !== workspaceId),
+              pending: state.workspaces.pending.filter((w) => w.id !== workspaceId),
               rejected: [...state.workspaces.rejected, { ...workspace, status: "rejected" }],
             },
           };
@@ -154,11 +154,14 @@ const useAdminStore = create(
         set((state) => ({
           ui: {
             ...state.ui,
-            notifications: [...state.ui.notifications, {
-              id: Date.now(),
-              timestamp: new Date().toISOString(),
-              ...notification,
-            }],
+            notifications: [
+              ...state.ui.notifications,
+              {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                ...notification,
+              },
+            ],
           },
         })),
 
@@ -166,7 +169,7 @@ const useAdminStore = create(
         set((state) => ({
           ui: {
             ...state.ui,
-            notifications: state.ui.notifications.filter(n => n.id !== notificationId),
+            notifications: state.ui.notifications.filter((n) => n.id !== notificationId),
           },
         })),
 
@@ -209,7 +212,12 @@ const useAdminStore = create(
             notifications: [],
           },
           system: {
-            stats: { totalUsers: 0, pendingWorkspaces: 0, activeWorkspaces: 0, systemHealth: "healthy" },
+            stats: {
+              totalUsers: 0,
+              pendingWorkspaces: 0,
+              activeWorkspaces: 0,
+              systemHealth: "healthy",
+            },
             settings: {},
             loading: false,
             error: null,
@@ -228,8 +236,8 @@ const useAdminStore = create(
           settings: state.system.settings,
         },
       }),
-    }
-  )
+    },
+  ),
 );
 
 export default useAdminStore;

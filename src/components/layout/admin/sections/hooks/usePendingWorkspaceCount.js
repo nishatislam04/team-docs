@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { getPendingWorkspaceCount } from "@/system/Actions/WorkspaceActions";
 
 /**
@@ -25,7 +25,7 @@ export function usePendingWorkspaceCount(refreshTrigger = 0) {
         } else {
           console.error(
             "Failed to fetch pending workspace count:",
-            result?.errors || "Unknown error"
+            result?.errors || "Unknown error",
           );
           setCount(0);
         }

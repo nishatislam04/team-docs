@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useMemo } from "react";
-
+import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,13 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { updatePermissionAction } from "@/system/Actions/PermissionActions";
-import { PermissionSchema } from "@/lib/schemas/PermissionSchema";
-import { useServerFormAction } from "@/hooks/useServerFormAction";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Form,
   FormControl,
@@ -27,6 +20,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -34,7 +30,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import GeneralFormErrorDispaly from "@/components/shared/GeneralFormErrorDispaly";
+import { Textarea } from "@/components/ui/textarea";
+import { useServerFormAction } from "@/hooks/useServerFormAction";
+import { PermissionSchema } from "@/lib/schemas/PermissionSchema";
+import { updatePermissionAction } from "@/system/Actions/PermissionActions";
 
 export default function PermissionEditDialog({
   isDialogOpen,
@@ -54,7 +53,7 @@ export default function PermissionEditDialog({
       action: permission?.action || "",
       resource: permission?.resource || "",
     }),
-    [permission]
+    [permission],
   );
 
   const form = useServerFormAction({
@@ -87,7 +86,6 @@ export default function PermissionEditDialog({
         resource: permission.resource || "",
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDialogOpen, form.reset, permission]);
 
   return (

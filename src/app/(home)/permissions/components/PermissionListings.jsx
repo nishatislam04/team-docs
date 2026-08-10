@@ -1,6 +1,14 @@
 "use client";
 
+import { Pencil } from "lucide-react";
+import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
+import DialogLoading from "@/components/loading/DialogLoading";
+import PaginationLoading from "@/components/loading/PaginationLoading";
+import TableLoading from "@/components/loading/TableLoading";
+import CreateButtonShared from "@/components/shared/CreateButtonShared";
+import SortIcon from "@/components/shared/SortIcon";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,16 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
-import CreateButtonShared from "@/components/shared/CreateButtonShared";
-import TableLoading from "@/components/loading/TableLoading";
 import { usePermissions } from "../hooks/usePermissions";
-import SortIcon from "@/components/shared/SortIcon";
-import dynamic from "next/dynamic";
 import DeletePermissionModal from "./DeletePermissionModal";
-import DialogLoading from "@/components/loading/DialogLoading";
-import PaginationLoading from "@/components/loading/PaginationLoading";
 
 const PermissionEditDialogLazy = dynamic(() => import("./PermissionEditDialog"), {
   ssr: false,

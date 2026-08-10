@@ -1,8 +1,8 @@
-import { Toaster } from "@/components/ui/sonner";
+import { SessionProvider } from "next-auth/react";
 import { Suspense } from "react";
 // import { Analytics } from "@vercel/analytics/next";
 import { AuthorizationToastProvider } from "@/components/abstracts/authorization-toast-provider";
-import { SessionProvider } from "next-auth/react";
+import { Toaster } from "@/components/ui/sonner";
 import "./styles/globals.css";
 
 export const metadata = {

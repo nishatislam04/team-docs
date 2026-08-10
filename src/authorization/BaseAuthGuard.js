@@ -1,9 +1,9 @@
+import { redirect } from "next/navigation";
 import Logger from "@/lib/Logger";
 import { Session } from "@/lib/Session";
 import { notify } from "@/lib/utils";
 import { UserServices } from "@/system/Services/UserServices";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
-import { redirect } from "next/navigation";
 
 /**
  * BaseAuthGuard - Laravel-like authorization base class
@@ -34,7 +34,7 @@ export class BaseAuthGuard {
    * @throws {Error} Forbidden error if not authenticated
    */
   static async requireAuth() {
-    const session = await this.getSession();
+    const session = await BaseAuthGuard.getSession();
     if (!session) return notify("You need to be an Auth user");
     return session;
   }
@@ -56,8 +56,8 @@ export class BaseAuthGuard {
    * @throws {Error} Forbidden error if not super admin
    */
   static async requireSuperAdmin() {
-    const session = await this.requireAuth();
-    if (!this.isSuperAdmin(session)) return this.redirectUnauthorized();
+    const session = await BaseAuthGuard.requireAuth();
+    if (!BaseAuthGuard.isSuperAdmin(session)) return BaseAuthGuard.redirectUnauthorized();
 
     return session;
   }
@@ -70,7 +70,7 @@ export class BaseAuthGuard {
    * @throws {Error} Forbidden error if not workspace admin
    */
   static async isWorkspaceAdmin() {
-    const session = await this.requireAuth();
+    const session = await BaseAuthGuard.requireAuth();
 
     const user = await UserServices.getResource({
       where: { id: session.id },
@@ -91,7 +91,7 @@ export class BaseAuthGuard {
    * @throws {Error} Forbidden error if not authenticated
    */
   static async basicAuthCheck() {
-    const session = await this.getSession();
+    const session = await BaseAuthGuard.getSession();
     if (!session) return notify("You need to be an Auth user");
 
     const workspaceId = session.workspaceId || Session.getWorkspaceId();
@@ -126,7 +126,7 @@ export class BaseAuthGuard {
    * @returns {boolean} True if user owns the resource
    */
   static isOwner(resourceOwnerId) {
-    const session = this.getSession();
+    const session = BaseAuthGuard.getSession();
     return session?.id === resourceOwnerId;
   }
 

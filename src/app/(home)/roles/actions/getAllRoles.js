@@ -13,43 +13,38 @@ import { RoleService } from "@/system/Services/RoleServices";
  * @returns {Promise<{data: Array, totalItems: number, totalPages: number, sortBy: string, sortOrder: string}>}
  */
 export async function getAllRolesFn(options = {}) {
-	const session = await Session.getCurrentUser();
-	const { 
-		page = 1, 
-		pageSize = 10,
-		sortBy = 'name',
-		sortOrder = 'asc'
-	} = options;
+  const session = await Session.getCurrentUser();
+  const { page = 1, pageSize = 10, sortBy = "name", sortOrder = "asc" } = options;
 
-	const whereClause = {
-		OR: [{ isSystem: true }, { ownerId: session?.id }],
-	};
+  const whereClause = {
+    OR: [{ isSystem: true }, { ownerId: session?.id }],
+  };
 
-	// Get total count for pagination
-	const totalItems = await RoleService.countResources({ where: whereClause });
-	
-	// Calculate pagination parameters
-	const skip = (page - 1) * pageSize;
-	const take = pageSize;
-	const totalPages = Math.ceil(totalItems / pageSize);
+  // Get total count for pagination
+  const totalItems = await RoleService.countResources({ where: whereClause });
 
-	// Prepare sort options
-	const orderBy = { [sortBy]: sortOrder };
+  // Calculate pagination parameters
+  const skip = (page - 1) * pageSize;
+  const take = pageSize;
+  const totalPages = Math.ceil(totalItems / pageSize);
 
-	// Get paginated and sorted data
-	const roles = await RoleService.getAllResources({ 
-		where: whereClause,
-		pagination: { skip, take },
-		orderBy
-	});
+  // Prepare sort options
+  const orderBy = { [sortBy]: sortOrder };
 
-	return {
-		data: roles,
-		totalItems,
-		totalPages,
-		currentPage: page,
-		pageSize,
-		sortBy,
-		sortOrder
-	};
+  // Get paginated and sorted data
+  const roles = await RoleService.getAllResources({
+    where: whereClause,
+    pagination: { skip, take },
+    orderBy,
+  });
+
+  return {
+    data: roles,
+    totalItems,
+    totalPages,
+    currentPage: page,
+    pageSize,
+    sortBy,
+    sortOrder,
+  };
 }

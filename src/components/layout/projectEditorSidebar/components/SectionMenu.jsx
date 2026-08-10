@@ -1,6 +1,11 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { FileText, MoreHorizontal, Settings, Trash } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+import { usePageDialogStore } from "@/app/(home)/projects/store/usePageDialogStore";
+import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,27 +13,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuAction } from "@/components/ui/sidebar";
-import { motion, AnimatePresence } from "framer-motion";
-import { usePageDialogStore } from "@/app/(home)/projects/store/usePageDialogStore";
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
 import Logger from "@/lib/Logger";
 
 // Dynamically import the section dialogs
 const SectionEditDialog = dynamic(
-  () => import("@/app/(home)/projects/[slug]/editor/components/SectionEditDialog")
+  () => import("@/app/(home)/projects/[slug]/editor/components/SectionEditDialog"),
 );
 
 const DeleteSectionDialog = dynamic(
-  () => import("@/app/(home)/projects/[slug]/editor/components/DeleteSectionDialog")
+  () => import("@/app/(home)/projects/[slug]/editor/components/DeleteSectionDialog"),
 );
 
 export default function SectionMenu({ sectionId }) {
   const openPageDialog = usePageDialogStore((state) => state.openPageDialog);
   const sections = useProjectStore((state) => state.sections);
   const section = sections?.find((s) => s.id === sectionId);
-  
+
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -81,12 +81,12 @@ export default function SectionMenu({ sectionId }) {
 
       {section && (
         <>
-          <SectionEditDialog 
+          <SectionEditDialog
             section={section}
             isDialogOpen={isEditDialogOpen}
             setIsDialogOpen={setIsEditDialogOpen}
           />
-          <DeleteSectionDialog 
+          <DeleteSectionDialog
             section={section}
             isDialogOpen={isDeleteDialogOpen}
             setIsDialogOpen={setIsDeleteDialogOpen}

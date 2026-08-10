@@ -1,21 +1,21 @@
 "use server";
 
-import { BaseAction } from "./BaseAction";
-import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import Logger from "@/lib/Logger";
-import { Session } from "@/lib/Session";
-import { PageSchema } from "@/lib/schemas/PageSchema";
-import { PageModel } from "../Models/PageModel";
-import { ProjectServices } from "../Services/ProjectServices";
-import { SectionServices } from "../Services/SectionServices";
-import { PageServices } from "../Services/PageServices";
 import { revalidatePath } from "next/cache";
-import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 import {
   canCreatePageAuth,
   canDeletePageAuth,
   canUpdatePageAuth,
 } from "@/authorization/PageAuthGuard";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import Logger from "@/lib/Logger";
+import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
+import { Session } from "@/lib/Session";
+import { PageSchema } from "@/lib/schemas/PageSchema";
+import { PageModel } from "../Models/PageModel";
+import { PageServices } from "../Services/PageServices";
+import { ProjectServices } from "../Services/ProjectServices";
+import { SectionServices } from "../Services/SectionServices";
+import { BaseAction } from "./BaseAction";
 
 class PageActions extends BaseAction {
   static get schema() {
@@ -28,7 +28,7 @@ class PageActions extends BaseAction {
     const permission = await canCreatePageAuth();
     if (permission.success === false) return permission;
 
-    const result = await this.execute(formData);
+    const result = await PageActions.execute(formData);
     if (!result.success) return result;
 
     try {
@@ -83,7 +83,7 @@ class PageActions extends BaseAction {
     const permission = await canUpdatePageAuth();
     if (permission.success === false) return permission;
 
-    const result = await this.execute(formData);
+    const result = await PageActions.execute(formData);
 
     if (!result.success) return result;
 

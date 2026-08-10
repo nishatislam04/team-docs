@@ -1,3 +1,6 @@
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,10 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getAllWorkspacePermissions } from "../actions/getAllWorkspacePermissions";
-import { useEffect, useState } from "react";
 import { managePermissionStatus } from "../actions/managePermissionStatus";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
 
 export default function PermissionManage({
   isPermissionDialogOpen,

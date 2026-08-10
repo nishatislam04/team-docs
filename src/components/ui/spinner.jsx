@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
-import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
+import React from "react";
+import { cn } from "@/lib/utils";
 
 // Spinner container - full page layout
 const spinnerVariants = cva(
@@ -18,7 +18,7 @@ const spinnerVariants = cva(
     defaultVariants: {
       show: true,
     },
-  }
+  },
 );
 
 // Loader icon with gray and black colors

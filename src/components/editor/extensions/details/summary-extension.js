@@ -1,17 +1,17 @@
 import { Node } from "@tiptap/core";
 
 export const DetailsSummary = Node.create({
-	name: "detailsSummary",
+  name: "detailsSummary",
 
-	content: "inline*",
+  content: "inline*",
 
-	defining: true,
+  defining: true,
 
-	parseHTML() {
-		return [{ tag: "summary" }];
-	},
+  parseHTML() {
+    return [{ tag: "summary" }];
+  },
 
-	renderHTML() {
-		return ["summary", 0];
-	},
+  renderHTML() {
+    return ["summary", 0];
+  },
 });

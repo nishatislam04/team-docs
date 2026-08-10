@@ -1,8 +1,8 @@
-import { ProjectServices } from "@/system/Services/ProjectServices";
-import ProjectEditorShell from "./ProjectEditorShell";
-import { SectionServices } from "@/system/Services/SectionServices";
-import { canReadSectionAuth } from "@/authorization/SectionAuthGuard";
 import { canReadPageAuth } from "@/authorization/PageAuthGuard";
+import { canReadSectionAuth } from "@/authorization/SectionAuthGuard";
+import { ProjectServices } from "@/system/Services/ProjectServices";
+import { SectionServices } from "@/system/Services/SectionServices";
+import ProjectEditorShell from "./ProjectEditorShell";
 export default async function ProjectEditorPage({ params }) {
   const canReadSectionPermission = await canReadSectionAuth();
 

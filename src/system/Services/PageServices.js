@@ -1,7 +1,7 @@
-import { PageDTO } from "../DTOs/PageDTO";
-import { BaseService } from "./BaseService";
-import { PageModel } from "../Models/PageModel";
 import Logger from "@/lib/Logger";
+import { PageDTO } from "../DTOs/PageDTO";
+import { PageModel } from "../Models/PageModel";
+import { BaseService } from "./BaseService";
 
 export class PageServices extends BaseService {
   static modelName = "page";
@@ -90,7 +90,7 @@ export class PageServices extends BaseService {
     }
 
     // Extract numbers from existing copies and find the next available number
-    const numberPattern = new RegExp(`^${this.escapeRegex(copyPattern)}(?: (\\d+))?$`);
+    const numberPattern = new RegExp(`^${PageServices.escapeRegex(copyPattern)}(?: (\\d+))?$`);
     const numbers = existingCopies
       .map((page) => {
         const match = page.title.match(numberPattern);
@@ -127,8 +127,8 @@ export class PageServices extends BaseService {
       }
 
       // Extract the base name and generate the next copy name
-      const baseName = this.extractBaseName(originalPage.title);
-      const newTitle = await this.generateCopyName(baseName, originalPage.sectionId);
+      const baseName = PageServices.extractBaseName(originalPage.title);
+      const newTitle = await PageServices.generateCopyName(baseName, originalPage.sectionId);
 
       // Create the duplicate page with the determined title
       const duplicatedPage = await PageModel.create({

@@ -1,19 +1,19 @@
 "use server";
 
-import { BaseAction } from "./BaseAction";
-import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import Logger from "@/lib/Logger";
-import { Session } from "@/lib/Session";
-import { PermissionSchema } from "@/lib/schemas/PermissionSchema";
-import { PermissionModel } from "../Models/PermissionModel";
-import { PermissionServices } from "../Services/PermissionServices";
 import { revalidatePath } from "next/cache";
-import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 import {
   canCreatePermissionAuth,
   canDeletePermissionAuth,
   canUpdatePermissionAuth,
 } from "@/authorization/PermissionAuthGuard";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import Logger from "@/lib/Logger";
+import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
+import { Session } from "@/lib/Session";
+import { PermissionSchema } from "@/lib/schemas/PermissionSchema";
+import { PermissionModel } from "../Models/PermissionModel";
+import { PermissionServices } from "../Services/PermissionServices";
+import { BaseAction } from "./BaseAction";
 
 class PermissionActions extends BaseAction {
   static get schema() {
@@ -26,7 +26,7 @@ class PermissionActions extends BaseAction {
     const permission = await canCreatePermissionAuth();
     if (permission.success === false) return permission;
 
-    const result = await this.execute(formData);
+    const result = await PermissionActions.execute(formData);
 
     if (!result.success) return result;
 
@@ -67,7 +67,7 @@ class PermissionActions extends BaseAction {
     const permission = await canUpdatePermissionAuth();
     if (permission.success === false) return permission;
 
-    const result = await this.execute(formData);
+    const result = await PermissionActions.execute(formData);
 
     if (!result.success) return result;
 

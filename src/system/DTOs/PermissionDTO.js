@@ -14,6 +14,6 @@ export class PermissionDTO {
   }
 
   static toCollection(permissions) {
-    return permissions.map((permission) => this.toResponse(permission));
+    return permissions.map((permission) => PermissionDTO.toResponse(permission));
   }
 }

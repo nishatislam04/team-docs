@@ -1,7 +1,7 @@
 "use server";
+import Logger from "@/lib/Logger";
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
-import Logger from "@/lib/Logger";
 
 /**
  * NotificationAuthGuard - Authorization guard for notification-related operations
@@ -16,25 +16,25 @@ class NotificationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Notification object if authorized
    */
   static async protect(notificationId) {
-    const session = await this.requireAuth();
+    const session = await NotificationAuthGuard.requireAuth();
 
-    const notification = await this.validateResourceExists(
+    const notification = await NotificationAuthGuard.validateResourceExists(
       (where) => prisma.notification.findUnique(where),
       { where: { id: notificationId } },
-      "Notification"
+      "Notification",
     );
 
     // Super admins can access any notification
-    if (this.isSuperAdmin(session)) {
+    if (NotificationAuthGuard.isSuperAdmin(session)) {
       return notification;
     }
 
     // Users can only access their own notifications
-    if (!this.isOwner(notification.userId)) {
+    if (!NotificationAuthGuard.isOwner(notification.userId)) {
       Logger.warn(
-        `User ${session.id} attempted to access notification ${notificationId} belonging to user ${notification.userId}`
+        `User ${session.id} attempted to access notification ${notificationId} belonging to user ${notification.userId}`,
       );
-      this.redirectUnauthorized();
+      NotificationAuthGuard.redirectUnauthorized();
     }
 
     return notification;
@@ -46,15 +46,15 @@ class NotificationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Session if authorized
    */
   static async protectCreation(targetUserId) {
-    const session = await this.requireAuth();
+    const session = await NotificationAuthGuard.requireAuth();
 
     // Check if user can create notifications for the target user
-    const canCreate = await this.canCreateNotification(session.id, targetUserId);
+    const canCreate = await NotificationAuthGuard.canCreateNotification(session.id, targetUserId);
     if (!canCreate) {
       Logger.warn(
-        `User ${session.id} attempted to create notification for user ${targetUserId} without permission`
+        `User ${session.id} attempted to create notification for user ${targetUserId} without permission`,
       );
-      this.redirectUnauthorized();
+      NotificationAuthGuard.redirectUnauthorized();
     }
 
     return session;
@@ -66,16 +66,19 @@ class NotificationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Notification object if authorized
    */
   static async protectUpdate(notificationId) {
-    const session = await this.requireAuth();
+    const session = await NotificationAuthGuard.requireAuth();
 
-    const notification = await this.protect(notificationId);
+    const notification = await NotificationAuthGuard.protect(notificationId);
 
     // Users can only update their own notifications
-    if (!this.isSuperAdmin(session) && !this.isOwner(notification.userId)) {
+    if (
+      !NotificationAuthGuard.isSuperAdmin(session) &&
+      !NotificationAuthGuard.isOwner(notification.userId)
+    ) {
       Logger.warn(
-        `User ${session.id} attempted to update notification ${notificationId} without permission`
+        `User ${session.id} attempted to update notification ${notificationId} without permission`,
       );
-      this.redirectUnauthorized();
+      NotificationAuthGuard.redirectUnauthorized();
     }
 
     return notification;
@@ -87,16 +90,19 @@ class NotificationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Notification object if authorized
    */
   static async protectDeletion(notificationId) {
-    const session = await this.requireAuth();
+    const session = await NotificationAuthGuard.requireAuth();
 
-    const notification = await this.protect(notificationId);
+    const notification = await NotificationAuthGuard.protect(notificationId);
 
     // Users can delete their own notifications, admins can delete any
-    if (!this.isSuperAdmin(session) && !this.isOwner(notification.userId)) {
+    if (
+      !NotificationAuthGuard.isSuperAdmin(session) &&
+      !NotificationAuthGuard.isOwner(notification.userId)
+    ) {
       Logger.warn(
-        `User ${session.id} attempted to delete notification ${notificationId} without permission`
+        `User ${session.id} attempted to delete notification ${notificationId} without permission`,
       );
-      this.redirectUnauthorized();
+      NotificationAuthGuard.redirectUnauthorized();
     }
 
     return notification;
@@ -109,10 +115,10 @@ class NotificationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Session and authorized filters
    */
   static async protectList(userId, filters = {}) {
-    const session = await this.requireAuth();
+    const session = await NotificationAuthGuard.requireAuth();
 
     // Super admins can access any user's notifications
-    if (this.isSuperAdmin(session)) {
+    if (NotificationAuthGuard.isSuperAdmin(session)) {
       return {
         session,
         filters: { ...filters, userId },
@@ -120,9 +126,9 @@ class NotificationAuthGuard extends BaseAuthGuard {
     }
 
     // Users can only access their own notifications
-    if (!this.isOwner(userId)) {
+    if (!NotificationAuthGuard.isOwner(userId)) {
       Logger.warn(`User ${session.id} attempted to access notifications for user ${userId}`);
-      this.redirectUnauthorized();
+      NotificationAuthGuard.redirectUnauthorized();
     }
 
     return {
@@ -137,17 +143,17 @@ class NotificationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Session if authorized
    */
   static async protectBulkOperations(userId) {
-    const session = await this.requireAuth();
+    const session = await NotificationAuthGuard.requireAuth();
 
     // Super admins can perform bulk operations on any user's notifications
-    if (this.isSuperAdmin(session)) {
+    if (NotificationAuthGuard.isSuperAdmin(session)) {
       return session;
     }
 
     // Users can only perform bulk operations on their own notifications
-    if (!this.isOwner(userId)) {
+    if (!NotificationAuthGuard.isOwner(userId)) {
       Logger.warn(`User ${session.id} attempted bulk notification operations for user ${userId}`);
-      this.redirectUnauthorized();
+      NotificationAuthGuard.redirectUnauthorized();
     }
 
     return session;
@@ -160,21 +166,24 @@ class NotificationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Session and authorized targets
    */
   static async protectBroadcast(targetUserIds, notificationType) {
-    const session = await this.requireAuth();
+    const session = await NotificationAuthGuard.requireAuth();
 
     // Check if user can broadcast this type of notification
-    const canBroadcast = await this.canBroadcastNotification(session.id, notificationType);
+    const canBroadcast = await NotificationAuthGuard.canBroadcastNotification(
+      session.id,
+      notificationType,
+    );
     if (!canBroadcast) {
       Logger.warn(
-        `User ${session.id} attempted to broadcast ${notificationType} notifications without permission`
+        `User ${session.id} attempted to broadcast ${notificationType} notifications without permission`,
       );
-      this.redirectUnauthorized();
+      NotificationAuthGuard.redirectUnauthorized();
     }
 
     // Filter target users based on permissions
-    const authorizedTargets = await this.getAuthorizedNotificationTargets(
+    const authorizedTargets = await NotificationAuthGuard.getAuthorizedNotificationTargets(
       session.id,
-      targetUserIds
+      targetUserIds,
     );
 
     return { session, authorizedTargets };
@@ -188,24 +197,27 @@ class NotificationAuthGuard extends BaseAuthGuard {
    */
   static async canCreateNotification(userId, targetUserId) {
     try {
-      const session = await this.getSession();
+      const session = await NotificationAuthGuard.getSession();
 
       // Super admins can create notifications for anyone
-      if (this.isSuperAdmin(session)) return true;
+      if (NotificationAuthGuard.isSuperAdmin(session)) return true;
 
       // Users can create notifications for themselves (self-notifications)
       if (userId === targetUserId) return true;
 
       // Check if users are in the same workspace (for workspace notifications)
-      const sharedWorkspaces = await this.getSharedWorkspaces(userId, targetUserId);
+      const sharedWorkspaces = await NotificationAuthGuard.getSharedWorkspaces(
+        userId,
+        targetUserId,
+      );
       if (sharedWorkspaces.length > 0) {
         // Check if user has notification permission in any shared workspace
         for (const workspaceId of sharedWorkspaces) {
-          const hasPermission = await this.hasPermission(
+          const hasPermission = await NotificationAuthGuard.hasPermission(
             userId,
             "create:notification",
             "workspace",
-            workspaceId
+            workspaceId,
           );
           if (hasPermission) return true;
         }
@@ -226,10 +238,10 @@ class NotificationAuthGuard extends BaseAuthGuard {
    */
   static async canBroadcastNotification(userId, notificationType) {
     try {
-      const session = await this.getSession();
+      const session = await NotificationAuthGuard.getSession();
 
       // Super admins can broadcast any notification type
-      if (this.isSuperAdmin(session)) return true;
+      if (NotificationAuthGuard.isSuperAdmin(session)) return true;
 
       // Define which notification types require special permissions
       const restrictedTypes = ["system_announcement", "maintenance_alert", "security_notice"];
@@ -240,7 +252,7 @@ class NotificationAuthGuard extends BaseAuthGuard {
       }
 
       // For other types, check if user has broadcast permission
-      return await this.hasPermission(userId, "broadcast:notification", "system");
+      return await NotificationAuthGuard.hasPermission(userId, "broadcast:notification", "system");
     } catch (error) {
       Logger.error("Failed to check notification broadcast permission", error);
       return false;
@@ -286,7 +298,7 @@ class NotificationAuthGuard extends BaseAuthGuard {
       const authorizedTargets = [];
 
       for (const targetUserId of targetUserIds) {
-        const canNotify = await this.canCreateNotification(userId, targetUserId);
+        const canNotify = await NotificationAuthGuard.canCreateNotification(userId, targetUserId);
         if (canNotify) {
           authorizedTargets.push(targetUserId);
         }
@@ -306,10 +318,10 @@ class NotificationAuthGuard extends BaseAuthGuard {
    */
   static async getUserNotificationContext(userId) {
     try {
-      const session = await this.getSession();
+      const session = await NotificationAuthGuard.getSession();
 
       // Users can only get their own notification context unless admin
-      if (!this.isSuperAdmin(session) && session.id !== userId) {
+      if (!NotificationAuthGuard.isSuperAdmin(session) && session.id !== userId) {
         return null;
       }
 
@@ -333,8 +345,8 @@ class NotificationAuthGuard extends BaseAuthGuard {
           name: w.workspace.name,
           role: w.role.name,
         })),
-        canBroadcast: await this.canBroadcastNotification(userId, "general"),
-        isAdmin: this.isSuperAdmin(session),
+        canBroadcast: await NotificationAuthGuard.canBroadcastNotification(userId, "general"),
+        isAdmin: NotificationAuthGuard.isSuperAdmin(session),
       };
     } catch (error) {
       Logger.error("Failed to get user notification context", error);

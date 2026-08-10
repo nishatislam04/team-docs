@@ -1,6 +1,6 @@
-import RoleShell from "./RoleShell";
-import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
 import { canViewRolesAuth } from "@/authorization/RoleAuthGuard";
+import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
+import RoleShell from "./RoleShell";
 
 export default async function RolePage() {
   await requireWorkspaceActive();

@@ -141,7 +141,7 @@ export const toastPromise = (promise, messages, options = {}) => {
       ...defaultMessages,
       ...messages,
     },
-    options
+    options,
   );
 };
 

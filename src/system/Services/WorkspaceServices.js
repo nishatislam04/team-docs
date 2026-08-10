@@ -1,9 +1,9 @@
-import { WorkspaceDTO } from "../DTOs/WorkspaceDto";
-import { BaseService } from "./BaseService";
+import { WorkspaceStatus } from "@/generated/client/client";
 import Logger from "@/lib/Logger";
+import { WorkspaceDTO } from "../DTOs/WorkspaceDto";
 import { UserModel } from "../Models/UserModel";
 import { WorkspaceModel } from "../Models/WorkspaceModel";
-import { WorkspaceStatus } from "@/generated/client/client";
+import { BaseService } from "./BaseService";
 
 export class WorkspaceServices extends BaseService {
   static modelName = "workspace";
@@ -24,7 +24,7 @@ export class WorkspaceServices extends BaseService {
       const totalPages = Math.ceil(totalItems / pageSize);
 
       return {
-        data: this.dto.toCollection(workspaces),
+        data: WorkspaceServices.dto.toCollection(workspaces),
         totalItems,
         pageSize,
         sortBy,
@@ -83,7 +83,7 @@ export class WorkspaceServices extends BaseService {
         orderBy: { createdAt: "desc" },
       });
 
-      return this.dto.toCollection(pendingWorkspaces);
+      return WorkspaceServices.dto.toCollection(pendingWorkspaces);
     } catch (error) {
       Logger.error(error.message, "Get pending workspaces failed");
       return [];

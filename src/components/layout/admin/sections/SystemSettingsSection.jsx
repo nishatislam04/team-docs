@@ -1,18 +1,18 @@
 "use client";
 
+import { Database, Mail, Settings, Shield } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Settings, Database, Mail, Shield } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useActiveSection } from "../ActiveSectionContext";
-import { useEffect } from "react";
-import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
 
 /**
  * System Settings Section Component

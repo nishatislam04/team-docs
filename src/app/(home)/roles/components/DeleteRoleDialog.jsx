@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Trash2 } from "lucide-react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,9 +13,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-
-import { deleteRoleAction } from "@/system/Actions/RoleActions";
 import { useToast } from "@/hooks/useToast";
+import { deleteRoleAction } from "@/system/Actions/RoleActions";
 
 export default function DeleteRoleDialog({ role, setShouldStartFetchRoles }) {
   const toast = useToast();
@@ -35,7 +34,7 @@ export default function DeleteRoleDialog({ role, setShouldStartFetchRoles }) {
       } else {
         toast.error(
           "Failed to delete role",
-          result.errors?._form?.[0] || "An error occurred while deleting the role."
+          result.errors?._form?.[0] || "An error occurred while deleting the role.",
         );
       }
     } catch (_) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * useLinkEditor Hook
@@ -59,7 +59,7 @@ export function useLinkEditor(editor) {
       doc.descendants((node, pos) => {
         if (node.marks) {
           const linkMark = node.marks.find(
-            (mark) => mark.type.name === "link" && mark.attrs.href === href
+            (mark) => mark.type.name === "link" && mark.attrs.href === href,
           );
           if (linkMark) {
             linkPos = { from: pos, to: pos + node.nodeSize };
@@ -78,7 +78,7 @@ export function useLinkEditor(editor) {
         setIsEditDialogOpen(true);
       }
     },
-    [editor]
+    [editor],
   );
 
   /**
@@ -152,7 +152,7 @@ export function useLinkEditor(editor) {
         // Silently handle link update errors - user can retry
       }
     },
-    [editor, linkData.text]
+    [editor, linkData.text],
   );
 
   /**
@@ -236,7 +236,7 @@ export function useLinkEditor(editor) {
         // Silently handle link creation errors - user can retry
       }
     },
-    [editor, selectedText]
+    [editor, selectedText],
   );
 
   /**

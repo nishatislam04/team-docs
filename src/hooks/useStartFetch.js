@@ -1,5 +1,5 @@
-import Logger from "@/lib/Logger";
 import { useEffect, useState, useTransition } from "react";
+import Logger from "@/lib/Logger";
 
 /**
  * A custom hook to fetch data on client-side with skeleton loading management.

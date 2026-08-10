@@ -54,7 +54,7 @@ export class PrismaErrorFormatter {
   }
 
   static handle(error, data, formFields = []) {
-    const formatted = this.format(error, data, formFields);
+    const formatted = PrismaErrorFormatter.format(error, data, formFields);
 
     return {
       success: false,

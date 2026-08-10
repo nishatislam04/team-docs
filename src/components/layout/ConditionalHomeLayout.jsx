@@ -1,9 +1,9 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import ConditionalMainHeader from "@/components/layout/ConditionalMainHeader";
 import MainSidebar from "@/components/layout/mainSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { usePathname } from "next/navigation";
 
 /**
  * Client-side conditional layout wrapper that handles layout switching

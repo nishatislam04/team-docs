@@ -1,11 +1,10 @@
-import { PrismaClient } from "@/generated/client/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@/generated/client/client";
 
 // Create a global reference to reuse Prisma client
 const globalForPrisma = global;
 
 /** @type {import('@/generated/client/client').PrismaClient} */
-// eslint-disable-next-line import-x/no-mutable-exports
 let prisma;
 
 // Prisma 7: a driver adapter is required to connect to the database.

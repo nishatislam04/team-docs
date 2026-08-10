@@ -1,8 +1,8 @@
 "use server";
 
+import Logger from "@/lib/Logger";
 import prisma from "@/lib/prisma";
 import { BaseAuthGuard } from "./BaseAuthGuard";
-import Logger from "@/lib/Logger";
 
 /**
  * InvitationAuthGuard - Authorization guard for invitation-related operations
@@ -17,9 +17,9 @@ class InvitationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Invitation object if authorized
    */
   static async protect(invitationId) {
-    const session = await this.requireAuth();
+    const session = await InvitationAuthGuard.requireAuth();
 
-    const invitation = await this.validateResourceExists(
+    const invitation = await InvitationAuthGuard.validateResourceExists(
       (where) =>
         prisma.invitation.findUnique({
           ...where,
@@ -28,16 +28,16 @@ class InvitationAuthGuard extends BaseAuthGuard {
           },
         }),
       { where: { id: invitationId } },
-      "Invitation"
+      "Invitation",
     );
 
     // Super admins can access any invitation
-    if (this.isSuperAdmin(session)) {
+    if (InvitationAuthGuard.isSuperAdmin(session)) {
       return invitation;
     }
 
     // Inviter can access their sent invitations
-    if (this.isOwner(invitation.invitedBy)) {
+    if (InvitationAuthGuard.isOwner(invitation.invitedBy)) {
       return invitation;
     }
 
@@ -47,9 +47,9 @@ class InvitationAuthGuard extends BaseAuthGuard {
     }
 
     Logger.warn(
-      `User ${session.id} attempted to access invitation ${invitationId} without permission`
+      `User ${session.id} attempted to access invitation ${invitationId} without permission`,
     );
-    this.redirectUnauthorized();
+    InvitationAuthGuard.redirectUnauthorized();
   }
 
   /**
@@ -58,7 +58,7 @@ class InvitationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Invitation object if valid
    */
   static async protectByToken(token) {
-    const invitation = await this.validateResourceExists(
+    const invitation = await InvitationAuthGuard.validateResourceExists(
       (where) =>
         prisma.invitation.findUnique({
           ...where,
@@ -67,7 +67,7 @@ class InvitationAuthGuard extends BaseAuthGuard {
           },
         }),
       { where: { token } },
-      "Invitation"
+      "Invitation",
     );
 
     // Check if invitation is still valid
@@ -90,21 +90,21 @@ class InvitationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Workspace object if authorized
    */
   static async protectWorkspaceInvitation(workspaceId) {
-    const session = await this.requireAuth();
+    const session = await InvitationAuthGuard.requireAuth();
 
-    const workspace = await this.validateResourceExists(
+    const workspace = await InvitationAuthGuard.validateResourceExists(
       (where) => prisma.workspace.findUnique(where),
       { where: { id: workspaceId } },
-      "Workspace"
+      "Workspace",
     );
 
     // Check if user can invite to this workspace
-    const canInvite = await this.canInviteToWorkspace(session.id, workspaceId);
+    const canInvite = await InvitationAuthGuard.canInviteToWorkspace(session.id, workspaceId);
     if (!canInvite) {
       Logger.warn(
-        `User ${session.id} attempted to invite to workspace ${workspaceId} without permission`
+        `User ${session.id} attempted to invite to workspace ${workspaceId} without permission`,
       );
-      this.redirectUnauthorized();
+      InvitationAuthGuard.redirectUnauthorized();
     }
 
     return workspace;
@@ -116,25 +116,25 @@ class InvitationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Project object if authorized
    */
   static async protectProjectInvitation(projectId) {
-    const session = await this.requireAuth();
+    const session = await InvitationAuthGuard.requireAuth();
 
-    const project = await this.validateResourceExists(
+    const project = await InvitationAuthGuard.validateResourceExists(
       (where) =>
         prisma.project.findUnique({
           ...where,
           include: { workspace: true },
         }),
       { where: { id: projectId } },
-      "Project"
+      "Project",
     );
 
     // Check if user can invite to this project
-    const canInvite = await this.canInviteToProject(session.id, projectId);
+    const canInvite = await InvitationAuthGuard.canInviteToProject(session.id, projectId);
     if (!canInvite) {
       Logger.warn(
-        `User ${session.id} attempted to invite to project ${projectId} without permission`
+        `User ${session.id} attempted to invite to project ${projectId} without permission`,
       );
-      this.redirectUnauthorized();
+      InvitationAuthGuard.redirectUnauthorized();
     }
 
     return project;
@@ -147,7 +147,7 @@ class InvitationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Invitation object if authorized
    */
   static async protectAcceptance(token, acceptingUserId) {
-    const invitation = await this.protectByToken(token);
+    const invitation = await InvitationAuthGuard.protectByToken(token);
 
     // Verify the accepting user matches the invitation email
     const user = await prisma.user.findUnique({
@@ -169,37 +169,37 @@ class InvitationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Invitation object if authorized
    */
   static async protectCancellation(invitationId) {
-    const session = await this.requireAuth();
+    const session = await InvitationAuthGuard.requireAuth();
 
-    const invitation = await this.validateResourceExists(
+    const invitation = await InvitationAuthGuard.validateResourceExists(
       (where) =>
         prisma.invitation.findUnique({
           ...where,
           include: { workspace: true },
         }),
       { where: { id: invitationId } },
-      "Invitation"
+      "Invitation",
     );
 
     // Super admins can cancel any invitation
-    if (this.isSuperAdmin(session)) {
+    if (InvitationAuthGuard.isSuperAdmin(session)) {
       return invitation;
     }
 
     // Inviter can cancel their own invitations
-    if (this.isOwner(invitation.invitedBy)) {
+    if (InvitationAuthGuard.isOwner(invitation.invitedBy)) {
       return invitation;
     }
 
     // Workspace owners can cancel invitations to their workspace
-    if (this.isOwner(invitation.workspace.ownerId)) {
+    if (InvitationAuthGuard.isOwner(invitation.workspace.ownerId)) {
       return invitation;
     }
 
     Logger.warn(
-      `User ${session.id} attempted to cancel invitation ${invitationId} without permission`
+      `User ${session.id} attempted to cancel invitation ${invitationId} without permission`,
     );
-    this.redirectUnauthorized();
+    InvitationAuthGuard.redirectUnauthorized();
   }
 
   /**
@@ -208,10 +208,10 @@ class InvitationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Session and authorized filters
    */
   static async protectList(filters = {}) {
-    const session = await this.requireAuth();
+    const session = await InvitationAuthGuard.requireAuth();
 
     // Super admins can see all invitations
-    if (this.isSuperAdmin(session)) {
+    if (InvitationAuthGuard.isSuperAdmin(session)) {
       return { session, filters };
     }
 
@@ -244,7 +244,12 @@ class InvitationAuthGuard extends BaseAuthGuard {
       if (workspace.ownerId === userId) return true;
 
       // Check for invite permission
-      return await this.hasPermission(userId, "invite:user", "workspace", workspaceId);
+      return await InvitationAuthGuard.hasPermission(
+        userId,
+        "invite:user",
+        "workspace",
+        workspaceId,
+      );
     } catch (error) {
       Logger.error("Failed to check workspace invitation permission", error);
       return false;
@@ -273,7 +278,7 @@ class InvitationAuthGuard extends BaseAuthGuard {
       if (project.workspace.ownerId === userId) return true;
 
       // Check for invite permission
-      return await this.hasPermission(userId, "invite:user", "project", projectId);
+      return await InvitationAuthGuard.hasPermission(userId, "invite:user", "project", projectId);
     } catch (error) {
       Logger.error("Failed to check project invitation permission", error);
       return false;
@@ -316,10 +321,10 @@ class InvitationAuthGuard extends BaseAuthGuard {
    */
   static async getSentInvitations(userId, options = {}) {
     try {
-      const session = await this.getSession();
+      const session = await InvitationAuthGuard.getSession();
 
       // Verify user can access sent invitations
-      if (!this.isSuperAdmin(session) && session.id !== userId) {
+      if (!InvitationAuthGuard.isSuperAdmin(session) && session.id !== userId) {
         return [];
       }
 
@@ -379,13 +384,13 @@ class InvitationAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Session if authorized
    */
   static async protectInvitationWithLimits(workspaceId, inviterUserId) {
-    const session = await this.requireAuth();
+    const session = await InvitationAuthGuard.requireAuth();
 
     // Check basic invitation permission
-    await this.protectWorkspaceInvitation(workspaceId);
+    await InvitationAuthGuard.protectWorkspaceInvitation(workspaceId);
 
     // Check invitation limits
-    const limitReached = await this.isInvitationLimitReached(workspaceId);
+    const limitReached = await InvitationAuthGuard.isInvitationLimitReached(workspaceId);
     if (limitReached) {
       Logger.warn(`Invitation limit reached for workspace ${workspaceId}`);
       throw new Error("Invitation limit reached for this workspace");

@@ -6,8 +6,8 @@
  * including positioning, keyboard navigation, search filtering, and command execution.
  */
 
-import { useState, useEffect, useMemo, useCallback } from "react";
-import { useFloating, autoUpdate, offset, flip, shift, size } from "@floating-ui/react";
+import { autoUpdate, flip, offset, shift, size, useFloating } from "@floating-ui/react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { SLASH_COMMAND_CONFIG } from "../../../../core/EditorConfig";
 import { getBaseCommands } from "../../../commands";
 
@@ -30,7 +30,7 @@ export const useSlashCommand = (
   setInitialText,
   setInitialUrl,
   setDialogMode,
-  config = {}
+  config = {},
 ) => {
   // Merge configuration with defaults
   const slashConfig = { ...SLASH_COMMAND_CONFIG, ...config };
@@ -80,7 +80,7 @@ export const useSlashCommand = (
       onOpenChange || (() => {}),
       setInitialText || (() => {}),
       setInitialUrl || (() => {}),
-      setDialogMode || (() => {})
+      setDialogMode || (() => {}),
     );
 
     return baseCommands.map((group) => ({
@@ -190,7 +190,7 @@ export const useSlashCommand = (
 
       return { groupIndex: 0, itemIndex: 0 };
     },
-    [groupedItems]
+    [groupedItems],
   );
 
   const getSelectedItem = useCallback(() => {
@@ -262,7 +262,7 @@ export const useSlashCommand = (
         onOpenChange || (() => {}),
         setInitialText || (() => {}),
         setInitialUrl || (() => {}),
-        setDialogMode || (() => {})
+        setDialogMode || (() => {}),
       );
 
       // Find the original command

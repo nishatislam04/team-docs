@@ -1,7 +1,7 @@
 import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
-import WorkspaceShell from "./WorkspaceShell";
 import { Session } from "@/lib/Session";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
+import WorkspaceShell from "./WorkspaceShell";
 
 export default async function WorkspacePage() {
   await requireWorkspaceActive();

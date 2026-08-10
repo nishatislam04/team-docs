@@ -19,12 +19,12 @@ export class RolePermissionAssignServices extends BaseService {
 
       // 2. get selected permissions
       const selectedPermissions = allPermissions.filter((permission) =>
-        permissions.some((p) => p === permission.id)
+        permissions.some((p) => p === permission.id),
       );
 
       // 3. get non-selected permissions
       const nonSelectedPermissions = allPermissions.filter(
-        (permission) => !permissions.some((p) => p === permission.id)
+        (permission) => !permissions.some((p) => p === permission.id),
       );
 
       // 4. remove non-selected permissions
@@ -56,8 +56,8 @@ export class RolePermissionAssignServices extends BaseService {
               ownerId,
               // workspaceId, // we will update db to support this column
             },
-          })
-        )
+          }),
+        ),
       );
     } catch (error) {
       Logger.error(error.message, `Perform permission assignment failed`);

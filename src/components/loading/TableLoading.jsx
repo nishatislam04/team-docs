@@ -1,5 +1,5 @@
 import { Skeleton } from "../ui/skeleton";
-import { TableCell, TableRow, Table, TableBody } from "../ui/table";
+import { Table, TableBody, TableCell, TableRow } from "../ui/table";
 
 export default function TableLoading({ columns = 4, withTable = false }) {
   const rows = [...Array(7)].map((_, i) => (
@@ -17,9 +17,7 @@ export default function TableLoading({ columns = 4, withTable = false }) {
   if (withTable) {
     return (
       <Table>
-        <TableBody>
-          {rows}
-        </TableBody>
+        <TableBody>{rows}</TableBody>
       </Table>
     );
   }

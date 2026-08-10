@@ -11,8 +11,7 @@ export const useProjectCreateNameWatch = (form) => {
         lower: true,
         strict: true,
         remove: /[*+~.()'"!:@]/g,
-      })
+      }),
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nameValue, form.setValue]);
 };

@@ -14,9 +14,8 @@ export default function useProjectEditFormWatch(form) {
         lower: true,
         strict: true,
         remove: /[*+~.()'"!:@]/g,
-      })
+      }),
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nameValue, form.setValue]);
 
   return { slugValue };

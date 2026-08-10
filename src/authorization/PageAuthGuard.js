@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import prisma from "@/lib/prisma";
 import { PermissionServices } from "@/system/Services/PermissionServices";
+import { BaseAuthGuard } from "./BaseAuthGuard";
 
 /**
  * PageAuthGuard - Authorization guard for page-related operations
@@ -13,11 +13,11 @@ import { PermissionServices } from "@/system/Services/PermissionServices";
  */
 class PageAuthGuard extends BaseAuthGuard {
   static async canReadPage() {
-    const session = await this.basicAuthCheck();
+    const session = await PageAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
-    if (this.isSuperAdmin(session)) return { success: true };
+    if (PageAuthGuard.isSuperAdmin(session)) return { success: true };
 
     const permission = await PermissionServices.findFirst({
       where: {
@@ -48,7 +48,7 @@ class PageAuthGuard extends BaseAuthGuard {
   }
 
   static async canCreatePage() {
-    const session = await this.basicAuthCheck();
+    const session = await PageAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -81,7 +81,7 @@ class PageAuthGuard extends BaseAuthGuard {
   }
 
   static async canUpdatePage() {
-    const session = await this.basicAuthCheck();
+    const session = await PageAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -114,7 +114,7 @@ class PageAuthGuard extends BaseAuthGuard {
   }
 
   static async canDeletePage() {
-    const session = await this.basicAuthCheck();
+    const session = await PageAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 

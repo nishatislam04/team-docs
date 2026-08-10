@@ -1,24 +1,23 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback, useMemo } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import { useEditorContext } from "./EditorProvider";
-import { DEFAULT_EDITOR_CONFIG, getInstanceConfig } from "./EditorConfig";
-
-import StarterKit from "@tiptap/starter-kit";
-import Highlight from "@tiptap/extension-highlight";
-import Underline from "@tiptap/extension-underline";
-import Link from "@tiptap/extension-link";
-import Color from "@tiptap/extension-color";
-import { TextStyle } from "@tiptap/extension-text-style";
-import { Placeholder } from "@tiptap/extension-placeholder";
-import TaskList from "@tiptap/extension-task-list";
-import TaskItem from "@tiptap/extension-task-item";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import Color from "@tiptap/extension-color";
+import Highlight from "@tiptap/extension-highlight";
+import Link from "@tiptap/extension-link";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import TaskItem from "@tiptap/extension-task-item";
+import TaskList from "@tiptap/extension-task-list";
 import TextAlign from "@tiptap/extension-text-align";
+import { TextStyle } from "@tiptap/extension-text-style";
+import Underline from "@tiptap/extension-underline";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import { all, createLowlight } from "lowlight";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Toggle, ToggleSummary } from "../extensions/toggle";
 import { TrailingNode } from "../extensions/trailing-node/trailing-node-extension";
+import { DEFAULT_EDITOR_CONFIG, getInstanceConfig } from "./EditorConfig";
+import { useEditorContext } from "./EditorProvider";
 
 // Create lowlight instance for syntax highlighting
 const lowlight = createLowlight(all);
@@ -102,7 +101,6 @@ const lowlight = createLowlight(all);
 const EditorComponent = ({
   instanceId,
   initialContent = null,
-  extensions = [], // eslint-disable-line no-unused-vars
   config = {},
   onSave,
   onChange,
@@ -193,7 +191,7 @@ const EditorComponent = ({
         }
       }
     },
-    [instanceId]
+    [instanceId],
   );
 
   // Update handleSaveRef after handleSave is defined
@@ -355,7 +353,7 @@ const EditorComponent = ({
         editorContextRef.current?.unregisterEditor?.(instanceId);
       },
     }),
-    [instanceId, initialContent]
+    [instanceId, initialContent],
   ); // Only depend on truly stable values
 
   const editor = useEditor(stableEditorConfig);
@@ -373,7 +371,7 @@ const EditorComponent = ({
         }
       }
     },
-    [editor]
+    [editor],
   );
 
   // Cleanup on unmount

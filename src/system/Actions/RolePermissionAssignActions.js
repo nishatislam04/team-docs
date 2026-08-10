@@ -1,12 +1,12 @@
 "use server";
 
-import { BaseAction } from "./BaseAction";
-import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 import Logger from "@/lib/Logger";
+import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
 import { Session } from "@/lib/Session";
 import { RolePermissionAssignSchema } from "@/lib/schemas/RolePermissionAssignSchema";
-import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 import { RolePermissionAssignServices } from "../Services/RolePermissionAssignServices";
+import { BaseAction } from "./BaseAction";
 
 class RolePermissionAssignActions extends BaseAction {
   static get schema() {
@@ -16,7 +16,7 @@ class RolePermissionAssignActions extends BaseAction {
   static async create(formData) {
     await requireWorkspaceAdmin();
 
-    const result = await this.execute(formData);
+    const result = await RolePermissionAssignActions.execute(formData);
 
     if (!result.success) return result;
 

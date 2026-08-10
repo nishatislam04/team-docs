@@ -2,12 +2,12 @@
 
 import React, {
   createContext,
-  useContext,
   useCallback,
-  useRef,
-  useState,
+  useContext,
   useEffect,
   useMemo,
+  useRef,
+  useState,
 } from "react";
 import { DEFAULT_EDITOR_CONFIG, mergeConfig } from "./EditorConfig";
 
@@ -151,7 +151,7 @@ export const EditorProvider = ({
         };
       }
     },
-    [autoSave, autoSaveDelay, onChange]
+    [autoSave, autoSaveDelay, onChange],
   );
 
   /**
@@ -189,7 +189,7 @@ export const EditorProvider = ({
       // Clean up save callback for this instance
       saveCallbacks.current.delete(instanceId);
     },
-    [] // Remove the dependency on editors.size to prevent infinite loops
+    [], // Remove the dependency on editors.size to prevent infinite loops
   );
 
   /**
@@ -207,7 +207,7 @@ export const EditorProvider = ({
       });
       return editor;
     },
-    [] // Remove editors dependency to prevent infinite loops
+    [], // Remove editors dependency to prevent infinite loops
   );
 
   /**
@@ -246,7 +246,7 @@ export const EditorProvider = ({
         setIsSaving(false);
       }
     },
-    [onSave] // Remove editors dependency to prevent infinite loops
+    [onSave], // Remove editors dependency to prevent infinite loops
   );
 
   /**
@@ -291,7 +291,7 @@ export const EditorProvider = ({
         setIsSaving(false);
       }
     },
-    [onSave] // Remove editors dependency to prevent infinite loops
+    [onSave], // Remove editors dependency to prevent infinite loops
   );
 
   /**
@@ -354,7 +354,7 @@ export const EditorProvider = ({
         setIsLoading(false);
       }
     },
-    [onLoad] // Remove editors dependency to prevent infinite loops
+    [onLoad], // Remove editors dependency to prevent infinite loops
   );
 
   /**
@@ -380,7 +380,7 @@ export const EditorProvider = ({
       editor.commands.focus();
       setHasUnsavedChanges(true);
     },
-    [] // Remove editors dependency to prevent infinite loops
+    [], // Remove editors dependency to prevent infinite loops
   );
 
   /**
@@ -408,7 +408,7 @@ export const EditorProvider = ({
         editor.commands.focus(position);
       }
     },
-    [] // Remove editors dependency to prevent infinite loops
+    [], // Remove editors dependency to prevent infinite loops
   );
 
   // Cleanup on unmount
@@ -470,7 +470,7 @@ export const EditorProvider = ({
       lastSaved,
       hasUnsavedChanges,
       editorCount,
-    ]
+    ],
   );
 
   return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;

@@ -1,7 +1,7 @@
 "use server";
 
-import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import { BaseAuthGuard } from "./BaseAuthGuard";
 
 /**
  * AdminAuthGuard - Authorization guard for administrative operations
@@ -15,7 +15,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protect() {
-    return await this.requireSuperAdmin();
+    return await AdminAuthGuard.requireSuperAdmin();
   }
 
   /**
@@ -23,7 +23,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protectUserManagement() {
-    const session = await this.requireSuperAdmin();
+    const session = await AdminAuthGuard.requireSuperAdmin();
     Logger.info(`Admin ${session.id} accessing user management`);
     return session;
   }
@@ -33,7 +33,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protectWorkspaceManagement() {
-    const session = await this.requireSuperAdmin();
+    const session = await AdminAuthGuard.requireSuperAdmin();
     Logger.info(`Admin ${session.id} accessing workspace management`);
     return session;
   }
@@ -43,7 +43,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protectSystemSettings() {
-    const session = await this.requireSuperAdmin();
+    const session = await AdminAuthGuard.requireSuperAdmin();
     Logger.info(`Admin ${session.id} accessing system settings`);
     return session;
   }
@@ -53,7 +53,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protectAnalytics() {
-    const session = await this.requireSuperAdmin();
+    const session = await AdminAuthGuard.requireSuperAdmin();
     Logger.info(`Admin ${session.id} accessing system analytics`);
     return session;
   }
@@ -63,7 +63,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protectMaintenance() {
-    const session = await this.requireSuperAdmin();
+    const session = await AdminAuthGuard.requireSuperAdmin();
     Logger.info(`Admin ${session.id} accessing maintenance operations`);
     return session;
   }
@@ -73,7 +73,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protectAuditLogs() {
-    const session = await this.requireSuperAdmin();
+    const session = await AdminAuthGuard.requireSuperAdmin();
     Logger.info(`Admin ${session.id} accessing audit logs`);
     return session;
   }
@@ -83,7 +83,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protectRolePermissionManagement() {
-    const session = await this.requireSuperAdmin();
+    const session = await AdminAuthGuard.requireSuperAdmin();
     Logger.info(`Admin ${session.id} accessing role/permission management`);
     return session;
   }
@@ -93,7 +93,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protectInvitationManagement() {
-    const session = await this.requireSuperAdmin();
+    const session = await AdminAuthGuard.requireSuperAdmin();
     Logger.info(`Admin ${session.id} accessing invitation management`);
     return session;
   }
@@ -103,7 +103,7 @@ class AdminAuthGuard extends BaseAuthGuard {
    * @returns {Promise<Object>} Admin user session
    */
   static async protectNotificationBroadcast() {
-    const session = await this.requireSuperAdmin();
+    const session = await AdminAuthGuard.requireSuperAdmin();
     Logger.info(`Admin ${session.id} accessing notification broadcast`);
     return session;
   }
@@ -114,8 +114,8 @@ class AdminAuthGuard extends BaseAuthGuard {
    */
   static async isAdmin() {
     try {
-      const session = await this.getSession();
-      return this.isSuperAdmin(session);
+      const session = await AdminAuthGuard.getSession();
+      return AdminAuthGuard.isSuperAdmin(session);
     } catch (error) {
       Logger.error("Failed to check admin status", error);
       return false;
@@ -128,9 +128,9 @@ class AdminAuthGuard extends BaseAuthGuard {
    */
   static async getAdminContext() {
     try {
-      const session = await this.getSession();
+      const session = await AdminAuthGuard.getSession();
 
-      if (!this.isSuperAdmin(session)) {
+      if (!AdminAuthGuard.isSuperAdmin(session)) {
         return null;
       }
 

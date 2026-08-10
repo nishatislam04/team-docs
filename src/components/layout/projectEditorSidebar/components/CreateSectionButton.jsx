@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { FolderKanban } from "lucide-react";
 import { useSectionDialogStore } from "@/app/(home)/projects/[slug]/editor/store/useSectionDialogStore";
+import { Button } from "@/components/ui/button";
 
 export default function CreateSectionButton() {
   const openSectionDialog = useSectionDialogStore((state) => state.openSectionDialog);

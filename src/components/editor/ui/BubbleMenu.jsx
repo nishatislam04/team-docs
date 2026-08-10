@@ -32,15 +32,15 @@ import {
   Italic, // Italic formatting icon
   Link, // Link creation/editing icon
   PaintBucket, // Text color icon
+  RotateCcw, // Remove formatting icon
   Strikethrough, // Strikethrough formatting icon
   Underline, // Underline formatting icon
-  RotateCcw, // Remove formatting icon
 } from "lucide-react";
 import { useState } from "react";
-import ColorPickerPanel from "./ColorPickerPanel"; // Color selection component
-import LinkEditDialog from "./LinkEditDialog"; // Edit existing links
-import LinkCreateDialog from "./LinkCreateDialog"; // Create new links
 import { useLinkEditor } from "../hooks/useLinkEditor"; // Link management hook
+import ColorPickerPanel from "./ColorPickerPanel"; // Color selection component
+import LinkCreateDialog from "./LinkCreateDialog"; // Create new links
+import LinkEditDialog from "./LinkEditDialog"; // Edit existing links
 
 export default function BubbleMenu({ editor }) {
   // 🎨 State for showing/hiding the color picker panel
@@ -60,7 +60,8 @@ export default function BubbleMenu({ editor }) {
         offset: 10, // Distance from the selection
         onHide: () => setShowColorPanel(false), // Clean up color panel when menu hides
       }}
-      className="z-50 flex w-[420px] items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+      className="z-50 flex w-[420px] items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+    >
       {/* Bold */}
       <button
         type="button"
@@ -70,7 +71,8 @@ export default function BubbleMenu({ editor }) {
           // Restore selection after formatting
           setTimeout(() => editor.commands.setTextSelection({ from, to }), 0);
         }}
-        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("bold") ? "bg-blue-100 text-blue-600" : ""}`}>
+        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("bold") ? "bg-blue-100 text-blue-600" : ""}`}
+      >
         <Bold className="h-5 w-5" />
       </button>
 
@@ -83,7 +85,8 @@ export default function BubbleMenu({ editor }) {
           // Restore selection after formatting
           setTimeout(() => editor.commands.setTextSelection({ from, to }), 0);
         }}
-        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("italic") ? "bg-blue-100 text-blue-600" : ""}`}>
+        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("italic") ? "bg-blue-100 text-blue-600" : ""}`}
+      >
         <Italic className="h-5 w-5" />
       </button>
 
@@ -96,7 +99,8 @@ export default function BubbleMenu({ editor }) {
           // Restore selection after formatting
           setTimeout(() => editor.commands.setTextSelection({ from, to }), 0);
         }}
-        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("underline") ? "bg-blue-100 text-blue-600" : ""}`}>
+        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("underline") ? "bg-blue-100 text-blue-600" : ""}`}
+      >
         <Underline className="h-5 w-5" />
       </button>
 
@@ -109,7 +113,8 @@ export default function BubbleMenu({ editor }) {
           // Restore selection after formatting
           setTimeout(() => editor.commands.setTextSelection({ from, to }), 0);
         }}
-        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("strike") ? "bg-blue-100 text-blue-600" : ""}`}>
+        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("strike") ? "bg-blue-100 text-blue-600" : ""}`}
+      >
         <Strikethrough className="h-5 w-5" />
       </button>
 
@@ -122,7 +127,8 @@ export default function BubbleMenu({ editor }) {
           // Restore selection after formatting
           setTimeout(() => editor.commands.setTextSelection({ from, to }), 0);
         }}
-        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("code") ? "bg-blue-100 text-blue-600" : ""}`}>
+        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("code") ? "bg-blue-100 text-blue-600" : ""}`}
+      >
         <Code className="h-5 w-5" />
       </button>
 
@@ -135,7 +141,8 @@ export default function BubbleMenu({ editor }) {
           // Restore selection after formatting
           setTimeout(() => editor.commands.setTextSelection({ from, to }), 0);
         }}
-        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("highlight") ? "bg-yellow-100 text-yellow-600" : ""}`}>
+        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("highlight") ? "bg-yellow-100 text-yellow-600" : ""}`}
+      >
         <Highlighter className="h-5 w-5" />
       </button>
 
@@ -151,7 +158,8 @@ export default function BubbleMenu({ editor }) {
             linkEditor.openLinkCreateDialog();
           }
         }}
-        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("link") ? "bg-blue-100 text-blue-600" : ""}`}>
+        className={`rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${editor.isActive("link") ? "bg-blue-100 text-blue-600" : ""}`}
+      >
         <Link className="h-5 w-5" />
       </button>
 
@@ -163,7 +171,8 @@ export default function BubbleMenu({ editor }) {
           e.stopPropagation();
           setShowColorPanel((prev) => !prev);
         }}
-        className={`relative rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${showColorPanel ? "bg-pink-100 text-pink-600" : ""}`}>
+        className={`relative rounded-lg p-2 text-gray-600 transition hover:bg-blue-100 hover:text-black focus:ring-2 focus:ring-blue-200 focus:outline-none active:bg-blue-50 dark:text-gray-300 dark:hover:bg-zinc-800 ${showColorPanel ? "bg-pink-100 text-pink-600" : ""}`}
+      >
         <PaintBucket className="h-5 w-5" />
         {/* Color indicator dot */}
         {(() => {
@@ -201,17 +210,15 @@ export default function BubbleMenu({ editor }) {
           setTimeout(() => editor.commands.setTextSelection({ from, to }), 0);
         }}
         className={`rounded-lg p-2 text-gray-600 transition hover:bg-red-100 hover:text-black focus:ring-2 focus:ring-red-200 focus:outline-none active:bg-red-50 dark:text-gray-300 dark:hover:bg-zinc-800`}
-        title="Remove all formatting">
+        title="Remove all formatting"
+      >
         <RotateCcw className="h-5 w-5" />
       </button>
 
       {/* Color Picker Panel */}
       {showColorPanel && (
         <div className="absolute top-12 left-0 z-50">
-          <ColorPickerPanel
-            editor={editor}
-            onClose={() => setShowColorPanel(false)}
-          />
+          <ColorPickerPanel editor={editor} onClose={() => setShowColorPanel(false)} />
         </div>
       )}
 

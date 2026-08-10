@@ -1,12 +1,12 @@
 "use client";
 
-import { Suspense, use, useState } from "react";
 import dynamic from "next/dynamic";
-import NoPermissionUI from "./components/NoPermissionUI";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Suspense, use, useState } from "react";
+import { toast } from "sonner";
 import DialogLoading from "@/components/loading/DialogLoading";
 import TableLoading from "@/components/loading/TableLoading";
+import NoPermissionUI from "./components/NoPermissionUI";
 
 const PermissionCreateDrawerLazy = dynamic(() => import("./components/PermissionCreateDialog"), {
   ssr: false,

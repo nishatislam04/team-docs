@@ -1,20 +1,20 @@
 "use server";
 
-import { BaseAction } from "./BaseAction";
-import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
-import Logger from "@/lib/Logger";
-import { Session } from "@/lib/Session";
-import { AdminUpdatingUserSchema, UserSchema } from "@/lib/schemas/UserSchema";
-import { UserModel } from "../Models/UserModel";
 import bcrypt from "bcryptjs";
-import { WorkspaceMemberModel } from "../Models/WorkspaceMemberModel";
-import { RoleService } from "../Services/RoleServices";
-import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
 import {
   canCreateUserAuth,
   canDeleteUserAuth,
   canUpdateUserAuth,
 } from "@/authorization/UserAuthGuard";
+import { requireWorkspaceAdmin } from "@/authorization/WorkspaceAuthGuard";
+import Logger from "@/lib/Logger";
+import { PrismaErrorFormatter } from "@/lib/PrismaErrorFormatter";
+import { Session } from "@/lib/Session";
+import { AdminUpdatingUserSchema, UserSchema } from "@/lib/schemas/UserSchema";
+import { UserModel } from "../Models/UserModel";
+import { WorkspaceMemberModel } from "../Models/WorkspaceMemberModel";
+import { RoleService } from "../Services/RoleServices";
+import { BaseAction } from "./BaseAction";
 
 class UserActions extends BaseAction {
   static get schema() {
@@ -33,7 +33,7 @@ class UserActions extends BaseAction {
 
     if (!userAuthorization.success) return userAuthorization;
 
-    const result = await this.execute(formData);
+    const result = await UserActions.execute(formData);
 
     if (!result.success) return result;
 
@@ -123,7 +123,7 @@ class UserActions extends BaseAction {
 
     if (!userAuthorization.success) return userAuthorization;
 
-    const result = await this.execute(formData, AdminUpdatingUserSchema);
+    const result = await UserActions.execute(formData, AdminUpdatingUserSchema);
 
     if (!result.success) return result;
 

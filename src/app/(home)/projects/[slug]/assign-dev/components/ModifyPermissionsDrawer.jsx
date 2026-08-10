@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Drawer,
   DrawerClose,
@@ -10,10 +12,8 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { getProjectPermission } from "../actions/getProjectPermission";
 import { modifyDevPermissionsAction } from "@/system/Actions/ProjectPermissionAction";
+import { getProjectPermission } from "../actions/getProjectPermission";
 
 export default function ModifyPermissionsDrawer({
   isOpen,
@@ -50,7 +50,7 @@ export default function ModifyPermissionsDrawer({
 
   const handlePermissionChange = (permissionId, checked) => {
     setSelectedPermissions((prev) =>
-      checked ? [...prev, permissionId] : prev.filter((id) => id !== permissionId)
+      checked ? [...prev, permissionId] : prev.filter((id) => id !== permissionId),
     );
   };
 

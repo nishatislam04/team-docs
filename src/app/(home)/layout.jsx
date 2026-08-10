@@ -1,9 +1,9 @@
+import { Suspense } from "react";
 import ConditionalHomeLayout from "@/components/layout/ConditionalHomeLayout";
 import RouteChangeHandler from "@/components/layout/RouteChangeHandler";
 import { Session } from "@/lib/Session";
 import { ThemeProvider } from "@/provider/ThemeProvider";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
-import { Suspense } from "react";
 
 export default async function HomeLayout({ children }) {
   return (

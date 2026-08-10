@@ -1,7 +1,7 @@
 "use client";
 
-import { useCurrentSession } from "@/hooks/useCurrentSession";
 import dynamic from "next/dynamic";
+import { useCurrentSession } from "@/hooks/useCurrentSession";
 
 const ActionButton = dynamic(() => import("../ActionButton"), {
   ssr: false,

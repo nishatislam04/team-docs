@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
 import Logger from "@/lib/Logger";
+import prisma from "@/lib/prisma";
 
 /**
  * PermissionChecker - Comprehensive permission checking system
@@ -21,29 +21,29 @@ export class PermissionChecker {
   static async hasPermission(userId, permissionName, scope, resourceId = null) {
     try {
       // Check direct user permissions first
-      const directPermission = await this.checkDirectUserPermission(
+      const directPermission = await PermissionChecker.checkDirectUserPermission(
         userId,
         permissionName,
         scope,
-        resourceId
+        resourceId,
       );
       if (directPermission) return true;
 
       // Check role-based permissions
-      const rolePermission = await this.checkRoleBasedPermission(
+      const rolePermission = await PermissionChecker.checkRoleBasedPermission(
         userId,
         permissionName,
         scope,
-        resourceId
+        resourceId,
       );
       if (rolePermission) return true;
 
       // Check ownership-based permissions
-      const ownershipPermission = await this.checkOwnershipPermission(
+      const ownershipPermission = await PermissionChecker.checkOwnershipPermission(
         userId,
         permissionName,
         scope,
-        resourceId
+        resourceId,
       );
       if (ownershipPermission) return true;
 
@@ -102,11 +102,19 @@ export class PermissionChecker {
   static async checkRoleBasedPermission(userId, permissionName, scope, resourceId) {
     try {
       if (scope === "workspace" && resourceId) {
-        return await this.checkWorkspaceRolePermission(userId, permissionName, resourceId);
+        return await PermissionChecker.checkWorkspaceRolePermission(
+          userId,
+          permissionName,
+          resourceId,
+        );
       }
 
       if (scope === "project" && resourceId) {
-        return await this.checkProjectRolePermission(userId, permissionName, resourceId);
+        return await PermissionChecker.checkProjectRolePermission(
+          userId,
+          permissionName,
+          resourceId,
+        );
       }
 
       return false;
@@ -146,7 +154,7 @@ export class PermissionChecker {
       if (!membership) return false;
 
       return membership.role.permissions.some(
-        (rp) => rp.permission.name === permissionName && rp.permission.scope === "workspace"
+        (rp) => rp.permission.name === permissionName && rp.permission.scope === "workspace",
       );
     } catch (error) {
       Logger.error("Failed to check workspace role permission", error);
@@ -184,7 +192,7 @@ export class PermissionChecker {
       if (!membership) return false;
 
       return membership.role.permissions.some(
-        (rp) => rp.permission.name === permissionName && rp.permission.scope === "project"
+        (rp) => rp.permission.name === permissionName && rp.permission.scope === "project",
       );
     } catch (error) {
       Logger.error("Failed to check project role permission", error);
@@ -214,7 +222,7 @@ export class PermissionChecker {
         return false;
       }
 
-      return await this.checkResourceOwnership(userId, scope, resourceId);
+      return await PermissionChecker.checkResourceOwnership(userId, scope, resourceId);
     } catch (error) {
       Logger.error("Failed to check ownership permission", error);
       return false;
@@ -278,7 +286,9 @@ export class PermissionChecker {
   static async checkMultiplePermissions(userId, permissions, logic = "AND") {
     try {
       const results = await Promise.all(
-        permissions.map((p) => this.hasPermission(userId, p.name, p.scope, p.resourceId))
+        permissions.map((p) =>
+          PermissionChecker.hasPermission(userId, p.name, p.scope, p.resourceId),
+        ),
       );
 
       return logic === "AND" ? results.every((r) => r) : results.some((r) => r);
@@ -300,15 +310,27 @@ export class PermissionChecker {
       const permissions = new Set();
 
       // Get direct permissions
-      const directPermissions = await this.getDirectUserPermissions(userId, scope, resourceId);
+      const directPermissions = await PermissionChecker.getDirectUserPermissions(
+        userId,
+        scope,
+        resourceId,
+      );
       directPermissions.forEach((p) => permissions.add(p));
 
       // Get role-based permissions
-      const rolePermissions = await this.getRoleBasedPermissions(userId, scope, resourceId);
+      const rolePermissions = await PermissionChecker.getRoleBasedPermissions(
+        userId,
+        scope,
+        resourceId,
+      );
       rolePermissions.forEach((p) => permissions.add(p));
 
       // Get ownership permissions
-      const ownershipPermissions = await this.getOwnershipPermissions(userId, scope, resourceId);
+      const ownershipPermissions = await PermissionChecker.getOwnershipPermissions(
+        userId,
+        scope,
+        resourceId,
+      );
       ownershipPermissions.forEach((p) => permissions.add(p));
 
       return Array.from(permissions);
@@ -375,7 +397,7 @@ export class PermissionChecker {
           permissions.push(
             ...membership.role.permissions
               .filter((rp) => rp.permission.scope === "workspace")
-              .map((rp) => rp.permission.name)
+              .map((rp) => rp.permission.name),
           );
         }
       }
@@ -398,7 +420,7 @@ export class PermissionChecker {
           permissions.push(
             ...membership.role.permissions
               .filter((rp) => rp.permission.scope === "project")
-              .map((rp) => rp.permission.name)
+              .map((rp) => rp.permission.name),
           );
         }
       }
@@ -426,7 +448,7 @@ export class PermissionChecker {
         page: ["edit:page", "delete:page", "share:page"],
       };
 
-      const isOwner = await this.checkResourceOwnership(userId, scope, resourceId);
+      const isOwner = await PermissionChecker.checkResourceOwnership(userId, scope, resourceId);
       return isOwner ? ownershipPermissions[scope] || [] : [];
     } catch (error) {
       Logger.error("Failed to get ownership permissions", error);
@@ -444,6 +466,6 @@ export class PermissionChecker {
    */
   static async canPerformAction(userId, action, resourceType, resourceId) {
     const permissionName = `${action}:${resourceType}`;
-    return await this.hasPermission(userId, permissionName, resourceType, resourceId);
+    return await PermissionChecker.hasPermission(userId, permissionName, resourceType, resourceId);
   }
 }

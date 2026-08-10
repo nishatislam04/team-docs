@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { BaseAuthGuard } from "./BaseAuthGuard";
 import Logger from "@/lib/Logger";
+import prisma from "@/lib/prisma";
 import { PermissionServices } from "@/system/Services/PermissionServices";
+import { BaseAuthGuard } from "./BaseAuthGuard";
 
 /**
  * SectionAuthGuard - Authorization guard for section-related operations
@@ -13,11 +13,11 @@ import { PermissionServices } from "@/system/Services/PermissionServices";
  */
 class SectionAuthGuard extends BaseAuthGuard {
   static async canReadSection() {
-    const session = await this.basicAuthCheck();
+    const session = await SectionAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
-    if (this.isSuperAdmin(session)) return { success: true };
+    if (SectionAuthGuard.isSuperAdmin(session)) return { success: true };
 
     const section = await PermissionServices.findFirst({
       where: {
@@ -48,7 +48,7 @@ class SectionAuthGuard extends BaseAuthGuard {
   }
 
   static async canCreateSection() {
-    const session = await this.basicAuthCheck();
+    const session = await SectionAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -81,7 +81,7 @@ class SectionAuthGuard extends BaseAuthGuard {
   }
 
   static async canUpdateSection() {
-    const session = await this.basicAuthCheck();
+    const session = await SectionAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 
@@ -114,7 +114,7 @@ class SectionAuthGuard extends BaseAuthGuard {
   }
 
   static async canDeleteSection() {
-    const session = await this.basicAuthCheck();
+    const session = await SectionAuthGuard.basicAuthCheck();
 
     if (session.success === false) return session;
 

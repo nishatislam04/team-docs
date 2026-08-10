@@ -11,6 +11,6 @@ export class ProjectDTO {
   }
 
   static toCollection(projects) {
-    return projects.map((project) => this.toResponse(project));
+    return projects.map((project) => ProjectDTO.toResponse(project));
   }
 }

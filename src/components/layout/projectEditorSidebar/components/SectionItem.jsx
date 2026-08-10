@@ -1,12 +1,12 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
-import SectionMenu from "./SectionMenu";
-import PageList from "./PageList";
-import { SidebarMenuItem } from "@/components/ui/sidebar";
 import { ChevronDown, FolderKanban } from "lucide-react";
+import { useProjectStore } from "@/app/(home)/projects/store/useProjectStore";
+import { SidebarMenuItem } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import PageList from "./PageList";
+import SectionMenu from "./SectionMenu";
 // Removed useRouter, usePathname, useSearchParams - no longer needed for URL updates
 
 export default function SectionItem({ section, isOpen, onToggle }) {
@@ -25,7 +25,7 @@ export default function SectionItem({ section, isOpen, onToggle }) {
         onClick={handleSectionClick}
         className={cn(
           "flex items-center justify-between w-full p-2 transition rounded-xs hover:bg-gray-200/30",
-          section.pages?.some((p) => p.id === selectedPage) && "bg-blue-100"
+          section.pages?.some((p) => p.id === selectedPage) && "bg-blue-100",
         )}
       >
         {/* Section header content */}
@@ -33,7 +33,7 @@ export default function SectionItem({ section, isOpen, onToggle }) {
           <ChevronDown
             className={cn(
               "w-4 h-4 transition-transform duration-300 text-muted-foreground",
-              isOpen ? "rotate-0" : "-rotate-90"
+              isOpen ? "rotate-0" : "-rotate-90",
             )}
           />
           <FolderKanban className="w-4 h-4" />

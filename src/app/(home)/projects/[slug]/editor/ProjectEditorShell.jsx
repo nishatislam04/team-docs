@@ -1,12 +1,11 @@
 "use client";
 
-import ProjectEditorLayout from "./ProjectEditorLayout";
-import ProjectEditorDialogs from "./ProjectEditorDialogs";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { useProjectStore } from "../../store/useProjectStore";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useProjectStore } from "../../store/useProjectStore";
+import ProjectEditorDialogs from "./ProjectEditorDialogs";
+import ProjectEditorLayout from "./ProjectEditorLayout";
 
 export default function ProjectEditorShell({
   hasSection,

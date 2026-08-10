@@ -26,7 +26,7 @@ export const ProjectListingsStore = create((set) => ({
   updateProject: (projectId, updatedProject) =>
     set((state) => ({
       projects: state.projects.map((project) =>
-        project.id === projectId ? updatedProject : project
+        project.id === projectId ? updatedProject : project,
       ),
     })),
 

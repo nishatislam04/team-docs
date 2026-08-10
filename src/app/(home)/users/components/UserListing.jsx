@@ -1,5 +1,12 @@
 "use client";
 
+import { ArrowUpDown, ChevronDown, ChevronUp, Pencil } from "lucide-react";
+import { useState } from "react";
+import TableLoading from "@/components/loading/TableLoading";
+import CreateButtonShared from "@/components/shared/CreateButtonShared";
+import SortIcon from "@/components/shared/SortIcon";
+import TablePagination from "@/components/shared/TablePagination";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,17 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
-import CreateButtonShared from "@/components/shared/CreateButtonShared";
-import TableLoading from "@/components/loading/TableLoading";
 import { useUsers } from "../hooks/useUsers";
-import TablePagination from "@/components/shared/TablePagination";
-import { ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react";
 import UserDeleteDialog from "./UserDeleteDialog";
-import { useState } from "react";
 import UserEditDialog from "./UserEditDialog";
-import SortIcon from "@/components/shared/SortIcon";
 
 export default function UserListings({ setIsDialogOpen, shouldRefetch, setShouldRefetch }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);

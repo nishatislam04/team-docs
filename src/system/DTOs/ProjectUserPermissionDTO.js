@@ -15,7 +15,7 @@ export class ProjectUserPermissionDTO {
 
   static toCollection(projectUserPermissions) {
     return projectUserPermissions.map((projectUserPermission) =>
-      this.toResponse(projectUserPermission)
+      ProjectUserPermissionDTO.toResponse(projectUserPermission),
     );
   }
 }

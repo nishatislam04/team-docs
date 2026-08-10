@@ -1,10 +1,10 @@
-import PermissionShell from "./PermissionShell";
-import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
-import { canPermissionViewAuth } from "@/authorization/PermissionAuthGuard";
-import { getHasPermissions } from "./actions/getHasPermissions";
-import { getAllProjectsFn } from "./actions/getAllProjects";
-import LazyPageLoading from "@/components/loading/LazyPageLoading";
 import { Suspense } from "react";
+import { canPermissionViewAuth } from "@/authorization/PermissionAuthGuard";
+import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
+import LazyPageLoading from "@/components/loading/LazyPageLoading";
+import { getAllProjectsFn } from "./actions/getAllProjects";
+import { getHasPermissions } from "./actions/getHasPermissions";
+import PermissionShell from "./PermissionShell";
 
 export default async function PermissionsPage() {
   await requireWorkspaceActive();

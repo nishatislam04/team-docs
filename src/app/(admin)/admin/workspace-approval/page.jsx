@@ -1,10 +1,10 @@
+import { Calendar, CheckCircle, Clock, Eye, Mail, User, XCircle } from "lucide-react";
+import { Suspense } from "react";
 import { protectAdmin } from "@/authorization/AdminAuthGuard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
-import { Calendar, CheckCircle, Clock, Eye, Mail, User, XCircle } from "lucide-react";
-import { Suspense } from "react";
 import WorkspaceApprovalDialog from "./components/WorkspaceApprovalDialog";
 import WorkspaceDetailsDialog from "./components/WorkspaceDetailsDialog";
 import WorkspaceRejectionDialog from "./components/WorkspaceRejectionDialog";

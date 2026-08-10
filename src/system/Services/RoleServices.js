@@ -1,7 +1,7 @@
-import { BaseService } from "./BaseService";
+import Logger from "@/lib/Logger";
 import { RoleDTO } from "../DTOs/RoleDTO";
 import { RoleModel } from "../Models/RoleModel";
-import Logger from "@/lib/Logger";
+import { BaseService } from "./BaseService";
 
 export class RoleService extends BaseService {
   static modelName = "role";

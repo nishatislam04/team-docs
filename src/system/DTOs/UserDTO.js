@@ -12,6 +12,6 @@ export class UserDTO {
   }
 
   static toCollection(users) {
-    return users.map((user) => this.toResponse(user));
+    return users.map((user) => UserDTO.toResponse(user));
   }
 }
