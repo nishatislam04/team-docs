@@ -1,0 +1,39 @@
+# rumdl configuration file
+
+[global]
+# Rules disabled because they don't fit this project's docs
+disable = [
+    "MD013", # line length (project markdown uses long lines)
+    "MD024", # multiple headings with same content (common in API docs)
+    "MD051", # link fragments (kept simple, some anchors not resolvable)
+]
+
+# List of file/directory patterns to exclude from linting
+exclude = [
+    # Common directories to exclude
+    ".git",
+    ".github",
+    "node_modules",
+    "vendor",
+    "dist",
+    "build",
+
+    # Legacy docs with pre-existing issues (not actively maintained)
+    "docs/",
+    "src/components/editor/docs/",
+    "src/components/editor/README.md",
+    "src/components/editor/DEVELOPMENT.md",
+    "src/components/editor/CONFIGURATION.md",
+    "src/components/editor/EXTENSIONS.md",
+    "src/components/editor/FEATURES.md",
+    "src/components/editor/API.md",
+    "src/components/editor/ROADMAP.md",
+    "src/components/editor/NOTION-COMPARISON.md",
+
+    # Specific files or patterns
+    "CHANGELOG.md",
+    "LICENSE.md",
+]
+
+# Respect .gitignore files when scanning directories (default: true)
+respect-gitignore = true

@@ -5,33 +5,39 @@ This directory contains the organized CSS files for the application. The styles 
 ## File Structure
 
 ### `globals.css` (Entry Point)
+
 The main entry file that imports all other style files. This file is kept lightweight and only contains imports.
 
 ### Core Style Files
 
 #### `theme.css`
+
 - CSS custom properties and color schemes
 - Theme variables for light and dark modes
 - Color tokens for UI components
 - Radius and spacing variables
 
 #### `base.css`
+
 - Base layer styles and CSS resets
 - Global element styling
 - Sidebar-specific variables (legacy support)
 
 #### `utilities.css`
+
 - Custom utility classes
 - Reusable component classes like `.bubble-btn`
 - Application-specific utility styles
 
 #### `scrollbar.css`
+
 - Global scrollbar styling for all browsers
 - WebKit scrollbar customization
 - Firefox and IE scrollbar support
 - ScrollArea component integration
 
 #### `toast.css`
+
 - Complete toast notification system styles
 - Toast animations and transitions
 - Different toast types (success, error, warning, info)
@@ -39,6 +45,7 @@ The main entry file that imports all other style files. This file is kept lightw
 - Close button styling
 
 #### `editor.css`
+
 - Editor-specific styles (existing file)
 - Rich text editor customizations
 
@@ -64,6 +71,7 @@ When adding new styles:
 ## Import Order
 
 The import order in `globals.css` is important:
+
 1. Framework imports (Tailwind, animations)
 2. Feature-specific styles (editor, theme, base)
 3. Component-specific styles (utilities, scrollbar, toast)

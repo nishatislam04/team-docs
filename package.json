@@ -13,6 +13,8 @@
     "lint:fix": "biome check --write",
     "format": "biome format --write",
     "check": "biome check --write && biome format --write",
+    "lint:md": "rumdl check .",
+    "lint:md:fix": "rumdl fmt .",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "local-dev": "bun run db:up && concurrently -k -n \"STUDIO,NEXT\" -c \"cyan,green\" \"BROWSER=none npx prisma studio\" \"npm run dev\"",
@@ -112,6 +114,7 @@
     "concurrently": "^10.0.4",
     "postcss": "^8.5.26",
     "prisma": "7.9.1",
+    "rumdl": "^0.2.53",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2"
   },
