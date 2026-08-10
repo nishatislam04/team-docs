@@ -1,5 +1,5 @@
 import { PrismaClient } from "@/generated/client/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 // Create a global reference to reuse Prisma client
 const globalForPrisma = global;
@@ -8,15 +8,13 @@ const globalForPrisma = global;
 // eslint-disable-next-line import-x/no-mutable-exports
 let prisma;
 
-const isPreview = process.env.IS_PREVIEW === "true";
+// Prisma 7: a driver adapter is required to connect to the database.
+// DATABASE_URL points to the local Postgres from docker-compose.
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
 
-const resolvedUrl = isPreview ? process.env.PREVIEW_DATABASE_URL : process.env.DATABASE_URL;
-
-// Prisma 7: prisma+postgres:// (Prisma Postgres / Accelerate) URLs are passed
-// via `accelerateUrl` and used with the Accelerate extension.
-const basePrisma = globalForPrisma.prisma || new PrismaClient({ accelerateUrl: resolvedUrl });
-
-prisma = basePrisma.$extends(withAccelerate());
+prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;

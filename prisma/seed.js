@@ -1,8 +1,11 @@
 import { PrismaClient } from "../src/generated/client/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
 
 const prisma = new PrismaClient({
-  accelerateUrl: process.env.DATABASE_URL,
+  adapter: new PrismaPg({
+    connectionString: process.env.DATABASE_URL,
+  }),
 });
 
 // ! add nishat project permissions

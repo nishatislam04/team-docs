@@ -2,6 +2,14 @@
 
 BUN = bun
 
+# Start local database (Postgres + Redis via docker compose)
+db-up:
+	docker compose up -d
+
+# Stop local database
+db-down:
+	docker compose down
+
 # Run dev migration with timestamp
 migrate:
 	npx prisma migrate dev
@@ -38,8 +46,9 @@ size:
 	@echo "📦 Node Modules:"
 	@du -sh node_modules 2>/dev/null || echo "node_modules not found"
 
-# Run development environment
+# Run development environment (starts DB, prisma studio + next dev)
 dev:
+	docker compose up -d
 	npx prisma generate
 	npm run local-dev
 
@@ -59,20 +68,20 @@ production:
 ## BUN
 ## ----------------------------
 
-# Install dependencies (respect package.json + bun.lockb)
+# Install dependencies
 bun-install:
-	npx install
+	bun install
 
 # Install fresh (clear lockfile + reinstall)
 bun-reinstall:
-	rm -f bun.lockb
+	rm -f bun.lock
 	rm -rf node_modules
-	npx install
+	bun install
 
 # Upgrade all dependencies
 bun-upgrade:
-	npx update
+	bun update --latest
 
 # Show outdated packages
 bun-outdated:
-	npx outdated
+	bun outdated
