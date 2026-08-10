@@ -2,15 +2,10 @@ import chalk from "chalk";
 import util from "util";
 
 class Logger {
-  // Fixed environment detection for both client and server contexts
-  static isProduction = (() => {
-    // Client-side check (browser)
-    if (typeof window !== "undefined") {
-      return process.env.NEXT_PUBLIC_NODE_ENV === "production";
-    }
-    // Server-side check (Node.js)
-    return process.env.NODE_ENV === "production";
-  })();
+  // Never log in production builds. `process.env.NODE_ENV` is statically inlined
+  // by the bundler to "production" for both client and server bundles, so this
+  // guard is reliable in every context (no NEXT_PUBLIC env var needed).
+  static isProduction = process.env.NODE_ENV === "production";
 
   // Enhanced color system with background colors
   static colors = {

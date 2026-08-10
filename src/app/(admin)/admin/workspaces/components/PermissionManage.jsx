@@ -36,7 +36,6 @@ export default function PermissionManage({
       const permissions = await getAllWorkspacePermissions(workspaceId);
       setPermissions(permissions);
       setIsLoading(false);
-      console.log({ permissions, workspaceId }, "permissions from admin");
     }
     fetchPermissions();
   }, [workspaceId]);

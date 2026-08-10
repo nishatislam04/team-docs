@@ -27,8 +27,6 @@ export default function ProfileMenu({ sessionPromise }) {
       .substring(0, 2);
   };
 
-  console.log(userSession);
-
   return (
     <div className="flex items-center space-x-4">
       {userSession ? (
