@@ -5,6 +5,7 @@ import Footer from "./_components/Footer";
 import HeroSection from "./_components/HeroSection";
 import Header from "./_components/header";
 import FeaturedSectionWrapper from "./_components/sub/FeaturedSectionWrapper";
+import WhyChooseUs from "./_components/WhyChooseUs";
 
 export default async function LandingPage() {
   return (
@@ -23,6 +24,9 @@ async function LandingPageContent() {
       <Header sessionPromise={sessionPromise} />
 
       <HeroSection workspace={workspace} />
+
+      <WhyChooseUs />
+
       <FeaturedSectionWrapper workspace={workspace} />
       <Footer />
     </main>
