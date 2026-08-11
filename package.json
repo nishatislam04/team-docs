@@ -1,12 +1,12 @@
 {
   "name": "docs-collab-system",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "NODE_ENV=production next build --turbopack",
-    "vercel-build": "npx prisma generate && npx prisma migrate deploy && npm run build",
+    "dev": "bun --bun next dev",
+    "build": "NODE_ENV=production bun --bun next build",
+    "vercel-build": "bunx prisma generate && bunx prisma migrate deploy && npm run build",
     "start": "next start",
     "analyze": "ANALYZE=true next build",
     "lint": "biome check",
@@ -15,13 +15,9 @@
     "check": "biome check --write && biome format --write",
     "lint:md": "rumdl check .",
     "lint:md:fix": "rumdl fmt .",
-    "db:up": "docker compose up -d",
-    "db:down": "docker compose down",
-    "db:restart": "docker compose down && docker compose up -d",
-    "local-dev": "bun run db:up && concurrently -k -n \"STUDIO,NEXT\" -c \"cyan,green\" \"BROWSER=none npx prisma studio\" \"npm run dev\"",
-    "deploy:preview": "npx vercel",
-    "deploy:prod": "npx vercel --prod",
-    "vercel:env:pull": "npx vercel env pull .env.local"
+    "deploy:preview": "bunx vercel",
+    "deploy:prod": "bunx vercel --prod",
+    "vercel:env:pull": "bunx vercel env pull .env.local"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",
