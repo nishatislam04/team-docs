@@ -4,10 +4,12 @@ import { ChevronUp, Loader2, LogOut, User2 } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useActionState } from "react";
+import { ThemeToggleMenuItem } from "@/components/abstracts/theme-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -49,6 +51,8 @@ export default function Footer() {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent side="top" className="mb-3 w-52">
+                <ThemeToggleMenuItem />
+                <DropdownMenuSeparator />
                 <form action={formAction}>
                   <DropdownMenuItem asChild>
                     <button

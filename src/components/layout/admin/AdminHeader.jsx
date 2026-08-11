@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useTransition } from "react";
+import { ThemeToggleMenuItem } from "@/components/abstracts/theme-toggle";
 import { useAdminRefresh } from "@/components/layout/admin/AdminRefreshContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -118,6 +119,8 @@ export default function AdminHeader({ user }) {
               <Settings className="mr-2 h-4 w-4" />
               <span>Admin Settings</span>
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <ThemeToggleMenuItem />
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="cursor-pointer text-red-600 focus:text-red-600"

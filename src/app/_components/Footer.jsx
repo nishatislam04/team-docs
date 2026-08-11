@@ -2,6 +2,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { connection } from "next/server";
+import { ThemeToggle } from "@/components/abstracts/theme-toggle";
 import { Separator } from "@/components/ui/separator";
 import FooterSocialsWrapper from "./sub/FooterSocialsWrapper";
 
@@ -100,7 +101,7 @@ export default async function Footer() {
           <p className="text-muted-foreground mb-4 text-sm md:mb-0">
             &copy; {currentYear} Team Docs, Inc. All rights reserved.
           </p>
-          <div className="text-muted-foreground flex flex-wrap gap-5 text-sm">
+          <div className="text-muted-foreground flex flex-wrap items-center gap-5 text-sm">
             {legalLinks.map((link) => (
               <Link
                 key={link.text}
@@ -110,6 +111,7 @@ export default async function Footer() {
                 {link.text}
               </Link>
             ))}
+            <ThemeToggle className="border-border size-9 rounded-full border" />
           </div>
         </div>
       </div>

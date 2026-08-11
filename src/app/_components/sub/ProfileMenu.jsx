@@ -3,6 +3,7 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { use } from "react";
 import ComingSoonWrapper from "@/components/abstracts/ComingSoonWrapper";
+import { ThemeToggleMenuItem } from "@/components/abstracts/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -105,6 +106,12 @@ export default function ProfileMenu({ sessionPromise }) {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </ComingSoonWrapper>
+            </div>
+
+            <DropdownMenuSeparator className="my-0.5" />
+
+            <div className="p-2">
+              <ThemeToggleMenuItem />
             </div>
 
             <DropdownMenuSeparator className="my-0.5" />
