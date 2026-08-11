@@ -2,6 +2,7 @@
 
 2. update landing page loading text with beautiful animation loading icon
 
+3. check signin, signup page when night mode on
 
 
 ## push to vercel
