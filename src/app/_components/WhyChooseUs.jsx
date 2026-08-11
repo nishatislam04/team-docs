@@ -105,7 +105,7 @@ export default function WhyChooseUs() {
         <div className="bg-secondary/30 absolute -right-24 -bottom-24 h-80 w-80 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative container mx-auto px-4">
+      <div className="relative container mx-auto px-3 sm:px-4">
         <motion.div
           ref={headerRef}
           initial={{ opacity: 0, y: 30 }}
@@ -174,7 +174,7 @@ export default function WhyChooseUs() {
           initial={{ opacity: 0, y: 20 }}
           animate={gridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={transition(0.2)}
-          className="border-border/60 bg-card/50 mx-auto mt-14 max-w-4xl rounded-2xl border px-6 py-5"
+          className="border-border/60 bg-card/50 mx-auto mt-14 max-w-4xl rounded-2xl border px-4 py-5 sm:px-6"
         >
           <div className="grid grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-3">
             {highlights.map((highlight) => (

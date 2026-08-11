@@ -76,15 +76,17 @@ export default function RegistrationDialog({ isAuthenticated }) {
       <PendingConfirmationDialog isAuthenticated={isAuthenticated} />
       <Dialog open={isFormDialogOpen} onOpenChange={closeFormDialog}>
         <DialogContent
-          className={`w-full ${
-            isAuthenticated ? "!max-w-[40vw]" : "!max-w-[80vw]"
-          } h-[85vh] max-h-[90vh] overflow-y-auto`}
+          className={
+            isAuthenticated
+              ? "h-[85vh] max-h-[90vh] w-[95vw] max-w-[95vw] overflow-y-auto p-4 sm:p-6 lg:max-w-[40vw]"
+              : "h-[85vh] max-h-[90vh] w-[95vw] max-w-[95vw] overflow-y-auto p-4 sm:p-6 lg:max-w-[80vw]"
+          }
         >
           <DialogHeader className="space-y-1 text-center">
-            <DialogTitle className="text-4xl font-semibold leading-3 text-center">
+            <DialogTitle className="text-center text-2xl font-semibold leading-tight sm:text-4xl">
               Get Started
             </DialogTitle>
-            <DialogDescription className="font-light text-center text-lg mt-2">
+            <DialogDescription className="mt-2 text-center text-base font-light sm:text-lg">
               Create your first workspace to get started.
             </DialogDescription>
           </DialogHeader>
@@ -133,8 +135,8 @@ export default function RegistrationDialog({ isAuthenticated }) {
                   />
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-10 w-full md:grid-cols-2">
-                  <div className="space-y-4 border-r border-gray-200 pr-8">
+                <div className="grid w-full grid-cols-1 gap-10 lg:grid-cols-2">
+                  <div className="space-y-4 border-border lg:border-r lg:pr-8">
                     <h3 className="pb-2 text-xl font-semibold border-b">User Information</h3>
                     <FormField
                       control={form.control}
@@ -219,7 +221,7 @@ export default function RegistrationDialog({ isAuthenticated }) {
                   type="submit"
                   size="lg"
                   disabled={form.isSubmitDisabled}
-                  className="min-w-[220px]"
+                  className="w-full min-w-0 sm:w-auto sm:min-w-[220px]"
                 >
                   {form.formState.isSubmitting
                     ? "Processing..."
@@ -247,16 +249,16 @@ function PendingConfirmationDialog({ isAuthenticated }) {
 
   return (
     <Dialog open={isPendingDialogOpen} onOpenChange={handleClose}>
-      <DialogContent className="!max-w-[56vw] h-[78vh] p-0 overflow-hidden border border-border shadow-2xl rounded-2xl">
-        <div className="relative isolate overflow-hidden bg-gradient-to-br from-primary/15 via-primary/10 to-transparent">
+      <DialogContent className="max-h-[92vh] w-[95vw] max-w-[95vw] overflow-x-hidden overflow-y-auto rounded-2xl border border-border p-0 shadow-2xl sm:max-w-lg md:max-w-2xl lg:max-w-[56vw]">
+        <div className="relative isolate overflow-visible bg-gradient-to-br from-primary/15 via-primary/10 to-transparent">
           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(60rem_30rem_at_20%_-10%,theme(colors.primary/0.2),transparent)]" />
-          <div className="px-8 pt-10 pb-6 text-center">
+          <div className="px-4 pt-8 pb-5 text-center sm:px-8 sm:pt-10 sm:pb-6">
             <DialogHeader className="text-center">
-              <DialogTitle className="text-4xl md:text-5xl font-bold tracking-tight text-center">
+              <DialogTitle className="text-center text-2xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                 Registration Pending
               </DialogTitle>
             </DialogHeader>
-            <div className="mt-6 flex items-center justify-center">
+            <div className="mt-5 flex items-center justify-center sm:mt-6">
               <div className="relative">
                 <motion.span
                   className="absolute inset-0 rounded-full bg-primary/25 blur-2xl"
@@ -265,7 +267,7 @@ function PendingConfirmationDialog({ isAuthenticated }) {
                   transition={{ duration: 0.6 }}
                 />
                 <motion.div
-                  className="relative grid place-items-center w-24 h-24 rounded-full bg-background border border-border"
+                  className="relative grid size-16 place-items-center rounded-full border border-border bg-background sm:size-24"
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ type: "spring", stiffness: 180, damping: 14 }}
@@ -282,37 +284,38 @@ function PendingConfirmationDialog({ isAuthenticated }) {
                     }}
                     transition={{ repeat: Infinity, duration: 2.4, ease: "easeOut" }}
                   />
-                  <AlertCircle className="w-12 h-12 text-primary" />
+                  <AlertCircle className="size-8 text-primary sm:size-12" />
                 </motion.div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Body */}
-        <div className="px-8 md:px-12 py-8 md:py-10 text-center space-y-5">
-          <p className="text-2xl md:text-3xl font-semibold">Thank you for your registration!</p>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-balance">
+        <div className="space-y-4 px-4 py-5 text-center sm:space-y-5 sm:px-8 sm:py-8 md:px-12 md:py-10">
+          <p className="text-xl font-semibold sm:text-2xl md:text-3xl">
+            Thank you for your registration!
+          </p>
+          <p className="text-muted-foreground mx-auto max-w-2xl text-balance text-sm sm:text-base">
             We&apos;ll review your information and send a confirmation email once your workspace is
             approved. This process typically takes 24–48 hours.
           </p>
 
           {!isAuthenticated && (
-            <div className="mx-auto max-w-xl">
-              <div className="mt-2 inline-flex items-center gap-2 rounded-full border px-4 py-2 bg-background/60">
-                <span className="inline-flex h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-                <p className="text-sm md:text-base font-medium text-amber-700 dark:text-amber-400">
+            <div className="mx-auto w-full max-w-xl">
+              <div className="mt-2 flex w-full items-start gap-2.5 rounded-2xl border bg-background/60 px-3 py-2.5 sm:rounded-full sm:px-4 sm:py-2">
+                <span className="mt-1.5 size-2.5 shrink-0 rounded-full bg-amber-500 animate-pulse sm:mt-0 sm:self-center" />
+                <p className="text-left text-sm font-medium text-amber-700 dark:text-amber-400 sm:text-center sm:text-base">
                   Please sign in to get notified when your workspace is approved
                 </p>
               </div>
             </div>
           )}
 
-          <div className="pt-4 flex justify-center">
+          <div className="flex justify-center pt-2 sm:pt-4">
             <Button
               onClick={handleClose}
               size="lg"
-              className="min-w-[200px] shadow-sm hover:shadow-md transition-shadow"
+              className="w-full shadow-sm transition-shadow hover:shadow-md sm:w-auto sm:min-w-[200px]"
             >
               I Understand
             </Button>

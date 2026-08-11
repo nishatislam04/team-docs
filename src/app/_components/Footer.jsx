@@ -4,7 +4,6 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { ThemeToggle } from "@/components/abstracts/theme-toggle";
 import { Separator } from "@/components/ui/separator";
-import FooterSocialsWrapper from "./sub/FooterSocialsWrapper";
 
 export default async function Footer() {
   await connection(); // Mark as dynamic for Cache Components
@@ -15,7 +14,7 @@ export default async function Footer() {
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 sm:px-4">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <div className="mb-4 flex items-center">
@@ -32,49 +31,48 @@ export default async function Footer() {
               Streamline your team&apos;s documentation workflow with our collaborative platform.
               Create, share, and manage documents with ease in a single, integrated workspace.
             </p>
-
-            <FooterSocialsWrapper />
           </div>
 
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:col-span-8">
-            <div>
-              <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
-                Products
-              </h3>
-              <ul className="mt-4 mr-6 space-y-3">
-                {productLinks.map((link) => (
-                  <li key={link.text}>
-                    <Link
-                      href={link.href}
-                      className="group text-muted-foreground hover:text-foreground flex items-center transition-colors duration-200"
-                    >
-                      {/* <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /> */}
-                      <span>{link.text}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+          <div className="grid grid-cols-1 gap-8 lg:col-span-8">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+              <div>
+                <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
+                  Products
+                </h3>
+                <ul className="mt-4 space-y-3">
+                  {productLinks.map((link) => (
+                    <li key={link.text}>
+                      <Link
+                        href={link.href}
+                        className="group text-muted-foreground hover:text-foreground flex items-center transition-colors duration-200"
+                      >
+                        <span>{link.text}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
+                  Company
+                </h3>
+                <ul className="mt-4 space-y-3">
+                  {companyLinks.map((link) => (
+                    <li key={link.text}>
+                      <Link
+                        href={link.href}
+                        className="group text-muted-foreground hover:text-foreground flex items-center transition-colors duration-200"
+                      >
+                        <span>{link.text}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
-            <div>
-              <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
-                Company
-              </h3>
-              <ul className="mt-4 space-y-3">
-                {companyLinks.map((link) => (
-                  <li key={link.text}>
-                    <Link
-                      href={link.href}
-                      className="group text-muted-foreground hover:text-foreground flex items-center transition-colors duration-200"
-                    >
-                      <span>{link.text}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
+            <div className="w-full">
               <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
                 Contact Us
               </h3>
@@ -85,7 +83,7 @@ export default async function Footer() {
                       href={link.href}
                       className="group text-muted-foreground hover:text-foreground flex items-center transition-colors duration-200"
                     >
-                      <link.icon className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                      <link.icon className="mr-2 h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
                       <span>{link.text}</span>
                     </Link>
                   </li>
@@ -97,11 +95,8 @@ export default async function Footer() {
 
         <Separator className="my-8 opacity-70" />
 
-        <div className="flex flex-col items-center justify-between pt-4 md:flex-row">
-          <p className="text-muted-foreground mb-4 text-sm md:mb-0">
-            &copy; {currentYear} Team Docs, Inc. All rights reserved.
-          </p>
-          <div className="text-muted-foreground flex flex-wrap items-center gap-5 text-sm">
+        <div className="flex flex-col items-center gap-4 pt-4">
+          <div className="text-muted-foreground flex flex-wrap items-center justify-center gap-5 text-sm">
             {legalLinks.map((link) => (
               <Link
                 key={link.text}
@@ -113,6 +108,9 @@ export default async function Footer() {
             ))}
             <ThemeToggle className="border-border size-9 rounded-full border" />
           </div>
+          <p className="text-muted-foreground text-center text-sm">
+            &copy; {currentYear} Team Docs, Inc. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

@@ -12,7 +12,7 @@ import ProfileMenuWrapper from "./sub/ProfileMenuWrapper";
  */
 export default function Header({ sessionPromise }) {
   return (
-    <header className="container mx-auto flex items-center justify-between px-4 py-6">
+    <header className="container mx-auto flex items-center justify-between px-3 py-6 sm:px-4">
       <Link href="/" className="flex items-center">
         <Image src="/logo.svg" alt="Team Docs Logo" width={36} height={36} className="mr-2" />
         <span className="text-xl font-bold">Team Docs</span>

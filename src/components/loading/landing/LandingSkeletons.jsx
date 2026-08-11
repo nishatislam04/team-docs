@@ -126,7 +126,6 @@ export function LandingPageSkeleton() {
                 <Skeleton className="h-4 w-full max-w-sm" />
                 <Skeleton className="h-4 w-2/3 max-w-xs" />
               </div>
-              <FooterSocialsSkeleton />
             </div>
             {["products", "company", "contact"].map((id) => (
               <div key={id} className="space-y-4">

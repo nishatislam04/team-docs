@@ -20,9 +20,9 @@ import { cn } from "@/lib/utils";
 import ActionButton from "./ActionButton";
 
 const featureCategories = [
-  { value: "core", label: "Core Features" },
-  { value: "collab", label: "Collaboration" },
-  { value: "custom", label: "Customization" },
+  { value: "core", label: "Core Features", shortLabel: "Core" },
+  { value: "collab", label: "Collaboration", shortLabel: "Collab" },
+  { value: "custom", label: "Customization", shortLabel: "Custom" },
 ];
 
 export default function FeaturedSection({ workspace }) {
@@ -54,7 +54,7 @@ export default function FeaturedSection({ workspace }) {
         <div className="bg-secondary/20 absolute top-40 -right-20 h-80 w-80 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative container mx-auto px-4">
+      <div className="relative container mx-auto px-3 sm:px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -134,10 +134,14 @@ export default function FeaturedSection({ workspace }) {
             onValueChange={setActiveCategory}
             className="mb-8"
           >
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1">
               {featureCategories.map((category) => (
-                <TabsTrigger key={category.value} value={category.value}>
-                  {category.label}
+                <TabsTrigger
+                  key={category.value}
+                  value={category.value}
+                  className="h-auto px-1 py-2.5 text-[11px] leading-tight whitespace-normal sm:text-xs"
+                >
+                  {category.shortLabel}
                 </TabsTrigger>
               ))}
             </TabsList>
