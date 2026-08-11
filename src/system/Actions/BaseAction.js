@@ -12,7 +12,7 @@ export class BaseAction {
   static async execute(formData, schemaOverride = null) {
     try {
       const rawData = BaseAction.#parseFormData(formData);
-      const schema = schemaOverride || BaseAction.schema; // ← use override if provided
+      const schema = schemaOverride || this.schema;
 
       const result = schema.safeParse(rawData);
 

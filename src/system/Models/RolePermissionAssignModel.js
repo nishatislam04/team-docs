@@ -6,7 +6,7 @@ export class RolePermissionAssignModel extends BaseModel {
 
   static async findByRoleId(roleId) {
     try {
-      return await BaseModel.findMany({
+      return await this.findMany({
         where: { roleId },
         select: { permissionId: true },
       });
@@ -17,7 +17,7 @@ export class RolePermissionAssignModel extends BaseModel {
 
   static async upsert({ where, create, update }) {
     try {
-      return await BaseModel.upsert({ where, create, update });
+      return await this.upsert({ where, create, update });
     } catch (error) {
       Logger.error(error.message, `Upsert failed`);
       throw error;
@@ -27,7 +27,7 @@ export class RolePermissionAssignModel extends BaseModel {
   static async delete(roleId, permissionId) {
     try {
       // Step 1: Lookup the unique record first using composite key
-      const record = await BaseModel.findUnique({
+      const record = await this.findUnique({
         where: {
           roleId_permissionId: {
             roleId,
@@ -45,7 +45,7 @@ export class RolePermissionAssignModel extends BaseModel {
       }
 
       // Step 3: Now call the parent delete method with the actual ID
-      return await BaseModel.delete(record.id);
+      return await this.delete({ where: { id: record.id } });
     } catch (error) {
       Logger.error(error.message, `Delete failed`);
       throw error;

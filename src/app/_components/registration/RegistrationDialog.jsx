@@ -92,7 +92,7 @@ export default function RegistrationDialog({ isAuthenticated }) {
           {form.formState.errors._form && (
             <Alert variant="destructive" className="mt-4">
               <AlertCircle className="w-4 h-4" />
-              <AlertDescription>{form.formState.errors._form[0]}</AlertDescription>
+              <AlertDescription>{form.formState.errors._form.message}</AlertDescription>
             </Alert>
           )}
 

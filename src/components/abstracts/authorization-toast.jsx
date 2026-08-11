@@ -1,15 +1,13 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useToast } from "@/hooks/useToast";
 
-export function AuthorizationToastProvider() {
-  const params = useSearchParams();
+export function AuthorizationToast() {
   const toast = useToast();
 
   useEffect(() => {
-    const message = params.get("unauthorized");
+    const message = new URLSearchParams(window.location.search).get("unauthorized");
     if (!message) return;
 
     if (message === "1") {
@@ -17,7 +15,7 @@ export function AuthorizationToastProvider() {
     } else {
       toast.warning(decodeURIComponent(message));
     }
-  }, [params, toast]);
+  }, [toast]);
 
   return null;
 }

@@ -3,21 +3,21 @@ import prisma from "@/lib/prisma";
 
 export class BaseModel {
   static get model() {
-    if (!BaseModel.modelName) throw new Error("modelName not defined in child class");
-    return prisma[BaseModel.modelName];
+    if (!this.modelName) throw new Error("modelName not defined in child class");
+    return prisma[this.modelName];
   }
 
   static async create(data) {
-    return await BaseModel.model.create({ data });
+    return await this.model.create({ data });
   }
 
   static async createMany(data) {
-    return await BaseModel.model.createMany(data);
+    return await this.model.createMany(data);
   }
 
   static async upsert({ where, create, update }) {
     try {
-      return await BaseModel.model.upsert({
+      return await this.model.upsert({
         where,
         create,
         update,
@@ -29,26 +29,26 @@ export class BaseModel {
   }
 
   static async update({ where, data }) {
-    return await BaseModel.model.update({
+    return await this.model.update({
       where,
       data,
     });
   }
 
   static async updateMany({ where, data }) {
-    return await BaseModel.model.updateMany({ where, data });
+    return await this.model.updateMany({ where, data });
   }
 
   static async delete({ where }) {
-    return await BaseModel.model.delete({ where });
+    return await this.model.delete({ where });
   }
 
   static async deleteMany({ where }) {
-    return await BaseModel.model.deleteMany({ where });
+    return await this.model.deleteMany({ where });
   }
 
   static async findUnique({ where, select, include }) {
-    return await BaseModel.model.findUnique({
+    return await this.model.findUnique({
       where,
       ...(select && { select }),
       ...(include && { include }),
@@ -56,7 +56,7 @@ export class BaseModel {
   }
 
   static async findMany({ where, select, orderBy = { createdAt: "desc" }, include }) {
-    return await BaseModel.model.findMany({
+    return await this.model.findMany({
       ...(where && { where }),
       ...(select && { select }),
       ...(include && { include }),
@@ -65,13 +65,13 @@ export class BaseModel {
   }
 
   static async findFirst({ where, include = {} }) {
-    return await BaseModel.model.findFirst({
+    return await this.model.findFirst({
       ...(where && { where }),
       ...(include && { include }),
     });
   }
 
   static async count({ where }) {
-    return await BaseModel.model.count({ ...(where && { where }) });
+    return await this.model.count({ ...(where && { where }) });
   }
 }
