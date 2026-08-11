@@ -106,7 +106,7 @@ export default function SignInForm() {
           />
 
           {form.formState.errors._form && (
-            <div className="space-y-1 text-sm text-red-500">
+            <div className="space-y-1 text-sm text-destructive">
               <p>{form.formState.errors._form.message}</p>
             </div>
           )}
@@ -116,7 +116,7 @@ export default function SignInForm() {
           <div className="pt-4 text-center">
             <p className="text-muted-foreground text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="/auth/signup" className="text-blue-600 hover:underline">
+              <Link href="/auth/signup" className="text-primary hover:underline">
                 Sign up
               </Link>
             </p>

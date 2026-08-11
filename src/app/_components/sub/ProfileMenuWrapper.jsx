@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import LandingLoading from "@/components/loading/LandingLoading";
+import { HeaderProfileSkeleton } from "@/components/loading/landing/LandingSkeletons";
 import { devDelay } from "@/lib/devDelay";
 
 const ProfileMenuLazy = dynamic(
@@ -12,7 +12,7 @@ const ProfileMenuLazy = dynamic(
     }),
   {
     ssr: false,
-    loading: () => <LandingLoading size="sm" className="min-w-[120px]" />,
+    loading: () => <HeaderProfileSkeleton />,
   },
 );
 

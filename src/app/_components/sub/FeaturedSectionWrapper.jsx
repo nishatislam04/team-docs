@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import LandingLoading from "@/components/loading/LandingLoading";
+import { FeaturedSectionSkeleton } from "@/components/loading/landing/LandingSkeletons";
 import { devDelay } from "@/lib/devDelay";
 
 const FeaturedSection = dynamic(
@@ -12,7 +12,7 @@ const FeaturedSection = dynamic(
     }),
   {
     ssr: false,
-    loading: () => <LandingLoading size="lg" className="py-24" />,
+    loading: () => <FeaturedSectionSkeleton />,
   },
 );
 

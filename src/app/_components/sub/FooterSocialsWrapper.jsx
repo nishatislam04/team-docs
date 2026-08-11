@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import LandingLoading from "@/components/loading/LandingLoading";
+import { FooterSocialsSkeleton } from "@/components/loading/landing/LandingSkeletons";
 import { devDelay } from "@/lib/devDelay";
 
 const FooterSocials = dynamic(
@@ -12,7 +12,7 @@ const FooterSocials = dynamic(
     }),
   {
     ssr: false,
-    loading: () => <LandingLoading size="sm" className="mt-6 min-h-[40px] items-start" />,
+    loading: () => <FooterSocialsSkeleton />,
   },
 );
 

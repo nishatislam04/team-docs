@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import LandingLoading from "@/components/loading/LandingLoading";
+import { ActionButtonSkeleton } from "@/components/loading/landing/LandingSkeletons";
 import { useCurrentSession } from "@/hooks/useCurrentSession";
 import { devDelay } from "@/lib/devDelay";
 
@@ -13,7 +13,7 @@ const ActionButton = dynamic(
     }),
   {
     ssr: false,
-    loading: () => <LandingLoading size="md" className="h-24 min-w-30" />,
+    loading: () => <ActionButtonSkeleton className="h-14 min-w-45" />,
   },
 );
 

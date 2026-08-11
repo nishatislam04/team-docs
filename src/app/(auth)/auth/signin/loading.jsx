@@ -1,9 +1,5 @@
-import { Spinner } from "@/components/ui/spinner";
+import { AuthFormSkeleton } from "@/components/loading/landing/LandingSkeletons";
 
 export default function Loading() {
-  return (
-    <Spinner className="flex flex-col items-center justify-center" size="large">
-      Loading Signin...
-    </Spinner>
-  );
+  return <AuthFormSkeleton />;
 }
