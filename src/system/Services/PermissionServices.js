@@ -63,6 +63,41 @@ export class PermissionServices extends BaseService {
     }
   }
 
+  /**
+   * batch update permission statuses for a workspace
+   * scoped to SYSTEM permissions of the given workspace only
+   * @param {*} workspaceId
+   * @param {*} ids
+   * @param {*} status
+   * @returns
+   */
+  static async updatePermissionStatusBatch(workspaceId, ids, status) {
+    try {
+      const result = await PermissionModel.updateMany({
+        where: {
+          id: { in: ids },
+          workspaceId,
+          scope: "SYSTEM",
+        },
+        data: { status },
+      });
+
+      return {
+        success: true,
+        type: "success",
+        message: "Action Successful",
+        count: result.count,
+      };
+    } catch (error) {
+      Logger.error(error.message, `Permission batch update fail`);
+      return {
+        success: false,
+        type: "fail",
+        errors: { _form: ["Failed to update permission status"] },
+      };
+    }
+  }
+
   static async getPermissionForProjectScope(projectName) {
     try {
       const permissions = await PermissionModel.findMany({
@@ -95,6 +130,9 @@ export class PermissionServices extends BaseService {
         select: {
           id: true,
           name: true,
+          description: true,
+          action: true,
+          resource: true,
           status: true,
         },
       });
