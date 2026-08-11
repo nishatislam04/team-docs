@@ -2,11 +2,8 @@ import { Activity, Building, Settings, Users } from "lucide-react";
 import { Suspense } from "react";
 import { protectAdmin } from "@/authorization/AdminAuthGuard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Session } from "@/lib/Session";
 
-export default async function AdminDashboard() {
-  await protectAdmin();
-
+export default function AdminDashboard() {
   return (
     <Suspense fallback={<div className="space-y-8 p-8">Loading admin dashboard...</div>}>
       <AdminDashboardContent />
@@ -15,7 +12,7 @@ export default async function AdminDashboard() {
 }
 
 async function AdminDashboardContent() {
-  const user = await Session.getCurrentUser();
+  const user = await protectAdmin();
 
   return (
     <div className="space-y-8 p-8">

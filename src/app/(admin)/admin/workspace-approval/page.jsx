@@ -9,9 +9,7 @@ import WorkspaceApprovalDialog from "./components/WorkspaceApprovalDialog";
 import WorkspaceDetailsDialog from "./components/WorkspaceDetailsDialog";
 import WorkspaceRejectionDialog from "./components/WorkspaceRejectionDialog";
 
-export default async function WorkspaceApprovalPage() {
-  await protectAdmin();
-
+export default function WorkspaceApprovalPage() {
   return (
     <Suspense fallback={<div className="space-y-8 p-8">Loading workspace approvals...</div>}>
       <WorkspaceApprovalContent />
@@ -20,6 +18,7 @@ export default async function WorkspaceApprovalPage() {
 }
 
 async function WorkspaceApprovalContent() {
+  await protectAdmin();
   const pendingWorkspaces = await WorkspaceServices.getPendingWorkspaces();
 
   return (

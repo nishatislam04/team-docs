@@ -2,6 +2,7 @@ import { SessionProvider } from "next-auth/react";
 // import { Analytics } from "@vercel/analytics/next";
 import { AuthorizationToast } from "@/components/abstracts/authorization-toast";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/provider/ThemeProvider";
 import "./styles/globals.css";
 
 export const metadata = {
@@ -14,13 +15,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <SessionProvider>
-          {children}
-          {/* <SpeedInsights /> */}
-          {/* <Analytics /> */}
-        </SessionProvider>
-        <AuthorizationToast />
-        <Toaster />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <SessionProvider>
+            {children}
+            {/* <SpeedInsights /> */}
+            {/* <Analytics /> */}
+          </SessionProvider>
+          <AuthorizationToast />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
