@@ -1,9 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import { Suspense, use, useState } from "react";
-import { toast } from "sonner";
 import DialogLoading from "@/components/loading/DialogLoading";
 import TableLoading from "@/components/loading/TableLoading";
 import NoPermissionUI from "./components/NoPermissionUI";
@@ -17,20 +15,10 @@ const PermissionListingsLazy = dynamic(() => import("./components/PermissionList
   loading: () => <TableLoading withTable={true} />,
 });
 
-export default function PermissionShell({
-  hasPermissionPromise,
-  canReadPermission,
-  projectsPromise,
-}) {
-  const router = useRouter();
+export default function PermissionShell({ hasPermissionPromise, projectsPromise }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const hasPermission = use(hasPermissionPromise);
   const [startFetchPermissions, setStartFetchPermissions] = useState(hasPermission ? true : false);
-
-  if (canReadPermission.success === false) {
-    toast.error(canReadPermission.errors._form[0]);
-    return router.replace("/");
-  }
 
   return (
     <>

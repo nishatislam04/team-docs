@@ -1,20 +1,12 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { toast } from "sonner";
 import { useProjectStore } from "../../store/useProjectStore";
 import ProjectEditorDialogs from "./ProjectEditorDialogs";
 import ProjectEditorLayout from "./ProjectEditorLayout";
 
-export default function ProjectEditorShell({
-  hasSection,
-  project,
-  sections,
-  canReadSectionPermission,
-  canReadPagePermission,
-}) {
-  const router = useRouter();
+export default function ProjectEditorShell({ hasSection, project, sections }) {
   const searchParams = useSearchParams();
   const setProject = useProjectStore((state) => state.setProject);
   const setSections = useProjectStore((state) => state.setSections);
@@ -46,16 +38,6 @@ export default function ProjectEditorShell({
       selectByNames(sectionParam, pageParam);
     }
   }, [searchParams, sections]);
-
-  if (canReadSectionPermission.success === false) {
-    toast.error(canReadSectionPermission.errors._form[0]);
-    return router.replace("/");
-  }
-
-  if (canReadPagePermission.success === false) {
-    toast.error(canReadPagePermission.errors._form[0]);
-    return router.replace("/");
-  }
 
   return (
     <>

@@ -34,7 +34,7 @@ class PageAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to read page without permission`);
       return {
         success: false,
@@ -67,7 +67,7 @@ class PageAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to create page without permission`);
       return {
         success: false,
@@ -100,7 +100,7 @@ class PageAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to update page without permission`);
       return {
         success: false,
@@ -133,7 +133,7 @@ class PageAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to delete page without permission`);
       return {
         success: false,

@@ -34,7 +34,7 @@ class SectionAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (section.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(section)) {
       Logger.warn(`User ${session.id} attempted to read section without permission`);
       return {
         success: false,
@@ -67,7 +67,7 @@ class SectionAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (section.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(section)) {
       Logger.warn(`User ${session.id} attempted to create section without permission`);
       return {
         success: false,
@@ -100,7 +100,7 @@ class SectionAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (section.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(section)) {
       Logger.warn(`User ${session.id} attempted to update section without permission`);
       return {
         success: false,
@@ -133,7 +133,7 @@ class SectionAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (section.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(section)) {
       Logger.warn(`User ${session.id} attempted to delete section without permission`);
       return {
         success: false,

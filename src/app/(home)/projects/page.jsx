@@ -1,3 +1,4 @@
+import { forbidden } from "next/navigation";
 import { canViewProjectsAuth } from "@/authorization/ProjectAuthGuard";
 import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
 
@@ -6,7 +7,10 @@ import { getHasProjects } from "./actions/getHasProjects";
 import ProjectListings from "./components/ProjectListings";
 
 export default async function ProjectPage({ searchParams }) {
-  await Promise.all([requireWorkspaceActive(), canViewProjectsAuth()]);
+  await requireWorkspaceActive();
+
+  const canViewProjects = await canViewProjectsAuth();
+  if (canViewProjects.success === false) forbidden();
 
   const params = await searchParams;
   const hasProjectsPromise = getHasProjects();

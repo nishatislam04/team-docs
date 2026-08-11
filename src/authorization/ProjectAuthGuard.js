@@ -1,7 +1,6 @@
 "use server";
 
 import Logger from "@/lib/Logger";
-import { notify } from "@/lib/utils";
 import { PermissionServices } from "@/system/Services/PermissionServices";
 import { ProjectServices } from "@/system/Services/ProjectServices";
 import { BaseAuthGuard } from "./BaseAuthGuard";
@@ -36,9 +35,12 @@ class ProjectAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to view projects without permission`);
-      notify("You are not permitted to view this project");
+      return {
+        success: false,
+        errors: { _form: ["You are not permitted to view projects."] },
+      };
     }
 
     return {
@@ -71,9 +73,12 @@ class ProjectAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to create project without permission`);
-      notify("You do not have permission to create a project");
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to create a project."] },
+      };
     }
 
     return {
@@ -121,7 +126,7 @@ class ProjectAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to update project without permission`);
       return {
         success: false,
@@ -173,7 +178,7 @@ class ProjectAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to delete project without permission`);
       return {
         success: false,

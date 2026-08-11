@@ -1,3 +1,4 @@
+import { forbidden } from "next/navigation";
 import { Suspense } from "react";
 import { canPermissionViewAuth } from "@/authorization/PermissionAuthGuard";
 import { requireWorkspaceActive } from "@/authorization/WorkspaceAuthGuard";
@@ -9,6 +10,8 @@ import PermissionShell from "./PermissionShell";
 export default async function PermissionsPage() {
   await requireWorkspaceActive();
   const canReadPermission = await canPermissionViewAuth();
+  if (canReadPermission.success === false) forbidden();
+
   const hasPermissionResources = getHasPermissions();
   const projectsPromise = getAllProjectsFn();
 
@@ -16,7 +19,6 @@ export default async function PermissionsPage() {
     <Suspense fallback={<LazyPageLoading>Loading Permissions...</LazyPageLoading>}>
       <PermissionShell
         hasPermissionPromise={hasPermissionResources}
-        canReadPermission={canReadPermission}
         projectsPromise={projectsPromise}
       />
     </Suspense>

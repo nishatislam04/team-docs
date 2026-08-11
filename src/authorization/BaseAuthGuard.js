@@ -1,7 +1,6 @@
-import { redirect } from "next/navigation";
+import { forbidden, redirect } from "next/navigation";
 import Logger from "@/lib/Logger";
 import { Session } from "@/lib/Session";
-import { notify } from "@/lib/utils";
 import { UserServices } from "@/system/Services/UserServices";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 
@@ -35,8 +34,18 @@ export class BaseAuthGuard {
    */
   static async requireAuth() {
     const session = await BaseAuthGuard.getSession();
-    if (!session) return notify("You need to be an Auth user");
+    if (!session) return redirect("/auth/signin");
     return session;
+  }
+
+  /**
+   * Check if a permission row is active. Also safe when the permission
+   * row does not exist at all (never granted) - missing rows are denied.
+   * @param {Object|null} permission - Permission row (status field) or null
+   * @returns {boolean} True if the permission is ACTIVE
+   */
+  static isPermissionActive(permission) {
+    return permission?.status === "ACTIVE";
   }
 
   /**
@@ -77,7 +86,7 @@ export class BaseAuthGuard {
       select: { isWorkspaceOwner: true },
     });
 
-    if (!user.isWorkspaceOwner) return notify("user does not exist");
+    if (!user.isWorkspaceOwner) return redirect("/");
 
     return true;
   }
@@ -92,7 +101,7 @@ export class BaseAuthGuard {
    */
   static async basicAuthCheck() {
     const session = await BaseAuthGuard.getSession();
-    if (!session) return notify("You need to be an Auth user");
+    if (!session) return redirect("/auth/signin");
 
     const workspaceId = session.workspaceId || Session.getWorkspaceId();
 
@@ -101,8 +110,11 @@ export class BaseAuthGuard {
     });
 
     if (!userExist) {
-      Logger.warn(`User ${session.id} attempted to view projects without user membership`);
-      notify("User does not exist");
+      Logger.warn(`User ${session.id} attempted to access resources without user membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to access this workspace."] },
+      };
     }
 
     const workspaceExist = await WorkspaceServices.hasResource({
@@ -113,8 +125,11 @@ export class BaseAuthGuard {
     });
 
     if (!workspaceExist) {
-      Logger.warn(`User ${session.id} attempted to view projects without workspace membership`);
-      notify("workspace does not exist");
+      Logger.warn(`User ${session.id} attempted to access resources without workspace membership`);
+      return {
+        success: false,
+        errors: { _form: ["You do not have permission to access this workspace."] },
+      };
     }
 
     return session;
@@ -131,6 +146,6 @@ export class BaseAuthGuard {
   }
 
   static redirectUnauthorized() {
-    redirect("/?unauthorized=1");
+    redirect("/");
   }
 }

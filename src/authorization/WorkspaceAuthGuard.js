@@ -1,7 +1,7 @@
 "use server";
 
+import { forbidden } from "next/navigation";
 import { Session } from "@/lib/Session";
-import { notify } from "@/lib/utils";
 import { UserServices } from "@/system/Services/UserServices";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 import { BaseAuthGuard } from "./BaseAuthGuard";
@@ -26,16 +26,16 @@ class WorkspaceAuthGuard extends BaseAuthGuard {
       where: { workspaceId },
     });
 
-    if (!workspaceExists) return notify("Workspace not found");
+    if (!workspaceExists) return forbidden();
 
     const workspace = await WorkspaceServices.getResource({
       where: { id: session.workspaceId },
       include: { owner: true },
     });
 
-    if (!workspace) return notify("Workspace not found");
+    if (!workspace) return forbidden();
 
-    if (workspace.status !== "ACTIVE") return notify("workspace was not active");
+    if (workspace.status !== "ACTIVE") return forbidden();
 
     return true;
   }

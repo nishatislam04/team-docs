@@ -36,7 +36,7 @@ class RoleAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to view roles without permission`);
       return {
         success: false,
@@ -71,7 +71,7 @@ class RoleAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to create role without permission`);
       return {
         success: false,
@@ -107,7 +107,7 @@ class RoleAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to update role without permission`);
       return {
         success: false,
@@ -143,7 +143,7 @@ class RoleAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to delete role without permission`);
       return {
         success: false,

@@ -42,7 +42,7 @@ class UserAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to read user without permission`);
       return {
         success: false,
@@ -75,7 +75,7 @@ class UserAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to create user without permission`);
       return {
         success: false,
@@ -110,7 +110,7 @@ class UserAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to update user without permission`);
       return {
         success: false,
@@ -145,7 +145,7 @@ class UserAuthGuard extends BaseAuthGuard {
       },
     });
 
-    if (permission.status !== "ACTIVE") {
+    if (!BaseAuthGuard.isPermissionActive(permission)) {
       Logger.warn(`User ${session.id} attempted to delete user without permission`);
       return {
         success: false,
