@@ -1,9 +1,11 @@
 "use server";
 
+import { devDelay } from "@/lib/devDelay";
 import { Session } from "@/lib/Session";
 import { WorkspaceServices } from "@/system/Services/WorkspaceServices";
 
 export async function getWorkspaceFn() {
+  await devDelay();
   const session = await Session.getCurrentUser();
 
   let workspaceId = session?.workspaceId;

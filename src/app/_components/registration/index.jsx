@@ -1,26 +1,23 @@
-import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
+import LandingLoading from "@/components/loading/LandingLoading";
+import { devDelay } from "@/lib/devDelay";
 
-// Dynamically import the dialog component for better performance
-const RegistrationDialogComponent = dynamic(() => import("./RegistrationDialog"), {
-  loading: () => (
-    <div className="flex items-center justify-center min-h-[100px]">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-    </div>
-  ),
-  ssr: false,
-});
+const RegistrationDialogComponent = dynamic(
+  () =>
+    import("./RegistrationDialog").then(async (mod) => {
+      await devDelay();
+      return mod;
+    }),
+  {
+    loading: () => <LandingLoading size="md" className="min-h-[100px]" />,
+    ssr: false,
+  },
+);
 
 export default function RegistrationDialog({ isAuthenticated }) {
   return (
-    <Suspense
-      fallback={
-        <div className="flex items-center justify-center min-h-[100px]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      }
-    >
+    <Suspense fallback={<LandingLoading size="md" className="min-h-[100px]" />}>
       <RegistrationDialogComponent isAuthenticated={isAuthenticated} />
     </Suspense>
   );

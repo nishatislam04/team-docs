@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+import LandingLoading from "@/components/loading/LandingLoading";
 
 import ProfileMenuWrapper from "./sub/ProfileMenuWrapper";
 
@@ -17,7 +18,7 @@ export default function Header({ sessionPromise }) {
         <span className="text-xl font-bold">Team Docs</span>
       </Link>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingLoading size="xl" className="min-w-30 h-24" />}>
         <ProfileMenuWrapper sessionPromise={sessionPromise} />
       </Suspense>
     </header>

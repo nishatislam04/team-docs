@@ -6,6 +6,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import LandingLoading from "@/components/loading/LandingLoading";
 import {
   Carousel,
   CarouselContent,
@@ -193,7 +194,7 @@ export default function FeaturedSection({ workspace }) {
             Ready to transform your team&apos;s documentation experience?
           </p>
           <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LandingLoading size="sm" className="min-h-[44px] min-w-[180px]" />}>
               <ActionButton isAuthenticated={isAuthenticated} workspace={workspace} />
             </Suspense>
           </div>

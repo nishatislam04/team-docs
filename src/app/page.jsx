@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import LandingLoading from "@/components/loading/LandingLoading";
 import { getSession } from "./_components/actions/getSession";
 import { getWorkspaceFn } from "./_components/actions/getWorkspace";
 import Footer from "./_components/Footer";
@@ -9,7 +10,7 @@ import WhyChooseUs from "./_components/WhyChooseUs";
 
 export default async function LandingPage() {
   return (
-    <Suspense fallback={<div className="bg-background min-h-screen">Loading...</div>}>
+    <Suspense fallback={<LandingLoading fullScreen size="xl" />}>
       <LandingPageContent />
     </Suspense>
   );
