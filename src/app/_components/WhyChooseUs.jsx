@@ -65,6 +65,8 @@ const highlights = [
   "Day & night mode",
   "Invitations & member management",
   "Superadmin workspace oversight",
+  "Internal docs organized by project & section",
+  "Documentation distributed across your team",
 ];
 
 export default function WhyChooseUs() {
@@ -172,17 +174,20 @@ export default function WhyChooseUs() {
           initial={{ opacity: 0, y: 20 }}
           animate={gridInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={transition(0.2)}
-          className="border-border/60 bg-card/50 mx-auto mt-14 flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-2xl border px-6 py-5"
+          className="border-border/60 bg-card/50 mx-auto mt-14 max-w-4xl rounded-2xl border px-6 py-5"
         >
-          {highlights.map((highlight) => (
-            <span
-              key={highlight}
-              className="text-muted-foreground flex items-center text-sm font-medium"
-            >
-              <Check className="text-primary mr-2 h-4 w-4" />
-              {highlight}
-            </span>
-          ))}
+          <div className="grid grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-3">
+            {highlights.map((highlight) => (
+              <div key={highlight} className="flex items-start gap-3">
+                <span className="bg-primary/8 flex size-7 shrink-0 items-center justify-center rounded-md">
+                  <Check className="text-primary size-3.5" aria-hidden="true" />
+                </span>
+                <span className="text-muted-foreground pt-0.5 text-sm font-medium leading-snug">
+                  {highlight}
+                </span>
+              </div>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>
